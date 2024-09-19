@@ -3,10 +3,12 @@ import { ApiGatewayModule } from './api-gateway.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
 	const app = await NestFactory.create(ApiGatewayModule);
 	app.setGlobalPrefix('api');
+	app.use(cookieParser());
 	app.useGlobalPipes(new ValidationPipe());
 	app.useLogger(app.get(Logger));
 	const config_service = app.get(ConfigService);
