@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AdminLoginDto, UserLoginDto, UserRegisterDto } from '@app/contracts/auth';
 import { UsersService } from '../users/users.service';
+import { AdminTokenPayload, UserTokenPayload } from '@app/common/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
             throw new UnauthorizedException();
         }
 
-        const tokenPayload = {
+        const tokenPayload: AdminTokenPayload = {
             username: user.username,
             role: user.role,
             sub: user.id,
@@ -41,7 +42,7 @@ export class AuthService {
             throw new UnauthorizedException();
         }
 
-        const tokenPayload = {
+        const tokenPayload: UserTokenPayload = {
             email: user.email,
             role: user.role,
             sub: user.id,

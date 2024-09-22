@@ -3,6 +3,7 @@ import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { ConfigService } from "@nestjs/config";
 import { UsersService } from "../../users/users.service";
+import { AdminTokenPayload, UserTokenPayload } from "@app/common/interfaces";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -21,14 +22,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: any) {
+    async validate(payload: UserTokenPayload | AdminTokenPayload) {
         try {
-            if(payload.role === 'admin') {
+            if (payload.role === 'admin') {
                 const user = await this.userService.findAdmin(payload.sub);
                 if (!user) {
                     throw new UnauthorizedException('Invalid token');
                 }
-                const { 
+                const {
                     password,
                     ...result } = user;
                 return result;
@@ -37,7 +38,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             if (!user) {
                 throw new UnauthorizedException('Invalid token');
             }
-            const { 
+            const {
                 password,
                 created_at,
                 updated_at,
