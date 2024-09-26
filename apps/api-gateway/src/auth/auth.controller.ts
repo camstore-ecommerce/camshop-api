@@ -5,6 +5,7 @@ import {
 	Post,
 	Res,
 	UseGuards,
+	Query
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
@@ -12,8 +13,6 @@ import { AdminLoginDto, UserLoginDto, UserRegisterDto } from '@app/contracts/aut
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthUser } from '@app/common/decorators';
 import { UserDto } from '@app/contracts/users';
-
-
 
 @Controller('auth')
 export class AuthController {
@@ -49,5 +48,16 @@ export class AuthController {
 	@UseGuards(JwtAuthGuard)
 	async status(@AuthUser() user: UserDto) {
 		return user;
+	}
+
+	@Get('verify-email')
+	@UseGuards(JwtAuthGuard)
+	async sendVerifyEmail(@AuthUser() user: UserDto) {
+		return await this.authService.sendVerifyEmail(user);
+	}
+
+	@Get('confirm-verify-email')
+	async verify(@Query('token') token: string) {
+		return await this.authService.confirmVerifyEmail(token);
 	}
 }
