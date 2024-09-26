@@ -1,6 +1,6 @@
 import { CreateUserDto, UpdateUserDto } from '@app/contracts/users';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { UserRegisterDto } from '@app/contracts/auth';
 
@@ -23,11 +23,16 @@ export class UsersService {
 			this.prismaService.user.count()
 		]);
 
-		return { count, users };
+		const usersWithoutPassword = users.map(({ password, ...user }) => user);
+
+		return { count, users: usersWithoutPassword };
 	}
 
 	async findOne(id: string) {
-		return await this.prismaService.user.findUniqueOrThrow({ where: { id } });
+		return await this.prismaService.user.findFirstOrThrow({ where: { OR: [
+			{ id },
+			{ email: id }
+		] } });
 	}
 
 	async findAdmin(id: string) {
@@ -60,7 +65,9 @@ export class UsersService {
 			throw new UnauthorizedException('Credentials are invalid');
 		}
 
-		return user;
+		const { password: _, created_at, updated_at, deleted_at, ...result } = user;
+
+		return result;
 	}
 
 	async registerUser(registerDto: UserRegisterDto) {
@@ -86,7 +93,9 @@ export class UsersService {
 			throw new UnauthorizedException('Credentials are invalid');
 		}
 
-		return user;
+		const { password: _, ...result } = user;
+
+		return result;
 	}
 
 }
