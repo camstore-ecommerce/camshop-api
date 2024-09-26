@@ -6,10 +6,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { VerificationModule } from '../verification/verification.module';
 
 @Module({
   imports: [
 	UsersModule,
+	VerificationModule,
     JwtModule.registerAsync({
 			useFactory: (configService: ConfigService) => ({
 				secret: configService.get('JWT_SECRET'),

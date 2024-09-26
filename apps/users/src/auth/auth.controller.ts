@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AdminLoginDto, AUTH_PATTERNS, UserLoginDto, UserRegisterDto } from '@app/contracts/auth';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { UserDto } from '@app/contracts/users';
 
 @Controller()
 export class AuthController {
@@ -28,5 +29,15 @@ export class AuthController {
   @MessagePattern(AUTH_PATTERNS.AUTHENTICATE)
   async authenticate(@Payload() data: any) {
     return data.user;
+  }
+
+  @MessagePattern(AUTH_PATTERNS.EMAIL_VERIFICATION)
+  async verifyEmail(@Payload() user: UserDto) {
+    return await this.authService.sendVerificationEmail(user);
+  }
+
+  @MessagePattern(AUTH_PATTERNS.EMAIL_VERIFICATION_CONFIRM)
+  async confirmVerifyEmail(@Payload() token: string) {
+    return await this.authService.verifyEmail(token);
   }
 }
