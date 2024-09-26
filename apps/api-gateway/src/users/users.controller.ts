@@ -9,47 +9,52 @@ import {
 	UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto } from '@app/contracts/users';
+import { CreateUserDto, UpdateUserDto, UserDto } from '@app/contracts/users';
 import { JwtAuthGuard } from '@app/common/guards/jwt-auth.guard';
-import { Roles } from '@app/common/decorators';
+import { AuthUser, Roles } from '@app/common/decorators';
+import { Role } from '@app/common/enums';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
 	constructor(private readonly userService: UsersService) {}
 	
-	@Roles('admin')
+	@Roles(Role.Admin)
 	@Post()
 	create(@Body() createUserDto: CreateUserDto) {
 		return this.userService.create(createUserDto);
 	}
 	
-	
-	@Roles('admin')
+	@Roles(Role.Admin)
 	@Get()
 	findAll() {
 		return this.userService.findAll();
 	}
 
-	@Roles('admin')
+	@Roles(Role.Admin)
 	@Get(':id')
 	findOne(@Param('id') id: string) {
 		return this.userService.findOne(id);
 	}
 
-	@Roles('admin')
 	@Patch(':id')
-	update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+	update(
+		@Param('id') id: string, 
+		@Body() updateUserDto: UpdateUserDto,
+		@AuthUser() user: UserDto){
+		if(user.id !== id && user.role !== 'admin') {
+			throw new Error('You can only update your own profile');
+		} 
 		return this.userService.update(id, updateUserDto);
 	}
 
-	@Roles('admin')
+	@Roles(Role.Admin)
 	@Delete(':id')
 	remove(@Param('id') id: string) {
 		return this.userService.remove(id);
 	}
 
-	@Roles('admin')
+	@Roles(Role.Admin)
 	@Delete(':id/permanently')
 	permanentlyRemove(@Param('id') id: string) {
 		return this.userService.permanentlyRemove(id);
