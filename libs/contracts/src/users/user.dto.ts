@@ -4,5 +4,7 @@ export class UserDto {
 	phone: string;
 	first_name: string;
 	last_name: string;
+	verified_email_at: Date;
+	status: string;
 	role: string;
 }
