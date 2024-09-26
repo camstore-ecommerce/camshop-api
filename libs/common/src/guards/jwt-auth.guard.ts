@@ -4,6 +4,7 @@ import { USERS_CLIENT } from "../constants/services";
 import { ClientProxy } from "@nestjs/microservices";
 import { Reflector } from "@nestjs/core";
 import { AUTH_PATTERNS } from "@app/contracts/auth";
+import { IS_PUBLIC_KEY } from "../decorators";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -17,6 +18,12 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+        const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY,
+            [context.getHandler(), context.getClass()]);
+        if (isPublic) {
+            return true;
+        }
+
         const jwt =
             context.switchToHttp().getRequest().cookies?.Authentication ||
             context.switchToHttp().getRequest().headers?.authentication;
@@ -26,6 +33,7 @@ export class JwtAuthGuard implements CanActivate {
         }
 
         const role = this.reflector.get<string>('role', context.getHandler());
+
         return this.userClient.send(AUTH_PATTERNS.AUTHENTICATE, {
             Authentication: jwt,
         }).pipe(
