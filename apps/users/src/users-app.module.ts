@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { VerificationModule } from './verification/verification.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -17,6 +18,8 @@ import * as Joi from 'joi';
 				DATABASE_URL: Joi.string().required(),
 				JWT_SECRET: Joi.string().required(),
 				JWT_EXPIRATION: Joi.number().required(),
+				MAIL_CLIENT_PORT: Joi.number().required(),
+				APP_URL: Joi.string().required(),
 			}),
 			validationOptions: {
 				abortEarly: true,
@@ -26,6 +29,7 @@ import * as Joi from 'joi';
 		}),
 		UsersModule,
 		AuthModule,
+		VerificationModule,
 	],
 	controllers: [],
 	providers: [],
