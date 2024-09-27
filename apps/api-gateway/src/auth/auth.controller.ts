@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { AdminLoginDto, UserLoginDto, UserRegisterDto } from '@app/contracts/auth';
+import { AdminLoginDto, ResetPasswordDto, UserLoginDto, UserRegisterDto } from '@app/contracts/auth';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthUser } from '@app/common/decorators';
 import { UserDto } from '@app/contracts/users';
@@ -59,5 +59,15 @@ export class AuthController {
 	@Get('confirm-verify-email')
 	async verify(@Query('token') token: string) {
 		return await this.authService.confirmVerifyEmail(token);
+	}
+
+	@Post('forgot-password')
+	async forgotPassword(@Body('email') email: string) {
+		return await this.authService.forgotPassword(email);
+	}
+
+	@Post('reset-password')
+	async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+		return await this.authService.resetPassword(resetPasswordDto);
 	}
 }
