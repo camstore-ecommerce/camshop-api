@@ -5,4 +5,6 @@ export const AUTH_PATTERNS = {
     AUTHENTICATE: 'users.auth.authenticate',
     EMAIL_VERIFICATION: 'users.auth.email_verification',
     EMAIL_VERIFICATION_CONFIRM: 'users.auth.email_verification_confirm',
+    FORGOT_PASSWORD: 'users.auth.forgot_password',
+    RESET_PASSWORD: 'users.auth.reset_password',
 }

@@ -1,7 +1,7 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AdminLoginDto, AUTH_PATTERNS, UserLoginDto, UserRegisterDto } from '@app/contracts/auth';
+import { AdminLoginDto, AUTH_PATTERNS, ResetPasswordDto, UserLoginDto, UserRegisterDto } from '@app/contracts/auth';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UserDto } from '@app/contracts/users';
 
@@ -39,5 +39,15 @@ export class AuthController {
   @MessagePattern(AUTH_PATTERNS.EMAIL_VERIFICATION_CONFIRM)
   async confirmVerifyEmail(@Payload() token: string) {
     return await this.authService.verifyEmail(token);
+  }
+
+  @MessagePattern(AUTH_PATTERNS.FORGOT_PASSWORD)
+  async forgotPassword(@Payload() email: string) {
+    return await this.authService.forgotPassword(email);
+  }
+
+  @MessagePattern(AUTH_PATTERNS.RESET_PASSWORD)
+  async resetPassword(@Payload() resetPasswordDto: ResetPasswordDto) {
+    return await this.authService.resetPassword(resetPasswordDto);
   }
 }
