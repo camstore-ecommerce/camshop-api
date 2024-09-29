@@ -17,12 +17,12 @@
     "dependencies": {
         "@nestjs/jwt": "^10.2.0",
         "@nestjs/passport": "^10.0.3",
-        "@prisma/client": "^5.19.1",
+        "@prisma/client": "^5.20.0",
         "bcryptjs": "^2.4.3",
         "passport": "^0.7.0",
         "passport-jwt": "^4.0.1",
         "passport-local": "^1.0.0",
-        "prisma": "^5.19.1"
+        "prisma": "^5.20.0"
     },
     "devDependencies": {
         "@types/bcryptjs": "^2.4.6",
