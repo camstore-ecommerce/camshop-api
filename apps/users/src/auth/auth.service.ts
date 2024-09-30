@@ -18,7 +18,9 @@ export class AuthService implements OnModuleInit {
     async onModuleInit() {
         this.mailClient = ClientProxyFactory.create({
             transport: Transport.TCP,
-            options: { port: this.configService.get('MAIL_CLIENT_PORT') }
+            options: { 
+                host: this.configService.get("MAIL_CLIENT_HOST") || '0.0.0.0',
+                port: this.configService.get('MAIL_CLIENT_PORT') }
         })
     }
 
@@ -98,7 +100,7 @@ export class AuthService implements OnModuleInit {
 
     async verifyEmail(token: string) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET) as { user: string, otp: string };
+            const decoded = jwt.verify(token, this.configService.get("JWT_SECRET")) as { user: string, otp: string };
 
             const user = await this.usersService.findOne(decoded.user);
 
