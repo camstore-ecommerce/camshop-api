@@ -18,6 +18,7 @@ async function bootstrap() {
 	await app.listen(config_service.get('PORT'), () => {
 		console.log(
 			`API Gateway is running on port: ${config_service.get('PORT')}`,
+			`in ${config_service.get('NODE_ENV')} mode`,
 		);
 	});
 }

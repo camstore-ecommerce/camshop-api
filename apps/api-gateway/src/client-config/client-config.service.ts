@@ -17,14 +17,18 @@ export class ClientConfigService {
 	get productsClientOption(): ClientOptions {
 		return {
 			transport: Transport.TCP,
-			options: { port: this.getProductsClientPort() },
+			options: { 
+				host: this.configService.get("PRODUCTS_CLIENT_HOST") || '0.0.0.0',
+				port: this.getProductsClientPort() },
 		};
 	}
 
 	get usersClientOption(): ClientOptions {
 		return {
 			transport: Transport.TCP,
-			options: { port: this.getUsersClientPort() },
+			options: { 
+				host: this.configService.get("USERS_CLIENT_HOST") || '0.0.0.0',
+				port: this.getUsersClientPort() },
 		};
 	}
 }
