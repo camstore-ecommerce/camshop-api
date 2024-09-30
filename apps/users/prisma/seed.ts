@@ -7,14 +7,21 @@ async function main() {
     await prisma.$connect();
     const hashedPassword = await bcrypt.hash(process.env.ADMIN_PWD, 10);
 
-    await prisma.admin.create({
-        data: {
-            username: 'admin',
-            password: hashedPassword,
-        }
+    const existingAdmin = await prisma.admin.findUnique({
+        where: { username: 'admin' },
     });
 
-    console.log('Admin user created');
+    if (existingAdmin) {
+        console.log('Admin user already exists');
+    } else {
+        await prisma.admin.create({
+            data: {
+                username: 'admin',
+                password: hashedPassword,
+            }
+        });
+        console.log('Admin user created');
+    }
 }
 
 main()
