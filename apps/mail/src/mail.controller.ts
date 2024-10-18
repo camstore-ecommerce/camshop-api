@@ -5,10 +5,10 @@ import { MAIL_PATTERNS, SendMailDto } from '@app/contracts/mail';
 
 @Controller()
 export class MailController {
-  constructor(private readonly mailService: MailService) {}
+	constructor(private readonly mailService: MailService) {}
 
-  @MessagePattern(MAIL_PATTERNS.SEND)
-  async sendMail(@Payload() data: SendMailDto) {
-    return await this.mailService.sendMail(data);
-  }
+	@MessagePattern(MAIL_PATTERNS.SEND)
+	async sendMail(@Payload() data: SendMailDto) {
+		return await this.mailService.sendMail(data);
+	}
 }

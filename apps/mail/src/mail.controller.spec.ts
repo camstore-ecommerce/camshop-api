@@ -3,20 +3,20 @@ import { MailController } from './mail.controller';
 import { MailService } from './mail.service';
 
 describe('MailController', () => {
-  let mailController: MailController;
+	let mailController: MailController;
 
-  beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
-      controllers: [MailController],
-      providers: [MailService],
-    }).compile();
+	beforeEach(async () => {
+		const app: TestingModule = await Test.createTestingModule({
+			controllers: [MailController],
+			providers: [MailService],
+		}).compile();
 
-    mailController = app.get<MailController>(MailController);
-  });
+		mailController = app.get<MailController>(MailController);
+	});
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(mailController.getHello()).toBe('Hello World!');
-    });
-  });
+	describe('root', () => {
+		it('should return "Hello World!"', () => {
+			expect(mailController.getHello()).toBe('Hello World!');
+		});
+	});
 });

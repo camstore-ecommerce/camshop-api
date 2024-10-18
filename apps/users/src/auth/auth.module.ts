@@ -9,18 +9,18 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { VerificationModule } from '../verification/verification.module';
 
 @Module({
-  imports: [
-	UsersModule,
-	VerificationModule,
-    JwtModule.registerAsync({
+	imports: [
+		UsersModule,
+		VerificationModule,
+		JwtModule.registerAsync({
 			useFactory: (configService: ConfigService) => ({
 				secret: configService.get('JWT_SECRET'),
 				signOptions: { expiresIn: `${configService.get('JWT_EXPIRATION')}s` },
 			}),
 			inject: [ConfigService],
-		})
-  ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard],
+		}),
+	],
+	controllers: [AuthController],
+	providers: [AuthService, JwtStrategy, JwtAuthGuard],
 })
 export class AuthModule {}

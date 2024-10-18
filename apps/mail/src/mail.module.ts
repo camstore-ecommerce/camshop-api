@@ -31,4 +31,4 @@ import * as Joi from 'joi';
 	controllers: [MailController],
 	providers: [MailService],
 })
-export class MailModule { }
+export class MailModule {}

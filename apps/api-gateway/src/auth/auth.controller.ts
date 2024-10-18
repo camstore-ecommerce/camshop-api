@@ -5,30 +5,47 @@ import {
 	Post,
 	Res,
 	UseGuards,
-	Query
+	Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { AdminLoginDto, ResetPasswordDto, UserLoginDto, UserRegisterDto } from '@app/contracts/auth';
+import {
+	AdminLoginDto,
+	ResetPasswordDto,
+	UserLoginDto,
+	UserRegisterDto,
+} from '@app/contracts/auth';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthUser } from '@app/common/decorators';
 import { UserDto } from '@app/contracts/users';
 
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly authService: AuthService) { }
+	constructor(private readonly authService: AuthService) {}
 
 	@Post('admin-login')
-	async adminLogin(@Body() loginDto: AdminLoginDto, @Res({ passthrough: true }) response: Response) {
+	async adminLogin(
+		@Body() loginDto: AdminLoginDto,
+		@Res({ passthrough: true }) response: Response,
+	) {
 		const jwt = await this.authService.adminLogin(loginDto);
-		response.cookie('Authentication', jwt.token, { httpOnly: true, expires: new Date(jwt.expires) });
+		response.cookie('Authentication', jwt.token, {
+			httpOnly: true,
+			expires: new Date(jwt.expires),
+		});
 		response.send(jwt.user);
 	}
 
 	@Post('login')
-	async login(@Body() loginDto: UserLoginDto, @Res({ passthrough: true }) response: Response) {
+	async login(
+		@Body() loginDto: UserLoginDto,
+		@Res({ passthrough: true }) response: Response,
+	) {
 		const jwt = await this.authService.login(loginDto);
-		response.cookie('Authentication', jwt.token, { httpOnly: true, expires: new Date(jwt.expires) });
+		response.cookie('Authentication', jwt.token, {
+			httpOnly: true,
+			expires: new Date(jwt.expires),
+		});
 		response.send(jwt.user);
 	}
 

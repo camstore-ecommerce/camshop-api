@@ -18,13 +18,13 @@ import { Role } from '@app/common/enums';
 @Controller('users')
 export class UsersController {
 	constructor(private readonly userService: UsersService) {}
-	
+
 	@Roles(Role.Admin)
 	@Post()
 	create(@Body() createUserDto: CreateUserDto) {
 		return this.userService.create(createUserDto);
 	}
-	
+
 	@Roles(Role.Admin)
 	@Get()
 	findAll() {
@@ -39,12 +39,13 @@ export class UsersController {
 
 	@Patch(':id')
 	update(
-		@Param('id') id: string, 
+		@Param('id') id: string,
 		@Body() updateUserDto: UpdateUserDto,
-		@AuthUser() user: UserDto){
-		if(user.id !== id && user.role !== 'admin') {
+		@AuthUser() user: UserDto,
+	) {
+		if (user.id !== id && user.role !== 'admin') {
 			throw new Error('You can only update your own profile');
-		} 
+		}
 		return this.userService.update(id, updateUserDto);
 	}
 

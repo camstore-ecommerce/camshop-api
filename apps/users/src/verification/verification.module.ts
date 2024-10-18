@@ -3,7 +3,7 @@ import { VerificationService } from './verification.service';
 import { PrismaService } from '../prisma.service';
 
 @Module({
-  providers: [VerificationService, PrismaService],
-  exports: [VerificationService],
+	providers: [VerificationService, PrismaService],
+	exports: [VerificationService],
 })
 export class VerificationModule {}

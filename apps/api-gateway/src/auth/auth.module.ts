@@ -7,9 +7,7 @@ import { ClientProxyFactory } from '@nestjs/microservices';
 import { ClientConfigModule } from '../client-config/client-config.module';
 
 @Module({
-	imports: [
-		ClientConfigModule,
-	],
+	imports: [ClientConfigModule],
 	controllers: [AuthController],
 	providers: [
 		AuthService,
@@ -23,4 +21,4 @@ import { ClientConfigModule } from '../client-config/client-config.module';
 		},
 	],
 })
-export class AuthModule { }
+export class AuthModule {}

@@ -16,7 +16,7 @@ RUN npx prisma generate
 COPY apps/users apps/users
 COPY libs libs
 
-RUN cd apps/users && npm install && npx tsc ./prisma/seed.ts
+RUN cd apps/users && npm install --only=production && npx tsc ./prisma/seed.ts
 
 RUN npm run build users
 
