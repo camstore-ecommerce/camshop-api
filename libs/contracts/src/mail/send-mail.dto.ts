@@ -1,12 +1,12 @@
 interface Address {
-    name: string;
-    address: string;
+	name: string;
+	address: string;
 }
 
 export class SendMailDto {
-    sender?: Address;
-    recipients: Address[];
-    subject: string;
-    html?: string;
-    text?: string;
+	sender?: Address;
+	recipients: Address[];
+	subject: string;
+	html?: string;
+	text?: string;
 }

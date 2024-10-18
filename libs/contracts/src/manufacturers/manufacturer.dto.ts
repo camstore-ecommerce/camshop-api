@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export class ManufacturerDto {
 	_id: Types.ObjectId;

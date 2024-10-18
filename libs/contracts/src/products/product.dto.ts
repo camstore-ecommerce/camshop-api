@@ -1,5 +1,5 @@
-import { CategoryDto } from "../categories";
-import { ManufacturerDto } from "../manufacturers";
+import { CategoryDto } from '../categories';
+import { ManufacturerDto } from '../manufacturers';
 
 export class ProductDto {
 	_id: string;
