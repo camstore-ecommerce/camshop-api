@@ -14,21 +14,36 @@ export class ClientConfigService {
 		return this.configService.get<number>('USERS_CLIENT_PORT');
 	}
 
+	getOrdersClientPort(): number {
+		return this.configService.get<number>('ORDERS_CLIENT_PORT');
+	}
+
 	get productsClientOption(): ClientOptions {
 		return {
 			transport: Transport.TCP,
-			options: { 
-				host: this.configService.get("PRODUCTS_CLIENT_HOST") || '0.0.0.0',
-				port: this.getProductsClientPort() },
+			options: {
+				host: this.configService.get('PRODUCTS_CLIENT_HOST') || '0.0.0.0',
+				port: this.getProductsClientPort(),
+			},
 		};
 	}
 
 	get usersClientOption(): ClientOptions {
 		return {
 			transport: Transport.TCP,
-			options: { 
-				host: this.configService.get("USERS_CLIENT_HOST") || '0.0.0.0',
-				port: this.getUsersClientPort() },
+			options: {
+				host: this.configService.get('USERS_CLIENT_HOST') || '0.0.0.0',
+				port: this.getUsersClientPort(),
+			},
+		};
+	}
+
+	get ordersClientOption(): ClientOptions {
+		return {
+			transport: Transport.TCP,
+			options: {
+				host: this.configService.get('ORDERS_CLIENT_HOST') || '0.0.0.0',
+			},
 		};
 	}
 }

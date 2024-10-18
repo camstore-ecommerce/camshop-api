@@ -15,6 +15,7 @@ import * as Joi from 'joi';
 				PORT: Joi.number().default(3001),
 				PRODUCTS_CLIENT_PORT: Joi.number(),
 				USERS_CLIENT_PORT: Joi.number(),
+				ORDERS_CLIENT_PORT: Joi.number(),
 			}),
 			validationOptions: {
 				abortEarly: true,

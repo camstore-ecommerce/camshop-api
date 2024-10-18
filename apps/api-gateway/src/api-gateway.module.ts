@@ -9,6 +9,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { ManufacturersModule } from './manufacturers/manufacturers.module';
 import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from './auth/auth.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { AuthModule } from './auth/auth.module';
 			},
 		}),
 		AuthModule,
+		OrdersModule,
 	],
 	controllers: [ApiGatewayController],
 	providers: [ApiGatewayService, ClientConfigService],
