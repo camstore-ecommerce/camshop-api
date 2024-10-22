@@ -6,6 +6,18 @@ import { ClientOptions, Transport } from '@nestjs/microservices';
 export class ClientConfigService {
 	constructor(private configService: ConfigService) {}
 
+	getCdnCloudName(): string {
+		return this.configService.get<string>('CDN_CLOUD_NAME');
+	}
+
+	getCdnApiKey(): string {
+		return this.configService.get<string>('CDN_API_KEY');
+	}
+
+	getCdnApiSecret(): string {
+		return this.configService.get<string>('CDN_API_SECRET');
+	}
+
 	getProductsClientPort(): number {
 		return this.configService.get<number>('PRODUCTS_CLIENT_PORT');
 	}
