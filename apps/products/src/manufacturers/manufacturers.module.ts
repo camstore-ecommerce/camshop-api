@@ -16,5 +16,6 @@ import {
 	],
 	controllers: [ManufacturersController],
 	providers: [ManufacturersService, ManufacturersRepository],
+	exports: [ManufacturersService],
 })
 export class ManufacturersModule {}
