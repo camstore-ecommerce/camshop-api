@@ -8,7 +8,7 @@ export class ProductDto {
 	price: number;
 	original_price: number;
 	category: CategoryDto;
-	tags?: string[];
+	tags: string[];
 	manufacturer: ManufacturerDto;
 	stock: number;
 	image_url: string;

@@ -1,7 +1,5 @@
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { CategoryDto } from '../categories';
-import { ManufacturerDto } from '../manufacturers';
 
 export class CreateProductDto {
 	@IsString()
@@ -23,20 +21,17 @@ export class CreateProductDto {
 	original_price: number;
 
 	@IsNotEmpty()
-	category: CategoryDto;
+	category_id: string;
 
 	@IsString({ each: true })
 	@IsOptional()
 	tags?: string[];
 
 	@IsNotEmpty()
-	manufacturer: ManufacturerDto;
+	manufacturer_id: string;
 
 	@IsNumber()
 	@IsOptional()
+	@Type(() => Number)
 	stock: number;
-
-	@IsString()
-	@IsOptional()
-	image_url: string;
 }
