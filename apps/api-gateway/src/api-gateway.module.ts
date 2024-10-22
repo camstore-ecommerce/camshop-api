@@ -10,6 +10,7 @@ import { ManufacturersModule } from './manufacturers/manufacturers.module';
 import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
+import { CdnService } from './cdn/cdn.service';
 
 @Module({
 	imports: [
@@ -32,6 +33,6 @@ import { OrdersModule } from './orders/orders.module';
 		OrdersModule,
 	],
 	controllers: [ApiGatewayController],
-	providers: [ApiGatewayService, ClientConfigService],
+	providers: [ApiGatewayService, ClientConfigService, CdnService],
 })
 export class ApiGatewayModule {}
