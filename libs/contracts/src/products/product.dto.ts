@@ -1,4 +1,4 @@
-import { CategoryDto } from '../categories';
+import { Category } from '../categories';
 import { ManufacturerDto } from '../manufacturers';
 
 export class ProductDto {
@@ -7,7 +7,7 @@ export class ProductDto {
 	description: string;
 	price: number;
 	original_price: number;
-	category: CategoryDto;
+	category: Category;
 	tags: string[];
 	manufacturer: ManufacturerDto;
 	stock: number;
