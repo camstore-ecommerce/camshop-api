@@ -14,7 +14,7 @@ import { ProductsService } from './products.service';
 import { CreateProductDto, UpdateProductDto } from '@app/contracts/products';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '@app/common/guards';
-import { Roles } from '@app/common/decorators';
+import { Public, Roles } from '@app/common/decorators';
 import { Role } from '@app/common/enums';
 
 @Controller('products')
@@ -33,13 +33,13 @@ export class ProductsController {
 	}
 
 	@Get()
-	@Roles(Role.Admin)
+	@Public()
 	findAll() {
 		return this.productsService.findAll();
 	}
 
 	@Get(':id')
-	@Roles(Role.Admin)
+	@Public()
 	findOne(@Param('id') id: string) {
 		return this.productsService.findOne(id);
 	}

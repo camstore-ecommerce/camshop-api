@@ -1,81 +1,87 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { PRODUCTS_CLIENT } from '@app/common/constants/services';
 
 import {
-	PRODUCTS_PATTERNS,
-	CreateProductDto as ClientCreateProductDto,
-	UpdateProductDto as ClientUpdateProductDto,
 	ProductDto as ClientProductDto,
+	ProductsServiceClient,
+	PRODUCTS_SERVICE_NAME,
+	CreateProductDto,
+	UpdateProductDto,
+	Product,
 } from '@app/contracts/products';
 
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientGrpc } from '@nestjs/microservices';
 import { CdnService } from '../cdn/cdn.service';
 import { lastValueFrom, map, switchMap } from 'rxjs';
 
 @Injectable()
-export class ProductsService {
+export class ProductsService implements OnModuleInit {
+	private productsServiceClient: ProductsServiceClient;
+
 	constructor(
-		@Inject(PRODUCTS_CLIENT) private readonly productsClient: ClientProxy,
+		@Inject(PRODUCTS_CLIENT) private readonly productsClient: ClientGrpc,
 		private readonly cdnService: CdnService,
-	) {}
+	) { }
+
+	onModuleInit() {
+		this.productsServiceClient = this.productsClient.getService<ProductsServiceClient>(PRODUCTS_SERVICE_NAME);
+	}
 
 	create(
-		createProductDto: ClientCreateProductDto,
+		createProductDto: CreateProductDto,
 		image?: Express.Multer.File,
 	) {
-		return this.productsClient
-			.send(PRODUCTS_PATTERNS.CREATE, createProductDto)
-			.pipe(
-				switchMap(async (product: ClientProductDto) => {
-					if (image) {
-						const { secure_url } = await this.cdnService.uploadImage(
-							image,
-							product._id,
-							'products',
-						);
-						return await lastValueFrom(
-							this.productsClient.send(PRODUCTS_PATTERNS.UPDATE, {
-								id: product._id,
-								image_url: secure_url,
-							}),
-						);
-					}
-					return product;
-				}),
-				map((response) => response), // Ensure the response is properly handled
-			);
+		return this.productsServiceClient.create(createProductDto).pipe(
+			switchMap(async (product: Product) => {
+				if (image) {
+					const { secure_url } = await this.cdnService.uploadImage(
+						image,
+						product.id,
+						'products',
+					);
+					return await lastValueFrom(
+						this.productsServiceClient.update({
+							...product, // Spread the existing product properties
+							category_id: product.category.id,
+							manufacturer_id: product.manufacturer.id,
+							image_url: secure_url as string,
+						}),
+					);
+				}
+				return product;
+			}),
+			map((response) => response), // Ensure the response is properly handled
+		);
 	}
 
 	findAll() {
-		return this.productsClient.send(PRODUCTS_PATTERNS.FIND_ALL, {});
+		return this.productsServiceClient.findAll({});
 	}
 
 	findOne(id: string) {
-		return this.productsClient.send(PRODUCTS_PATTERNS.FIND_ONE, id);
+		return this.productsServiceClient.findOne({ id });
 	}
 
 	update(
 		id: string,
-		updateProductDto: ClientUpdateProductDto,
+		updateProductDto: UpdateProductDto,
 		image?: Express.Multer.File,
 	) {
-		return this.productsClient
-			.send(PRODUCTS_PATTERNS.UPDATE, {
-				id,
-				...updateProductDto,
-			})
+		return this.productsServiceClient.update({id,...updateProductDto})
 			.pipe(
-				switchMap(async (product: ClientProductDto) => {
+				switchMap(async (product: Product) => {
 					if (image) {
 						const { secure_url } = await this.cdnService.uploadImage(
 							image,
-							product._id,
+							product.id,
 							'products',
 						);
 						return await lastValueFrom(
-							this.productsClient.send(PRODUCTS_PATTERNS.UPDATE, {
-								id: product._id,
-								image_url: secure_url,
+							this.productsServiceClient.update({
+								...product, // Spread the existing product properties
+								category_id: product.category.id,
+								manufacturer_id: product.manufacturer.id,
+								image_url: secure_url as string,
 							}),
 						);
 					}
@@ -86,11 +92,11 @@ export class ProductsService {
 	}
 
 	remove(id: string) {
-		return this.productsClient.send(PRODUCTS_PATTERNS.REMOVE, id);
+		return this.productsServiceClient.remove({id});
 	}
 
 	async permanentlyRemove(id: string) {
-		return this.productsClient.send(PRODUCTS_PATTERNS.PERMANENTLY_REMOVE, id).pipe(
+		return this.productsServiceClient.permanentlyRemove({id}).pipe(
 			switchMap(async () => {
 				await this.cdnService.deleteImage(id);
 				return id;

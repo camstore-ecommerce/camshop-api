@@ -1,52 +1,52 @@
 import { PRODUCTS_CLIENT } from '@app/common/constants/services';
 import {
-	MANUFACTURERS_PATTERNS,
 	CreateManufacturerDto as ClientCreateManufacturerDto,
 	UpdateManufacturerDto as ClientUpdateManufacturerDto,
 	ManufacturerDto as ClientManufacturerDto,
+	ManufacturersServiceClient,
+	MANUFACTURERS_SERVICE_NAME,
 } from '@app/contracts/manufacturers';
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
 import { map } from 'rxjs';
 
 @Injectable()
-export class ManufacturersService {
+export class ManufacturersService implements OnModuleInit{
+	private manufacturersServiceClient: ManufacturersServiceClient;
+
 	constructor(
-		@Inject(PRODUCTS_CLIENT) private readonly productsClient: ClientProxy,
+		@Inject(PRODUCTS_CLIENT) private readonly productsClient: ClientGrpc,
 	) {}
 
+	onModuleInit() {
+		this.manufacturersServiceClient = this.productsClient.getService<ManufacturersServiceClient>(
+			MANUFACTURERS_SERVICE_NAME,
+		);
+	}
+
 	create(createManufacturerDto: ClientCreateManufacturerDto) {
-		return this.productsClient
-			.send<
-				ClientManufacturerDto,
-				ClientCreateManufacturerDto
-			>(MANUFACTURERS_PATTERNS.CREATE, createManufacturerDto)
-			.pipe(map((response) => ({ id: response._id, name: response.name })));
+		return this.manufacturersServiceClient.create(createManufacturerDto).pipe(
+			map((response) => ({ id: response.id })),
+		);
 	}
 
 	findAll() {
-		return this.productsClient.send(MANUFACTURERS_PATTERNS.FIND_ALL, {});
+		return this.manufacturersServiceClient.findAll({});
 	}
 
 	findOne(id: string) {
-		return this.productsClient.send(MANUFACTURERS_PATTERNS.FIND_ONE, id);
+		return this.manufacturersServiceClient.findOne({id});
 	}
 
 	update(id: string, updateManufacturerDto: ClientUpdateManufacturerDto) {
-		return this.productsClient.send(MANUFACTURERS_PATTERNS.UPDATE, {
-			id,
-			...updateManufacturerDto,
-		});
+		return this.manufacturersServiceClient.update({ id, ...updateManufacturerDto });
 	}
 
 	remove(id: string) {
-		return this.productsClient.send(MANUFACTURERS_PATTERNS.REMOVE, id);
+		return this.manufacturersServiceClient.remove({ id });
 	}
 
 	permanentlyRemove(id: string) {
-		return this.productsClient.send(
-			MANUFACTURERS_PATTERNS.PERMANENTLY_REMOVE,
-			id,
-		);
+		return this.manufacturersServiceClient.permanentlyRemove({ id });
 	}
 }

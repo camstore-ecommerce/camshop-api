@@ -1,10 +1,11 @@
+import { PRODUCTS_PACKAGE_NAME } from '@app/contracts/products';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientOptions, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class ClientConfigService {
-	constructor(private configService: ConfigService) {}
+	constructor(private configService: ConfigService) { }
 
 	getCdnCloudName(): string {
 		return this.configService.get<string>('CDN_CLOUD_NAME');
@@ -18,10 +19,6 @@ export class ClientConfigService {
 		return this.configService.get<string>('CDN_API_SECRET');
 	}
 
-	getProductsClientPort(): number {
-		return this.configService.get<number>('PRODUCTS_CLIENT_PORT');
-	}
-
 	getUsersClientPort(): number {
 		return this.configService.get<number>('USERS_CLIENT_PORT');
 	}
@@ -32,12 +29,20 @@ export class ClientConfigService {
 
 	get productsClientOption(): ClientOptions {
 		return {
-			transport: Transport.TCP,
+			transport: Transport.GRPC,
 			options: {
-				host: this.configService.get('PRODUCTS_CLIENT_HOST') || '0.0.0.0',
-				port: this.getProductsClientPort(),
-			},
-		};
+				package: PRODUCTS_PACKAGE_NAME,
+				protoPath: [
+					'proto/products/products.proto',
+					'proto/products/manufacturers.proto',
+					'proto/products/categories.proto',
+				],
+				url: this.configService.get('PRODUCTS_CLIENT_URL') || '0.0.0.0:50051',
+				loader: {
+					keepCase: true,
+				}
+			}
+		}
 	}
 
 	get usersClientOption(): ClientOptions {
@@ -55,6 +60,7 @@ export class ClientConfigService {
 			transport: Transport.TCP,
 			options: {
 				host: this.configService.get('ORDERS_CLIENT_HOST') || '0.0.0.0',
+				port: this.getOrdersClientPort(),
 			},
 		};
 	}
