@@ -1,46 +1,57 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ManufacturersService } from './manufacturers.service';
 import {
 	CreateManufacturerDto,
-	MANUFACTURERS_PATTERNS,
+	FindOneManufacturerDto,
+	Manufacturer,
+	Manufacturers,
+	ManufacturersServiceController,
+	ManufacturersServiceControllerMethods,
+	PermanentlyRemoveManufacturerDto,
+	RemoveManufacturerDto,
 	UpdateManufacturerDto,
 } from '@app/contracts/manufacturers';
+import { Empty } from '@app/common/interfaces';
 
 @Controller()
-export class ManufacturersController {
+@ManufacturersServiceControllerMethods()
+export class ManufacturersController implements ManufacturersServiceController {
 	constructor(private readonly manufacturersService: ManufacturersService) {}
 
-	@MessagePattern(MANUFACTURERS_PATTERNS.CREATE)
-	create(@Payload() createManufacturerDto: CreateManufacturerDto) {
-		return this.manufacturersService.create(createManufacturerDto);
+	async create(
+		createManufacturerDto: CreateManufacturerDto,
+	): Promise<Manufacturer> {
+		return await this.manufacturersService.create(createManufacturerDto);
 	}
 
-	@MessagePattern(MANUFACTURERS_PATTERNS.FIND_ALL)
-	findAll() {
-		return this.manufacturersService.findAll();
+	async findAll(): Promise<Manufacturers> {
+		return await this.manufacturersService.findAll();
 	}
 
-	@MessagePattern(MANUFACTURERS_PATTERNS.FIND_ONE)
-	findOne(@Payload() id: string) {
-		return this.manufacturersService.findOne(id);
+	async findOne(
+		findOneManufacturerDto: FindOneManufacturerDto,
+	): Promise<Manufacturer> {
+		return await this.manufacturersService.findOne(findOneManufacturerDto.id);
 	}
 
-	@MessagePattern(MANUFACTURERS_PATTERNS.UPDATE)
-	update(@Payload() updateManufacturerDto: UpdateManufacturerDto) {
-		return this.manufacturersService.update(
+	async update(
+		updateManufacturerDto: UpdateManufacturerDto,
+	): Promise<Manufacturer> {
+		return await this.manufacturersService.update(
 			updateManufacturerDto.id,
 			updateManufacturerDto,
 		);
 	}
 
-	@MessagePattern(MANUFACTURERS_PATTERNS.REMOVE)
-	remove(@Payload() id: string) {
-		return this.manufacturersService.remove(id);
+	async remove(removeManufacturerDto: RemoveManufacturerDto): Promise<Empty> {
+		return await this.manufacturersService.remove(removeManufacturerDto.id);
 	}
 
-	@MessagePattern(MANUFACTURERS_PATTERNS.PERMANENTLY_REMOVE)
-	permanentlyRemove(@Payload() id: string) {
-		return this.manufacturersService.permanentlyRemove(id);
+	async permanentlyRemove(
+		permanentlyRemoveManufacturerDto: PermanentlyRemoveManufacturerDto,
+	) {
+		return await this.manufacturersService.permanentlyRemove(
+			permanentlyRemoveManufacturerDto.id,
+		);
 	}
 }

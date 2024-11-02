@@ -1,46 +1,49 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CategoriesService } from './categories.service';
 import {
-	CATEGORIES_PATTERNS,
+	Categories,
+	CategoriesServiceController,
+	CategoriesServiceControllerMethods,
+	Category,
 	CreateCategoryDto,
+	PermanentlyRemoveCategoryDto,
+	RemoveCategoryDto,
 	UpdateCategoryDto,
 } from '@app/contracts/categories';
 
 @Controller()
-export class CategoriesController {
+@CategoriesServiceControllerMethods()
+export class CategoriesController implements CategoriesServiceController {
 	constructor(private readonly categoriesService: CategoriesService) {}
 
-	@MessagePattern(CATEGORIES_PATTERNS.CREATE)
-	create(@Payload() createCategoryDto: CreateCategoryDto) {
-		return this.categoriesService.create(createCategoryDto);
+	async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+		return await this.categoriesService.create(createCategoryDto);
 	}
 
-	@MessagePattern(CATEGORIES_PATTERNS.FIND_ALL)
-	findAll() {
-		return this.categoriesService.findAll();
+	async findAll(): Promise<Categories> {
+		return await this.categoriesService.findAll();
 	}
 
-	@MessagePattern(CATEGORIES_PATTERNS.FIND_ONE)
-	findOne(@Payload() id: string) {
-		return this.categoriesService.findOne(id);
+	async findOne(updateCategoryDto: UpdateCategoryDto): Promise<Category> {
+		return await this.categoriesService.findOne(updateCategoryDto.id);
 	}
 
-	@MessagePattern(CATEGORIES_PATTERNS.UPDATE)
-	update(@Payload() updateCategoryDto: UpdateCategoryDto) {
-		return this.categoriesService.update(
+	async update(updateCategoryDto: UpdateCategoryDto) {
+		return await this.categoriesService.update(
 			updateCategoryDto.id,
 			updateCategoryDto,
 		);
 	}
 
-	@MessagePattern(CATEGORIES_PATTERNS.REMOVE)
-	remove(@Payload() id: string) {
-		return this.categoriesService.remove(id);
+	async remove(removeCategoryDto: RemoveCategoryDto) {
+		return await this.categoriesService.remove(removeCategoryDto.id);
 	}
 
-	@MessagePattern(CATEGORIES_PATTERNS.PERMANENTLY_REMOVE)
-	permanentlyRemove(@Payload() id: string) {
-		return this.categoriesService.permanentlyRemove(id);
+	async permanentlyRemove(
+		permanentlyRemoveCategoryDto: PermanentlyRemoveCategoryDto,
+	) {
+		return await this.categoriesService.permanentlyRemove(
+			permanentlyRemoveCategoryDto.id,
+		);
 	}
 }

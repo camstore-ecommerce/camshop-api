@@ -12,29 +12,42 @@ export class ManufacturersService {
 	) {}
 
 	async create(createManufacturerDto: CreateManufacturerDto) {
-		return this.manufacturersRepository.create(createManufacturerDto);
+		const manufacturer = await this.manufacturersRepository.create(
+			createManufacturerDto,
+		);
+		return { id: manufacturer._id.toString(), ...manufacturer };
 	}
 
-	findAll() {
-		return this.manufacturersRepository.find({});
+	async findAll() {
+		const manufacturers = await this.manufacturersRepository.find({});
+		return {
+			count: manufacturers.count,
+			manufacturers: manufacturers.documents.map((manufacturer) => ({
+				id: manufacturer._id.toString(),
+				...manufacturer,
+			})),
+		};
 	}
 
-	findOne(_id: string) {
-		return this.manufacturersRepository.findOne({ _id });
+	async findOne(_id: string) {
+		const manufacturer = await this.manufacturersRepository.findOne({ _id });
+		return { id: manufacturer._id.toString(), ...manufacturer };
 	}
 
-	update(_id: string, updateManufacturerDto: UpdateManufacturerDto) {
-		return this.manufacturersRepository.findOneAndUpdate(
+	async update(_id: string, updateManufacturerDto: UpdateManufacturerDto) {
+		const manufacturer = await this.manufacturersRepository.findOneAndUpdate(
 			{ _id },
 			{ $set: updateManufacturerDto },
 		);
+		return { id: manufacturer._id.toString(), ...manufacturer };
 	}
 
-	remove(_id: string) {
-		return this.manufacturersRepository.softDelete({ _id });
+	async remove(_id: string) {
+		await this.manufacturersRepository.softDelete({ _id });
+		return {};
 	}
 
-	permanentlyRemove(_id: string) {
-		return this.manufacturersRepository.findOneAndDelete({ _id });
+	async permanentlyRemove(_id: string) {
+		return await this.manufacturersRepository.findOneAndDelete({ _id });
 	}
 }

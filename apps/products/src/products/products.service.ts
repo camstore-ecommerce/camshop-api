@@ -20,20 +20,54 @@ export class ProductsService {
 		const manufacturer =
 			await this.manufacturersService.findOne(manufacturer_id);
 
-		return this.productsRepository.create({
+		const product = await this.productsRepository.create({
 			...productData,
+			description: productData.description || '',
+			stock: productData.stock || 0,
+			price: productData.price || 0,
 			category,
 			manufacturer,
 			image_url: '',
 		});
+
+		return {
+			id: product._id.toString(),
+			...product,
+			category: { id: product.category._id.toString(), ...product.category },
+			manufacturer: {
+				id: product.manufacturer._id.toString(),
+				...product.manufacturer,
+			},
+		};
 	}
 
-	findAll() {
-		return this.productsRepository.find({});
+	async findAll() {
+		const products = await this.productsRepository.find({});
+		return {
+			count: products.count,
+			products: products.documents.map((product) => ({
+				id: product._id.toString(),
+				...product,
+				category: { id: product.category._id.toString(), ...product.category },
+				manufacturer: {
+					id: product.manufacturer._id.toString(),
+					...product.manufacturer,
+				},
+			})),
+		};
 	}
 
-	findOne(_id: string) {
-		return this.productsRepository.findOne({ _id });
+	async findOne(_id: string) {
+		const product = await this.productsRepository.findOne({ _id });
+		return {
+			id: product._id.toString(),
+			...product,
+			category: { id: product.category._id.toString(), ...product.category },
+			manufacturer: {
+				id: product.manufacturer._id.toString(),
+				...product.manufacturer,
+			},
+		};
 	}
 
 	async update(_id: string, updateProductDto: UpdateProductDto) {
@@ -51,7 +85,20 @@ export class ProductsService {
 			);
 		}
 
-		return await this.productsRepository.findOneAndUpdate({ _id }, updates);
+		const product = await this.productsRepository.findOneAndUpdate(
+			{ _id },
+			updates,
+		);
+
+		return {
+			id: product._id.toString(),
+			...product,
+			category: { id: product.category._id.toString(), ...product.category },
+			manufacturer: {
+				id: product.manufacturer._id.toString(),
+				...product.manufacturer,
+			},
+		};
 	}
 
 	remove(_id: string) {

@@ -10,29 +10,41 @@ export class CategoriesService {
 	constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
 	async create(createCategoryDto: CreateCategoryDto) {
-		return this.categoriesRepository.create(createCategoryDto);
+		const category = await this.categoriesRepository.create(createCategoryDto);
+		return { id: category._id.toString(), ...category };
 	}
 
-	findAll() {
-		return this.categoriesRepository.find({});
+	async findAll() {
+		const categories = await this.categoriesRepository.find({});
+		return {
+			count: categories.count,
+			categories: categories.documents.map((category) => ({
+				id: category._id.toString(),
+				...category,
+			})),
+		};
 	}
 
-	findOne(_id: string) {
-		return this.categoriesRepository.findOne({ _id });
+	async findOne(_id: string) {
+		const category = await this.categoriesRepository.findOne({ _id });
+		return { id: category._id.toString(), ...category };
 	}
 
-	update(_id: string, updateCategoryDto: UpdateCategoryDto) {
-		return this.categoriesRepository.findOneAndUpdate(
+	async update(_id: string, updateCategoryDto: UpdateCategoryDto) {
+		const category = await this.categoriesRepository.findOneAndUpdate(
 			{ _id },
 			{ $set: updateCategoryDto },
 		);
+
+		return { id: category._id.toString(), ...category };
 	}
 
-	remove(_id: string) {
-		return this.categoriesRepository.softDelete({ _id });
+	async remove(_id: string) {
+		await this.categoriesRepository.softDelete({ _id });
+		return {};
 	}
 
-	permanentlyRemove(_id: string) {
-		return this.categoriesRepository.findOneAndDelete({ _id });
+	async permanentlyRemove(_id: string) {
+		return await this.categoriesRepository.findOneAndDelete({ _id });
 	}
 }

@@ -3,41 +3,44 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductsService } from './products.service';
 import {
 	CreateProductDto,
-	PRODUCTS_PATTERNS,
+	FindOneProductDto,
+	PermanentlyRemoveProductDto,
+	Product,
+	Products,
+	ProductsServiceController,
+	ProductsServiceControllerMethods,
+	RemoveProductDto,
 	UpdateProductDto,
 } from '@app/contracts/products';
 
 @Controller()
-export class ProductsController {
+@ProductsServiceControllerMethods()
+export class ProductsController implements ProductsServiceController {
 	constructor(private readonly productsService: ProductsService) {}
 
-	@MessagePattern(PRODUCTS_PATTERNS.CREATE)
-	create(@Payload() createProductDto: CreateProductDto) {
-		return this.productsService.create(createProductDto);
+	async create(createProductDto: CreateProductDto): Promise<Product> {
+		return await this.productsService.create(createProductDto);
 	}
 
-	@MessagePattern(PRODUCTS_PATTERNS.FIND_ALL)
-	findAll() {
-		return this.productsService.findAll();
+	async findAll(): Promise<Products> {
+		return await this.productsService.findAll();
 	}
 
-	@MessagePattern(PRODUCTS_PATTERNS.FIND_ONE)
-	findOne(@Payload() id: string) {
-		return this.productsService.findOne(id);
+	findOne(findOneProductDto: FindOneProductDto): Promise<Product> {
+		return this.productsService.findOne(findOneProductDto.id);
 	}
 
-	@MessagePattern(PRODUCTS_PATTERNS.UPDATE)
-	update(@Payload() updateProductDto: UpdateProductDto) {
+	update(updateProductDto: UpdateProductDto): Promise<Product> {
 		return this.productsService.update(updateProductDto.id, updateProductDto);
 	}
 
-	@MessagePattern(PRODUCTS_PATTERNS.REMOVE)
-	remove(@Payload() id: string) {
-		return this.productsService.remove(id);
+	remove(removeProductDto: RemoveProductDto) {
+		return this.productsService.remove(removeProductDto.id);
 	}
 
-	@MessagePattern(PRODUCTS_PATTERNS.PERMANENTLY_REMOVE)
-	permanentlyRemove(@Payload() id: string) {
-		return this.productsService.permanentlyRemove(id);
+	permanentlyRemove(permanentlyRemoveProductDto: PermanentlyRemoveProductDto) {
+		return this.productsService.permanentlyRemove(
+			permanentlyRemoveProductDto.id,
+		);
 	}
 }

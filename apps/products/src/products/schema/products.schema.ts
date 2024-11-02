@@ -32,7 +32,7 @@ export class Product extends AbstractDocument {
 	category: Category;
 
 	@Prop({ type: [String], default: [] })
-	tags?: string[];
+	tags: string[];
 
 	@Prop({
 		type: mongoose.Schema.Types.ObjectId,
