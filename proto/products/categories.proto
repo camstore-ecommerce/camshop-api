@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package products;
+
+import "../common.proto";
+
+service CategoriesService {
+    rpc Create(CreateCategoryDto) returns (Category) {}
+    rpc FindOne(FindOneCategoryDto) returns (Category) {}
+    rpc FindAll(common.Empty) returns (Categories) {}
+    rpc Update(UpdateCategoryDto) returns (Category) {}
+    rpc Remove(RemoveCategoryDto) returns (common.Empty) {}
+    rpc PermanentlyRemove(PermanentlyRemoveCategoryDto) returns (common.Empty) {}
+}
+
+message CreateCategoryDto {
+    string name = 1;
+}
+
+message FindOneCategoryDto {
+    string id = 1;
+}
+
+message UpdateCategoryDto {
+    string id = 1;
+    string name = 2;
+}
+
+message RemoveCategoryDto {
+    string id = 1;
+}
+
+message PermanentlyRemoveCategoryDto {
+    string id = 1;
+}
+
+message Categories {
+    int32 count = 1;
+    repeated Category categories = 2;
+}
+
+message Category {
+    string id = 1;
+    string name = 2;
+}
