@@ -5,7 +5,7 @@ import { ClientOptions, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class ClientConfigService {
-	constructor(private configService: ConfigService) { }
+	constructor(private configService: ConfigService) {}
 
 	getCdnCloudName(): string {
 		return this.configService.get<string>('CDN_CLOUD_NAME');
@@ -40,9 +40,9 @@ export class ClientConfigService {
 				url: this.configService.get('PRODUCTS_CLIENT_URL') || '0.0.0.0:50051',
 				loader: {
 					keepCase: true,
-				}
-			}
-		}
+				},
+			},
+		};
 	}
 
 	get usersClientOption(): ClientOptions {

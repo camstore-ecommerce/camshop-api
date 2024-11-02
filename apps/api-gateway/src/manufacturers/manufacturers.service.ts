@@ -11,7 +11,7 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { map } from 'rxjs';
 
 @Injectable()
-export class ManufacturersService implements OnModuleInit{
+export class ManufacturersService implements OnModuleInit {
 	private manufacturersServiceClient: ManufacturersServiceClient;
 
 	constructor(
@@ -19,15 +19,16 @@ export class ManufacturersService implements OnModuleInit{
 	) {}
 
 	onModuleInit() {
-		this.manufacturersServiceClient = this.productsClient.getService<ManufacturersServiceClient>(
-			MANUFACTURERS_SERVICE_NAME,
-		);
+		this.manufacturersServiceClient =
+			this.productsClient.getService<ManufacturersServiceClient>(
+				MANUFACTURERS_SERVICE_NAME,
+			);
 	}
 
 	create(createManufacturerDto: ClientCreateManufacturerDto) {
-		return this.manufacturersServiceClient.create(createManufacturerDto).pipe(
-			map((response) => ({ id: response.id })),
-		);
+		return this.manufacturersServiceClient
+			.create(createManufacturerDto)
+			.pipe(map((response) => ({ id: response.id })));
 	}
 
 	findAll() {
@@ -35,11 +36,14 @@ export class ManufacturersService implements OnModuleInit{
 	}
 
 	findOne(id: string) {
-		return this.manufacturersServiceClient.findOne({id});
+		return this.manufacturersServiceClient.findOne({ id });
 	}
 
 	update(id: string, updateManufacturerDto: ClientUpdateManufacturerDto) {
-		return this.manufacturersServiceClient.update({ id, ...updateManufacturerDto });
+		return this.manufacturersServiceClient.update({
+			id,
+			...updateManufacturerDto,
+		});
 	}
 
 	remove(id: string) {

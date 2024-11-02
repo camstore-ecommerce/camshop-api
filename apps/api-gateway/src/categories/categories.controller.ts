@@ -9,7 +9,10 @@ import {
 	UseGuards,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { CreateCategoryDto, UpdateCategoryDto } from '@app/contracts/categories';
+import {
+	CreateCategoryDto,
+	UpdateCategoryDto,
+} from '@app/contracts/categories';
 import { JwtAuthGuard } from '@app/common/guards';
 import { Public, Roles } from '@app/common/decorators';
 import { Role } from '@app/common/enums';
