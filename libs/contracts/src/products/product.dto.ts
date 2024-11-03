@@ -1,5 +1,5 @@
 import { Category } from '../categories';
-import { ManufacturerDto } from '../manufacturers';
+import { Manufacturer } from '../manufacturers';
 
 export class ProductDto {
 	_id: string;
@@ -9,7 +9,7 @@ export class ProductDto {
 	original_price: number;
 	category: Category;
 	tags: string[];
-	manufacturer: ManufacturerDto;
+	manufacturer: Manufacturer;
 	stock: number;
 	image_url: string;
 }

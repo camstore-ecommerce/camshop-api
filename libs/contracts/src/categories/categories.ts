@@ -7,6 +7,7 @@
 /* eslint-disable */
 import { Empty } from '@app/common/interfaces';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Types } from 'mongoose';
 import { Observable } from 'rxjs';
 
 export const protobufPackage = 'products';
@@ -38,7 +39,7 @@ export interface Categories {
 }
 
 export interface Category {
-	id: string;
+	_id: Types.ObjectId;
 	name: string;
 }
 

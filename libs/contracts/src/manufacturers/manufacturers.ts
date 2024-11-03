@@ -34,7 +34,7 @@ export interface PermanentlyRemoveManufacturerDto {
 }
 
 export interface Manufacturer {
-	id: string;
+	_id: Types.ObjectId;
 	name: string;
 }
 

@@ -17,8 +17,7 @@ export class ProductsService {
 		const { manufacturer_id, category_id, ...productData } = createProductDto;
 
 		const category = await this.categoriesService.findOne(category_id);
-		const manufacturer =
-			await this.manufacturersService.findOne(manufacturer_id);
+		const manufacturer = await this.manufacturersService.findOne(manufacturer_id);
 
 		const product = await this.productsRepository.create({
 			...productData,
@@ -31,13 +30,9 @@ export class ProductsService {
 		});
 
 		return {
-			id: product._id.toString(),
 			...product,
-			category: { id: product.category._id.toString(), ...product.category },
-			manufacturer: {
-				id: product.manufacturer._id.toString(),
-				...product.manufacturer,
-			},
+			category: category,
+			manufacturer: manufacturer,
 		};
 	}
 
@@ -45,29 +40,12 @@ export class ProductsService {
 		const products = await this.productsRepository.find({});
 		return {
 			count: products.count,
-			products: products.documents.map((product) => ({
-				id: product._id.toString(),
-				...product,
-				category: { id: product.category._id.toString(), ...product.category },
-				manufacturer: {
-					id: product.manufacturer._id.toString(),
-					...product.manufacturer,
-				},
-			})),
+			products: products.documents
 		};
 	}
 
 	async findOne(_id: string) {
-		const product = await this.productsRepository.findOne({ _id });
-		return {
-			id: product._id.toString(),
-			...product,
-			category: { id: product.category._id.toString(), ...product.category },
-			manufacturer: {
-				id: product.manufacturer._id.toString(),
-				...product.manufacturer,
-			},
-		};
+		return await this.productsRepository.findOne({ _id });
 	}
 
 	async update(_id: string, updateProductDto: UpdateProductDto) {
@@ -85,20 +63,10 @@ export class ProductsService {
 			);
 		}
 
-		const product = await this.productsRepository.findOneAndUpdate(
+		return await this.productsRepository.findOneAndUpdate(
 			{ _id },
 			updates,
 		);
-
-		return {
-			id: product._id.toString(),
-			...product,
-			category: { id: product.category._id.toString(), ...product.category },
-			manufacturer: {
-				id: product.manufacturer._id.toString(),
-				...product.manufacturer,
-			},
-		};
 	}
 
 	remove(_id: string) {

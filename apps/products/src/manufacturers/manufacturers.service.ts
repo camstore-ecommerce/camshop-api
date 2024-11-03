@@ -12,34 +12,28 @@ export class ManufacturersService {
 	) {}
 
 	async create(createManufacturerDto: CreateManufacturerDto) {
-		const manufacturer = await this.manufacturersRepository.create(
+		return await this.manufacturersRepository.create(
 			createManufacturerDto,
 		);
-		return { id: manufacturer._id.toString(), ...manufacturer };
 	}
 
 	async findAll() {
 		const manufacturers = await this.manufacturersRepository.find({});
 		return {
 			count: manufacturers.count,
-			manufacturers: manufacturers.documents.map((manufacturer) => ({
-				id: manufacturer._id.toString(),
-				...manufacturer,
-			})),
-		};
+			manufacturers: manufacturers.documents
+		}
 	}
 
 	async findOne(_id: string) {
-		const manufacturer = await this.manufacturersRepository.findOne({ _id });
-		return { id: manufacturer._id.toString(), ...manufacturer };
+		return await this.manufacturersRepository.findOne({ _id });
 	}
 
 	async update(_id: string, updateManufacturerDto: UpdateManufacturerDto) {
-		const manufacturer = await this.manufacturersRepository.findOneAndUpdate(
+		return await this.manufacturersRepository.findOneAndUpdate(
 			{ _id },
 			{ $set: updateManufacturerDto },
 		);
-		return { id: manufacturer._id.toString(), ...manufacturer };
 	}
 
 	async remove(_id: string) {

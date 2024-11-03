@@ -10,33 +10,26 @@ export class CategoriesService {
 	constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
 	async create(createCategoryDto: CreateCategoryDto) {
-		const category = await this.categoriesRepository.create(createCategoryDto);
-		return { id: category._id.toString(), ...category };
+		return await this.categoriesRepository.create(createCategoryDto);
 	}
 
 	async findAll() {
 		const categories = await this.categoriesRepository.find({});
 		return {
 			count: categories.count,
-			categories: categories.documents.map((category) => ({
-				id: category._id.toString(),
-				...category,
-			})),
+			categories: categories.documents
 		};
 	}
 
 	async findOne(_id: string) {
-		const category = await this.categoriesRepository.findOne({ _id });
-		return { id: category._id.toString(), ...category };
+		return await this.categoriesRepository.findOne({ _id });
 	}
 
 	async update(_id: string, updateCategoryDto: UpdateCategoryDto) {
-		const category = await this.categoriesRepository.findOneAndUpdate(
+		return await this.categoriesRepository.findOneAndUpdate(
 			{ _id },
 			{ $set: updateCategoryDto },
 		);
-
-		return { id: category._id.toString(), ...category };
 	}
 
 	async remove(_id: string) {

@@ -40,6 +40,6 @@ message Categories {
 }
 
 message Category {
-    string id = 1;
+    string _id = 1;
     string name = 2;
 }

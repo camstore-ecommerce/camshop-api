@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { Category } from '../categories';
 import { Manufacturer } from '../manufacturers';
 import { Empty } from '@app/common/interfaces';
+import { Types } from 'mongoose';
 
 export const protobufPackage = 'products';
 
@@ -51,7 +52,7 @@ export interface PermanentlyRemoveProductDto {
 }
 
 export interface Product {
-	id: string;
+	_id: Types.ObjectId;
 	name: string;
 	description: string;
 	original_price: number;

@@ -53,7 +53,7 @@ message PermanentlyRemoveProductDto {
 }
 
 message Product {
-    string id = 1;
+    string _id = 1;
     string name = 2;
     string description = 3;
     double original_price = 4;
