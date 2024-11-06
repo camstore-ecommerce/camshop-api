@@ -36,14 +36,15 @@ export class ProductsService implements OnModuleInit {
 				if (image) {
 					const { secure_url } = await this.cdnService.uploadImage(
 						image,
-						product.id,
+						product._id.toString(),
 						'products',
 					);
 					return await lastValueFrom(
 						this.productsServiceClient.update({
+							id: product._id.toString(),
 							...product, // Spread the existing product properties
-							category_id: product.category.id,
-							manufacturer_id: product.manufacturer.id,
+							category_id: product.category._id.toString(),
+							manufacturer_id: product.manufacturer._id.toString(),
 							image_url: secure_url as string,
 						}),
 					);
@@ -72,14 +73,15 @@ export class ProductsService implements OnModuleInit {
 				if (image) {
 					const { secure_url } = await this.cdnService.uploadImage(
 						image,
-						product.id,
+						product._id.toString(),
 						'products',
 					);
 					return await lastValueFrom(
 						this.productsServiceClient.update({
+							id: product._id.toString(),
 							...product, // Spread the existing product properties
-							category_id: product.category.id,
-							manufacturer_id: product.manufacturer.id,
+							category_id: product.category._id.toString(),
+							manufacturer_id: product.manufacturer._id.toString(),
 							image_url: secure_url as string,
 						}),
 					);

@@ -1,4 +1,5 @@
 import { PRODUCTS_PACKAGE_NAME } from '@app/contracts/products';
+import { USERS_PACKAGE_NAME } from '@app/contracts/users';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientOptions, Transport } from '@nestjs/microservices';
@@ -40,6 +41,7 @@ export class ClientConfigService {
 				url: this.configService.get('PRODUCTS_CLIENT_URL') || '0.0.0.0:50051',
 				loader: {
 					keepCase: true,
+					defaults: true,
 				},
 			},
 		};
@@ -47,11 +49,20 @@ export class ClientConfigService {
 
 	get usersClientOption(): ClientOptions {
 		return {
-			transport: Transport.TCP,
+			transport: Transport.GRPC,
 			options: {
-				host: this.configService.get('USERS_CLIENT_HOST') || '0.0.0.0',
-				port: this.getUsersClientPort(),
+				package: USERS_PACKAGE_NAME,
+				protoPath: [
+					'proto/users/users.proto',
+					'proto/users/auth.proto'
+				],
+				url: this.configService.get('USERS_CLIENT_URL') || '0.0.0.0:50052',
+				loader: {
+					keepCase: true,
+					defaults: true,
+				}
 			},
+
 		};
 	}
 

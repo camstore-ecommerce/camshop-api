@@ -7,7 +7,6 @@ import {
 } from '@app/contracts/categories';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { map } from 'rxjs';
 
 @Injectable()
 export class CategoriesService implements OnModuleInit {
@@ -24,9 +23,7 @@ export class CategoriesService implements OnModuleInit {
 	}
 
 	create(createCategoryDto: CreateCategoryDto) {
-		return this.categtoriesServiceClient
-			.create(createCategoryDto)
-			.pipe(map((response) => ({ id: response.id })));
+		return this.categtoriesServiceClient.create(createCategoryDto)
 	}
 
 	findAll() {

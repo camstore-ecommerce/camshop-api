@@ -2,7 +2,6 @@ import { PRODUCTS_CLIENT } from '@app/common/constants/services';
 import {
 	CreateManufacturerDto as ClientCreateManufacturerDto,
 	UpdateManufacturerDto as ClientUpdateManufacturerDto,
-	ManufacturerDto as ClientManufacturerDto,
 	ManufacturersServiceClient,
 	MANUFACTURERS_SERVICE_NAME,
 } from '@app/contracts/manufacturers';
@@ -16,7 +15,7 @@ export class ManufacturersService implements OnModuleInit {
 
 	constructor(
 		@Inject(PRODUCTS_CLIENT) private readonly productsClient: ClientGrpc,
-	) {}
+	) { }
 
 	onModuleInit() {
 		this.manufacturersServiceClient =
@@ -26,9 +25,7 @@ export class ManufacturersService implements OnModuleInit {
 	}
 
 	create(createManufacturerDto: ClientCreateManufacturerDto) {
-		return this.manufacturersServiceClient
-			.create(createManufacturerDto)
-			.pipe(map((response) => ({ id: response.id })));
+		return this.manufacturersServiceClient.create(createManufacturerDto);
 	}
 
 	findAll() {
