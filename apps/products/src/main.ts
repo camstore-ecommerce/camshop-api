@@ -18,6 +18,7 @@ async function bootstrap() {
 				url: process.env.GRPC_URL || '0.0.0.0:50051',
 				loader: {
 					keepCase: true,
+					defaults: true,
 				},
 			},
 		},
