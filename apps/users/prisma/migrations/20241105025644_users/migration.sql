@@ -19,8 +19,8 @@ CREATE TABLE "users" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
-    "verified_email" BOOLEAN NOT NULL DEFAULT false,
-    "status" TEXT NOT NULL DEFAULT 'active',
+    "verified_email_at" TIMESTAMP(3),
+    "status" TEXT NOT NULL DEFAULT 'inactive',
     "gender" "Gender",
     "birth_date" TIMESTAMP(3),
     "profile_pic" TEXT,
@@ -33,8 +33,8 @@ CREATE TABLE "admins" (
     "id" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "adminLevel" "AdminLevel",
-    "permissions" JSONB,
+    "admin_level" "AdminLevel",
+    "permissions" TEXT[],
     "role" TEXT NOT NULL DEFAULT 'admin',
 
     CONSTRAINT "admins_pkey" PRIMARY KEY ("id")
@@ -48,10 +48,21 @@ CREATE TABLE "user_addresses" (
     "city" TEXT NOT NULL,
     "state" TEXT NOT NULL,
     "country" TEXT NOT NULL,
-    "postalCode" TEXT NOT NULL,
-    "isPrimary" BOOLEAN NOT NULL DEFAULT false,
+    "postal_code" TEXT NOT NULL,
+    "is_primary" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "user_addresses_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "verifications" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "token" TEXT NOT NULL,
+    "expires_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "verifications_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -65,3 +76,6 @@ CREATE UNIQUE INDEX "admins_username_key" ON "admins"("username");
 
 -- AddForeignKey
 ALTER TABLE "user_addresses" ADD CONSTRAINT "user_addresses_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "verifications" ADD CONSTRAINT "verifications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

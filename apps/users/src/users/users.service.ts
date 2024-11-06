@@ -1,4 +1,4 @@
-import { CreateUserDto, UpdateUserDto } from '@app/contracts/users';
+import { UpdateUserDto } from '@app/contracts/users';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcryptjs';
@@ -8,14 +8,14 @@ import { UserRegisterDto } from '@app/contracts/auth';
 export class UsersService {
 	constructor(private readonly prismaService: PrismaService) {}
 
-	async create(createUserDto: CreateUserDto) {
-		return await this.prismaService.user.create({
-			data: {
-				...createUserDto,
-				password: await bcrypt.hash(createUserDto.password, 10),
-			},
-		});
-	}
+	// async create(createUserDto: CreateUserDto) {
+	// 	return await this.prismaService.user.create({
+	// 		data: {
+	// 			...createUserDto,
+	// 			password: await bcrypt.hash(createUserDto.password, 10),
+	// 		},
+	// 	});
+	// }
 
 	async findAll() {
 		const [users, count] = await Promise.all([

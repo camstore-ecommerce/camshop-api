@@ -1,4 +1,2 @@
-export * from './create-user.dto';
-export * from './update-user.dto';
+export * from './users';
 export * from './user.dto';
-export * from './users.patterns';

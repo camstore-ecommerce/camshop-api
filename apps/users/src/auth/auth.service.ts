@@ -1,8 +1,8 @@
 import {
 	HttpException,
 	HttpStatus,
+	Inject,
 	Injectable,
-	OnModuleInit,
 	UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -12,40 +12,29 @@ import {
 	ResetPasswordDto,
 	UserLoginDto,
 	UserRegisterDto,
+	VerifyEmailDto,
 } from '@app/contracts/auth';
 import { UsersService } from '../users/users.service';
 import { AdminTokenPayload, UserTokenPayload } from '@app/common/interfaces';
 import {
 	ClientProxy,
-	ClientProxyFactory,
-	Transport,
 } from '@nestjs/microservices';
 import { VerificationService } from '../verification/verification.service';
 import { MAIL_PATTERNS } from '@app/contracts/mail';
 import * as jwt from 'jsonwebtoken';
-import { UserDto } from '@app/contracts/users';
+import { MAIL_CLIENT } from '@app/common/constants/services';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
-export class AuthService implements OnModuleInit {
-	private mailClient: ClientProxy;
-
-	async onModuleInit() {
-		this.mailClient = ClientProxyFactory.create({
-			transport: Transport.TCP,
-			options: {
-				host: this.configService.get('MAIL_CLIENT_HOST') || '0.0.0.0',
-				port: this.configService.get('MAIL_CLIENT_PORT'),
-			},
-		});
-	}
+export class AuthService {
 
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly jwtService: JwtService,
 		private readonly usersService: UsersService,
 		private readonly verificationService: VerificationService,
-	) {}
+		@Inject(MAIL_CLIENT) private readonly mailClient: ClientProxy,
+	) { }
 
 	async adminLogin(loginDto: AdminLoginDto) {
 		const user = await this.usersService.validateAdmin(
@@ -67,7 +56,6 @@ export class AuthService implements OnModuleInit {
 			expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
 		);
 		const token = await this.jwtService.signAsync(tokenPayload);
-
 		return { token, expires, user };
 	}
 
@@ -97,8 +85,8 @@ export class AuthService implements OnModuleInit {
 	}
 
 	async register(registerDto: UserRegisterDto) {
-		const user: UserDto = await this.usersService.registerUser(registerDto);
-		await this.sendVerificationEmail(user);
+		const user = await this.usersService.registerUser(registerDto);
+		this.sendVerificationEmail(user);
 		return {
 			message:
 				'User registered. Please check your email to verify your account.',
@@ -106,7 +94,7 @@ export class AuthService implements OnModuleInit {
 		};
 	}
 
-	async sendVerificationEmail(user: UserDto) {
+	async sendVerificationEmail(user: VerifyEmailDto) {
 		if (user.verified_email_at) {
 			throw new UnauthorizedException('User already verified');
 		}
@@ -254,7 +242,7 @@ export class AuthService implements OnModuleInit {
 				throw new UnauthorizedException('Invalid or expired OTP');
 			}
 
-			user.password = resetPasswordDto.newPassword;
+			user.password = resetPasswordDto.password;
 			await this.usersService.update(user.id, user);
 
 			return { message: 'Password reset successfully' };

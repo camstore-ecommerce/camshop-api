@@ -1,48 +1,45 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
 import {
-	CreateUserDto,
+	FindOneUserDto,
+	PermanentlyRemoveUserDto,
+	RemoveUserDto,
 	UpdateUserDto,
-	USERS_PATTERNS,
+	UsersServiceController,
+	UsersServiceControllerMethods,
 } from '@app/contracts/users';
 
 @Controller()
-export class UsersController {
+@UsersServiceControllerMethods()
+export class UsersController implements UsersServiceController {
 	constructor(private readonly usersService: UsersService) {}
 
-	@MessagePattern(USERS_PATTERNS.CREATE)
-	create(@Payload() createUserDto: CreateUserDto) {
-		return this.usersService.create(createUserDto);
-	}
+	// @MessagePattern(USERS_PATTERNS.CREATE)
+	// create(createUserDto: CreateUserDto) {
+	// 	return this.usersService.create(createUserDto);
+	// }
 
-	@MessagePattern(USERS_PATTERNS.FIND_ALL)
 	findAll() {
 		return this.usersService.findAll();
 	}
 
-	@MessagePattern(USERS_PATTERNS.FIND_ONE)
-	findOne(@Payload() id: string) {
-		return this.usersService.findOne(id);
+	findOne(findOneUserDto: FindOneUserDto) {
+		return this.usersService.findOne(findOneUserDto.id);
 	}
 
-	@MessagePattern(USERS_PATTERNS.UPDATE)
-	update(@Payload() updateUserDto: UpdateUserDto) {
+	update(updateUserDto: UpdateUserDto) {
 		return this.usersService.update(updateUserDto.id, updateUserDto);
 	}
 
-	@MessagePattern(USERS_PATTERNS.REMOVE)
-	remove(@Payload() id: string) {
-		return this.usersService.remove(id);
+	remove(removeUserDto: RemoveUserDto) {
+		return this.usersService.remove(removeUserDto.id);
 	}
 
-	@MessagePattern(USERS_PATTERNS.PERMANENTLY_REMOVE)
-	permanentlyRemove(@Payload() id: string) {
-		return this.usersService.permanentlyRemove(id);
+	permanentlyRemove(permanentlyRemoveUserDto: PermanentlyRemoveUserDto) {
+		return this.usersService.permanentlyRemove(permanentlyRemoveUserDto.id);
 	}
 
-	@MessagePattern(USERS_PATTERNS.VALIDATE_USER)
-	validateUser(@Payload() { email, password }) {
+	validateUser({ email, password }) {
 		return this.usersService.validateUser(email, password);
 	}
 }

@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package users; 
+
+import "../common.proto";
+import "./auth.proto";
+
+service UsersService {
+    rpc FindAll(common.Empty) returns (Users) {}
+    rpc FindOne(FindOneUserDto) returns (User) {}
+    rpc Update(UpdateUserDto) returns (User) {}
+    rpc UpdateUserProfile(UpdateUserProfileDto) returns (User) {}
+    rpc Remove(RemoveUserDto) returns (common.Empty) {}
+    rpc PermanentlyRemove(PermanentlyRemoveUserDto) returns (common.Empty) {}
+    rpc ValidateUser(ValidateUserDto) returns (User) {}
+}
+
+message Users {
+    int32 count = 1;
+    repeated User users = 2;
+}
+
+message FindOneUserDto {
+    string id = 1;
+}
+
+message UpdateUserDto {
+    string id = 1;
+    string email = 2;
+    string phone = 3;
+    string role = 4;
+    string status = 5;
+    string verified_email_at = 6;
+}
+
+message UpdateUserProfileDto {
+    string id = 1;
+    string phone = 2;
+    string first_name = 3;
+    string last_name = 4;
+    string birth_date = 5;
+    string gender = 6;
+    string profile_pic = 7;
+}
+
+message RemoveUserDto {
+    string id = 1;
+}
+
+message PermanentlyRemoveUserDto {
+    string id = 1;
+}
+
+message ValidateUserDto {
+    string email = 1;
+    string password = 2;
+}
+

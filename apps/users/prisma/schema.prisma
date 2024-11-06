@@ -33,12 +33,17 @@ model User {
     @@map("users")
 }
 
+enum AdminLevel {
+    super_admin
+    moderator
+}
+
 model Admin {
     id          String      @id @default(cuid())
     username    String      @unique
     password    String
-    adminLevel  AdminLevel?
-    permissions Json?
+    admin_level  AdminLevel?
+    permissions String[]
     role        String      @default("admin")
 
     @@map("admins")
@@ -51,8 +56,8 @@ model UserAddress {
     city       String
     state      String
     country    String
-    postalCode String
-    isPrimary  Boolean @default(false)
+    postal_code String
+    is_primary  Boolean @default(false)
 
     user User @relation(fields: [userId], references: [id])
 
@@ -75,11 +80,6 @@ enum Gender {
     male
     female
     other
-}
-
-enum AdminLevel {
-    super_admin
-    moderator
 }
 
 enum Role {
