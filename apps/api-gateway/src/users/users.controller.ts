@@ -5,11 +5,10 @@ import {
 	Get,
 	Param,
 	Patch,
-	Post,
 	UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto, UserDto } from '@app/contracts/users';
+import { UpdateUserDto, UserDto } from '@app/contracts/users';
 import { JwtAuthGuard } from '@app/common/guards/jwt-auth.guard';
 import { AuthUser, Roles } from '@app/common/decorators';
 import { Role } from '@app/common/enums';
@@ -19,11 +18,11 @@ import { Role } from '@app/common/enums';
 export class UsersController {
 	constructor(private readonly userService: UsersService) {}
 
-	@Roles(Role.Admin)
-	@Post()
-	create(@Body() createUserDto: CreateUserDto) {
-		return this.userService.create(createUserDto);
-	}
+	// @Roles(Role.Admin)
+	// @Post()
+	// create(@Body() createUserDto: CreateUserDto) {
+	// 	return this.userService.create(createUserDto);
+	// }
 
 	@Roles(Role.Admin)
 	@Get()
@@ -38,6 +37,7 @@ export class UsersController {
 	}
 
 	@Patch(':id')
+	@Roles(Role.Admin)
 	update(
 		@Param('id') id: string,
 		@Body() updateUserDto: UpdateUserDto,

@@ -1,42 +1,44 @@
 import { USERS_CLIENT } from '@app/common/constants/services';
-import {
-	CreateUserDto,
-	UpdateUserDto,
-	USERS_PATTERNS,
-} from '@app/contracts/users';
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { UpdateUserDto, USERS_SERVICE_NAME, UsersServiceClient } from '@app/contracts/users';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
+	private usersServiceClient: UsersServiceClient;
+
 	constructor(
-		@Inject(USERS_CLIENT) private readonly usersClient: ClientProxy,
+		@Inject(USERS_CLIENT) private readonly usersClient: ClientGrpc,
 	) {}
 
-	create(createUserDto: CreateUserDto) {
-		return this.usersClient.send(USERS_PATTERNS.CREATE, createUserDto);
+	onModuleInit() {
+		this.usersServiceClient = this.usersClient.getService<UsersServiceClient>(USERS_SERVICE_NAME);
 	}
 
+	// create(createUserDto: CreateUserDto) {
+	// 	return this.usersClient.send(USERS_PATTERNS.CREATE, createUserDto);
+	// }
+
 	findAll() {
-		return this.usersClient.send(USERS_PATTERNS.FIND_ALL, {});
+		return this.usersServiceClient.findAll({});
 	}
 
 	findOne(id: string) {
-		return this.usersClient.send(USERS_PATTERNS.FIND_ONE, id);
+		return this.usersServiceClient.findOne({id});
 	}
 
 	update(id: string, updateUserDto: UpdateUserDto) {
-		return this.usersClient.send(USERS_PATTERNS.UPDATE, {
+		return this.usersServiceClient.update({
 			id,
 			...updateUserDto,
 		});
 	}
 
 	remove(id: string) {
-		return this.usersClient.send(USERS_PATTERNS.REMOVE, id);
+		return this.usersServiceClient.remove({id});
 	}
 
 	permanentlyRemove(id: string) {
-		return this.usersClient.send(USERS_PATTERNS.PERMANENTLY_REMOVE, id);
+		return this.usersServiceClient.permanentlyRemove({id});
 	}
 }

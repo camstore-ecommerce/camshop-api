@@ -1,59 +1,66 @@
 import { USERS_CLIENT } from '@app/common/constants/services';
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import {
 	AdminLoginDto,
-	AUTH_PATTERNS,
+	AUTH_SERVICE_NAME,
+	AuthServiceClient,
 	ResetPasswordDto,
 	UserLoginDto,
 	UserRegisterDto,
+	VerifyEmailDto,
 } from '@app/contracts/auth';
-import { UserDto } from '@app/contracts/users';
 
 @Injectable()
-export class AuthService {
-	constructor(@Inject(USERS_CLIENT) private readonly userClient: ClientProxy) {}
+export class AuthService implements OnModuleInit {
+	private authServiceClient: AuthServiceClient;
 
-	async login(loginDto: UserLoginDto) {
+	constructor(@Inject(USERS_CLIENT) private readonly usersClient: ClientGrpc) {}
+
+	onModuleInit() {
+		this.authServiceClient = this.usersClient.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
+	}
+
+	async login(userLoginDto: UserLoginDto) {
 		return await firstValueFrom(
-			this.userClient.send(AUTH_PATTERNS.USER_LOGIN, loginDto),
+			this.authServiceClient.login(userLoginDto),
 		);
 	}
 
-	async register(registerDto: UserRegisterDto) {
+	async register(userRegisterDto: UserRegisterDto) {
 		return await firstValueFrom(
-			this.userClient.send(AUTH_PATTERNS.USER_REGISTER, registerDto),
+			this.authServiceClient.register(userRegisterDto),
 		);
 	}
 
-	async adminLogin(loginDto: AdminLoginDto) {
+	async adminLogin(adminLoginDto: AdminLoginDto) {
 		return await firstValueFrom(
-			this.userClient.send(AUTH_PATTERNS.ADMIN_LOGIN, loginDto),
+			this.authServiceClient.adminLogin(adminLoginDto),
 		);
 	}
 
-	async sendVerifyEmail(user: UserDto) {
+	async sendVerifyEmail(user: VerifyEmailDto) {
 		return await firstValueFrom(
-			this.userClient.send(AUTH_PATTERNS.EMAIL_VERIFICATION, user),
+			this.authServiceClient.verifyEmail(user)
 		);
 	}
 
 	async confirmVerifyEmail(token: string) {
 		return await firstValueFrom(
-			this.userClient.send(AUTH_PATTERNS.EMAIL_VERIFICATION_CONFIRM, token),
+			this.authServiceClient.confirmVerifyEmail({token}),
 		);
 	}
 
 	async forgotPassword(email: string) {
 		return await firstValueFrom(
-			this.userClient.send(AUTH_PATTERNS.FORGOT_PASSWORD, email),
+			this.authServiceClient.forgotPassword({email}),
 		);
 	}
 
 	async resetPassword(resetPasswordDto: ResetPasswordDto) {
 		return await firstValueFrom(
-			this.userClient.send(AUTH_PATTERNS.RESET_PASSWORD, resetPasswordDto),
+			this.authServiceClient.resetPassword(resetPasswordDto),
 		);
 	}
 }

@@ -16,8 +16,9 @@ import {
 	UserRegisterDto,
 } from '@app/contracts/auth';
 import { JwtAuthGuard } from '@app/common/guards';
-import { AuthUser } from '@app/common/decorators';
+import { AuthUser, Roles } from '@app/common/decorators';
 import { UserDto } from '@app/contracts/users';
+import { Role } from '@app/common/enums';
 
 @Controller('auth')
 export class AuthController {
