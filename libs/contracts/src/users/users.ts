@@ -5,99 +5,124 @@
 // source: proto/users/users.proto
 
 /* eslint-disable */
-import { Empty } from "@app/common/interfaces";
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
-import { User } from "../auth";
+import { Empty } from '@app/common/interfaces';
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import { User } from '../auth';
 
-export const protobufPackage = "users";
+export const protobufPackage = 'users';
 
 export interface Users {
-  count: number;
-  users: User[];
+	count: number;
+	users: User[];
 }
 
 export interface FindOneUserDto {
-  id: string;
+	id: string;
 }
 
 export interface UpdateUserDto {
-  id: string;
-  email: string;
-  phone: string;
-  role: string;
-  status: string;
-  verified_email_at: Date;
+	id: string;
+	email: string;
+	phone: string;
+	role: string;
+	status: string;
+	verified_email_at: Date;
 }
 
 export interface UpdateUserProfileDto {
-  id: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  gender: unknown;
-  birth_date: Date;
-  profile_pic: string;
+	id: string;
+	first_name: string;
+	last_name: string;
+	phone: string;
+	gender: unknown;
+	birth_date: Date;
+	profile_pic: string;
 }
 
 export interface RemoveUserDto {
-  id: string;
+	id: string;
 }
 
 export interface PermanentlyRemoveUserDto {
-  id: string;
+	id: string;
 }
 
 export interface ValidateUserDto {
-  email: string;
-  password: string;
+	email: string;
+	password: string;
 }
 
-export const USERS_PACKAGE_NAME = "users";
+export const USERS_PACKAGE_NAME = 'users';
 
 export interface UsersServiceClient {
-  findAll(request: Empty): Observable<Users>;
+	findAll(request: Empty): Observable<Users>;
 
-  findOne(request: FindOneUserDto): Observable<User>;
+	findOne(request: FindOneUserDto): Observable<User>;
 
-  update(request: UpdateUserDto): Observable<User>;
+	update(request: UpdateUserDto): Observable<User>;
 
-  updateUserProfile(request: UpdateUserProfileDto): Observable<User>;
+	updateUserProfile(request: UpdateUserProfileDto): Observable<User>;
 
-  remove(request: RemoveUserDto): Observable<Empty>;
+	remove(request: RemoveUserDto): Observable<Empty>;
 
-  permanentlyRemove(request: PermanentlyRemoveUserDto): Observable<Empty>;
+	permanentlyRemove(request: PermanentlyRemoveUserDto): Observable<Empty>;
 
-  validateUser(request: ValidateUserDto): Observable<User>;
+	validateUser(request: ValidateUserDto): Observable<User>;
 }
 
 export interface UsersServiceController {
-  findAll(request: Empty): Promise<Users> | Observable<Users> | Users;
+	findAll(request: Empty): Promise<Users> | Observable<Users> | Users;
 
-  findOne(request: FindOneUserDto): Promise<User> | Observable<User> | User;
+	findOne(request: FindOneUserDto): Promise<User> | Observable<User> | User;
 
-  update(request: UpdateUserDto): Promise<User> | Observable<User> | User;
+	update(request: UpdateUserDto): Promise<User> | Observable<User> | User;
 
-  remove(request: RemoveUserDto): Promise<Empty> | Observable<Empty> | Empty;
+	remove(request: RemoveUserDto): Promise<Empty> | Observable<Empty> | Empty;
 
-  permanentlyRemove(request: PermanentlyRemoveUserDto): Promise<Empty> | Observable<Empty> | Empty;
+	permanentlyRemove(
+		request: PermanentlyRemoveUserDto,
+	): Promise<Empty> | Observable<Empty> | Empty;
 
-  validateUser(request: ValidateUserDto): Promise<User> | Observable<User> | User;
+	validateUser(
+		request: ValidateUserDto,
+	): Promise<User> | Observable<User> | User;
 }
 
 export function UsersServiceControllerMethods() {
-  return function (constructor: Function) {
-    const grpcMethods: string[] = ["findAll", "findOne", "update", "remove", "permanentlyRemove", "validateUser"];
-    for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("UsersService", method)(constructor.prototype[method], method, descriptor);
-    }
-    const grpcStreamMethods: string[] = [];
-    for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("UsersService", method)(constructor.prototype[method], method, descriptor);
-    }
-  };
+	return function (constructor: Function) {
+		const grpcMethods: string[] = [
+			'findAll',
+			'findOne',
+			'update',
+			'remove',
+			'permanentlyRemove',
+			'validateUser',
+		];
+		for (const method of grpcMethods) {
+			const descriptor: any = Reflect.getOwnPropertyDescriptor(
+				constructor.prototype,
+				method,
+			);
+			GrpcMethod('UsersService', method)(
+				constructor.prototype[method],
+				method,
+				descriptor,
+			);
+		}
+		const grpcStreamMethods: string[] = [];
+		for (const method of grpcStreamMethods) {
+			const descriptor: any = Reflect.getOwnPropertyDescriptor(
+				constructor.prototype,
+				method,
+			);
+			GrpcStreamMethod('UsersService', method)(
+				constructor.prototype[method],
+				method,
+				descriptor,
+			);
+		}
+	};
 }
 
-export const USERS_SERVICE_NAME = "UsersService";
+export const USERS_SERVICE_NAME = 'UsersService';

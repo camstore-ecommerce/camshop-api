@@ -29,6 +29,9 @@ export interface CreateProductDto {
 export interface FindOneProductDto {
 	id: string;
 }
+export interface FindByIdsDto {
+	ids: string[];
+}
 
 export interface UpdateProductDto {
 	id: string;
@@ -76,6 +79,8 @@ export interface ProductsServiceClient {
 
 	findOne(request: FindOneProductDto): Observable<Product>;
 
+	findByIds(request: FindByIdsDto): Observable<Products>;
+
 	findAll(request: Empty): Observable<Products>;
 
 	update(request: UpdateProductDto): Observable<Product>;
@@ -93,6 +98,10 @@ export interface ProductsServiceController {
 	findOne(
 		request: FindOneProductDto,
 	): Promise<Product> | Observable<Product> | Product;
+
+	findByIds(
+		request: FindByIdsDto,
+	): Promise<Products> | Observable<Products> | Products;
 
 	findAll(request: Empty): Promise<Products> | Observable<Products> | Products;
 
@@ -112,6 +121,7 @@ export function ProductsServiceControllerMethods() {
 		const grpcMethods: string[] = [
 			'create',
 			'findOne',
+			'findByIds',
 			'findAll',
 			'update',
 			'remove',
