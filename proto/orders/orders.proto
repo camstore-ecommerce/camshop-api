@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package orders;
+
+import "../common.proto";
+import "../products/products.proto";
+import "../users/users.proto";
+
+// import "proto/common.proto";
+// import "proto/products/products.proto";
+// import "proto/users/users.proto";
+
+service OrdersService {
+    rpc FindOne(FindOneOrderDto) returns (OrderResponse) {}
+    rpc FindAll(common.Empty) returns (OrdersResponse) {}
+    rpc Create(CreateOrderDto) returns (OrderResponse) {}
+    rpc Update(UpdateOrderDto) returns (OrderResponse) {}
+    rpc Remove(RemoveOrderDto) returns (common.Empty) {}
+    rpc PermanentlyRemove(PermanentlyRemoveOrderDto) returns (common.Empty) {}
+}
+
+message FindOneOrderDto {
+    string id = 1;
+}
+
+message CreateOrderDto {
+    string user_id = 1;
+    repeated OrderItems order_items = 5;
+}
+
+message UpdateOrderDto {
+    string id = 1;
+    string user_id = 2;
+    string status = 3;
+    repeated OrderItems order_items = 4;
+}
+
+message RemoveOrderDto {
+    string id = 1;
+}
+
+message PermanentlyRemoveOrderDto {
+    string id = 1;
+}
+
+message Order {
+    string id = 1;
+    string user_id = 2;
+    string order_date = 3;
+    string status = 4;
+    float total_price = 5;
+    int32 total_qty = 6;
+    string created_at = 7;
+    string updated_at = 8;
+    repeated OrderItems order_items = 9;
+}
+
+message OrderItems {
+    string order_id = 1;
+    string product_id = 2;
+    int32 qty = 3;
+    float price = 4;
+}
+
+message OrdersResponse {
+    int32 count = 1;
+    repeated OrderResponse orders = 2;
+}
+
+message OrderResponse {
+    string id = 1;
+    users.User user = 2;
+    string order_date = 3;
+    string status = 4;
+    float total_price = 5;
+    int32 total_qty = 6;
+    string created_at = 7;
+    string updated_at = 8;
+    repeated OrderItemsResponse order_items = 9;
+}
+
+message OrderItemsResponse {
+    string order_id = 1;
+    products.Product product = 2;
+    int32 qty = 3;
+    float price = 4;
+}
