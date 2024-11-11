@@ -1,5 +1,9 @@
 import { USERS_CLIENT } from '@app/common/constants/services';
-import { UpdateUserDto, USERS_SERVICE_NAME, UsersServiceClient } from '@app/contracts/users';
+import {
+	UpdateUserDto,
+	USERS_SERVICE_NAME,
+	UsersServiceClient,
+} from '@app/contracts/users';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -7,12 +11,11 @@ import { ClientGrpc } from '@nestjs/microservices';
 export class UsersService implements OnModuleInit {
 	private usersServiceClient: UsersServiceClient;
 
-	constructor(
-		@Inject(USERS_CLIENT) private readonly usersClient: ClientGrpc,
-	) {}
+	constructor(@Inject(USERS_CLIENT) private readonly usersClient: ClientGrpc) {}
 
 	onModuleInit() {
-		this.usersServiceClient = this.usersClient.getService<UsersServiceClient>(USERS_SERVICE_NAME);
+		this.usersServiceClient =
+			this.usersClient.getService<UsersServiceClient>(USERS_SERVICE_NAME);
 	}
 
 	// create(createUserDto: CreateUserDto) {
@@ -24,7 +27,7 @@ export class UsersService implements OnModuleInit {
 	}
 
 	findOne(id: string) {
-		return this.usersServiceClient.findOne({id});
+		return this.usersServiceClient.findOne({ id });
 	}
 
 	update(id: string, updateUserDto: UpdateUserDto) {
@@ -35,10 +38,10 @@ export class UsersService implements OnModuleInit {
 	}
 
 	remove(id: string) {
-		return this.usersServiceClient.remove({id});
+		return this.usersServiceClient.remove({ id });
 	}
 
 	permanentlyRemove(id: string) {
-		return this.usersServiceClient.permanentlyRemove({id});
+		return this.usersServiceClient.permanentlyRemove({ id });
 	}
 }

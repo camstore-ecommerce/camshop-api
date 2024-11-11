@@ -23,7 +23,7 @@ export class CategoriesService implements OnModuleInit {
 	}
 
 	create(createCategoryDto: CreateCategoryDto) {
-		return this.categtoriesServiceClient.create(createCategoryDto)
+		return this.categtoriesServiceClient.create(createCategoryDto);
 	}
 
 	findAll() {

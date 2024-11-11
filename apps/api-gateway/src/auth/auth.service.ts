@@ -19,13 +19,12 @@ export class AuthService implements OnModuleInit {
 	constructor(@Inject(USERS_CLIENT) private readonly usersClient: ClientGrpc) {}
 
 	onModuleInit() {
-		this.authServiceClient = this.usersClient.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
+		this.authServiceClient =
+			this.usersClient.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
 	}
 
 	async login(userLoginDto: UserLoginDto) {
-		return await firstValueFrom(
-			this.authServiceClient.login(userLoginDto),
-		);
+		return await firstValueFrom(this.authServiceClient.login(userLoginDto));
 	}
 
 	async register(userRegisterDto: UserRegisterDto) {
@@ -41,20 +40,18 @@ export class AuthService implements OnModuleInit {
 	}
 
 	async sendVerifyEmail(user: VerifyEmailDto) {
-		return await firstValueFrom(
-			this.authServiceClient.verifyEmail(user)
-		);
+		return await firstValueFrom(this.authServiceClient.verifyEmail(user));
 	}
 
 	async confirmVerifyEmail(token: string) {
 		return await firstValueFrom(
-			this.authServiceClient.confirmVerifyEmail({token}),
+			this.authServiceClient.confirmVerifyEmail({ token }),
 		);
 	}
 
 	async forgotPassword(email: string) {
 		return await firstValueFrom(
-			this.authServiceClient.forgotPassword({email}),
+			this.authServiceClient.forgotPassword({ email }),
 		);
 	}
 

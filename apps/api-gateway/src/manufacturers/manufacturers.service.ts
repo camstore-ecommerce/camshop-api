@@ -15,7 +15,7 @@ export class ManufacturersService implements OnModuleInit {
 
 	constructor(
 		@Inject(PRODUCTS_CLIENT) private readonly productsClient: ClientGrpc,
-	) { }
+	) {}
 
 	onModuleInit() {
 		this.manufacturersServiceClient =
