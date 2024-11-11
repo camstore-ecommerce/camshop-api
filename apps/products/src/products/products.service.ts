@@ -17,7 +17,8 @@ export class ProductsService {
 		const { manufacturer_id, category_id, ...productData } = createProductDto;
 
 		const category = await this.categoriesService.findOne(category_id);
-		const manufacturer = await this.manufacturersService.findOne(manufacturer_id);
+		const manufacturer =
+			await this.manufacturersService.findOne(manufacturer_id);
 
 		const product = await this.productsRepository.create({
 			...productData,
@@ -40,7 +41,15 @@ export class ProductsService {
 		const products = await this.productsRepository.find({});
 		return {
 			count: products.count,
-			products: products.documents
+			products: products.documents,
+		};
+	}
+
+	async findByIds(ids: string[]) {
+		const products = await this.productsRepository.find({ _id: { $in: ids } });
+		return {
+			count: products.count,
+			products: products.documents,
 		};
 	}
 
@@ -63,10 +72,7 @@ export class ProductsService {
 			);
 		}
 
-		return await this.productsRepository.findOneAndUpdate(
-			{ _id },
-			updates,
-		);
+		return await this.productsRepository.findOneAndUpdate({ _id }, updates);
 	}
 
 	remove(_id: string) {

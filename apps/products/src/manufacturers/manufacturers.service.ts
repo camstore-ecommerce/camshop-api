@@ -12,17 +12,15 @@ export class ManufacturersService {
 	) {}
 
 	async create(createManufacturerDto: CreateManufacturerDto) {
-		return await this.manufacturersRepository.create(
-			createManufacturerDto,
-		);
+		return await this.manufacturersRepository.create(createManufacturerDto);
 	}
 
 	async findAll() {
 		const manufacturers = await this.manufacturersRepository.find({});
 		return {
 			count: manufacturers.count,
-			manufacturers: manufacturers.documents
-		}
+			manufacturers: manufacturers.documents,
+		};
 	}
 
 	async findOne(_id: string) {

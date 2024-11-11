@@ -17,7 +17,7 @@ export class CategoriesService {
 		const categories = await this.categoriesRepository.find({});
 		return {
 			count: categories.count,
-			categories: categories.documents
+			categories: categories.documents,
 		};
 	}
 

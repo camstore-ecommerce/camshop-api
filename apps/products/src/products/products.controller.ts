@@ -3,6 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductsService } from './products.service';
 import {
 	CreateProductDto,
+	FindByIdsDto,
 	FindOneProductDto,
 	PermanentlyRemoveProductDto,
 	Product,
@@ -12,6 +13,7 @@ import {
 	RemoveProductDto,
 	UpdateProductDto,
 } from '@app/contracts/products';
+import { Observable } from 'rxjs';
 
 @Controller()
 @ProductsServiceControllerMethods()
@@ -26,20 +28,29 @@ export class ProductsController implements ProductsServiceController {
 		return await this.productsService.findAll();
 	}
 
-	findOne(findOneProductDto: FindOneProductDto): Promise<Product> {
-		return this.productsService.findOne(findOneProductDto.id);
+	async findByIds(findByIdsDto: FindByIdsDto): Promise<Products> {
+		return await this.productsService.findByIds(findByIdsDto.ids);
 	}
 
-	update(updateProductDto: UpdateProductDto): Promise<Product> {
-		return this.productsService.update(updateProductDto.id, updateProductDto);
+	async findOne(findOneProductDto: FindOneProductDto): Promise<Product> {
+		return await this.productsService.findOne(findOneProductDto.id);
 	}
 
-	remove(removeProductDto: RemoveProductDto) {
-		return this.productsService.remove(removeProductDto.id);
+	async update(updateProductDto: UpdateProductDto): Promise<Product> {
+		return await this.productsService.update(
+			updateProductDto.id,
+			updateProductDto,
+		);
 	}
 
-	permanentlyRemove(permanentlyRemoveProductDto: PermanentlyRemoveProductDto) {
-		return this.productsService.permanentlyRemove(
+	async remove(removeProductDto: RemoveProductDto) {
+		return await this.productsService.remove(removeProductDto.id);
+	}
+
+	async permanentlyRemove(
+		permanentlyRemoveProductDto: PermanentlyRemoveProductDto,
+	) {
+		return await this.productsService.permanentlyRemove(
 			permanentlyRemoveProductDto.id,
 		);
 	}
