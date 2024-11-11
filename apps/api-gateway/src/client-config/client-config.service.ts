@@ -1,3 +1,4 @@
+import { ORDERS_PACKAGE_NAME } from '@app/contracts/orders';
 import { PRODUCTS_PACKAGE_NAME } from '@app/contracts/products';
 import { USERS_PACKAGE_NAME } from '@app/contracts/users';
 import { Injectable } from '@nestjs/common';
@@ -41,7 +42,10 @@ export class ClientConfigService {
 				url: this.configService.get('PRODUCTS_CLIENT_URL') || '0.0.0.0:50051',
 				loader: {
 					keepCase: true,
+					longs: String,
+					enums: String,
 					defaults: true,
+					oneofs: true,
 				},
 			},
 		};
@@ -52,26 +56,33 @@ export class ClientConfigService {
 			transport: Transport.GRPC,
 			options: {
 				package: USERS_PACKAGE_NAME,
-				protoPath: [
-					'proto/users/users.proto',
-					'proto/users/auth.proto'
-				],
+				protoPath: ['proto/users/users.proto', 'proto/users/auth.proto'],
 				url: this.configService.get('USERS_CLIENT_URL') || '0.0.0.0:50052',
 				loader: {
 					keepCase: true,
+					longs: String,
+					enums: String,
 					defaults: true,
-				}
+					oneofs: true,
+				},
 			},
-
 		};
 	}
 
 	get ordersClientOption(): ClientOptions {
 		return {
-			transport: Transport.TCP,
+			transport: Transport.GRPC,
 			options: {
-				host: this.configService.get('ORDERS_CLIENT_HOST') || '0.0.0.0',
-				port: this.getOrdersClientPort(),
+				package: ORDERS_PACKAGE_NAME,
+				protoPath: ['proto/orders/orders.proto'],
+				url: this.configService.get('ORDERS_CLIENT_URL') || '0.0.0.0:50053',
+				loader: {
+					keepCase: true,
+					longs: String,
+					enums: String,
+					defaults: true,
+					oneofs: true,
+				},
 			},
 		};
 	}

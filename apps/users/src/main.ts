@@ -10,15 +10,15 @@ async function bootstrap() {
 			transport: Transport.GRPC,
 			options: {
 				package: USERS_PACKAGE_NAME,
-				protoPath: [
-					'proto/users/users.proto',
-					'proto/users/auth.proto'
-				],
+				protoPath: ['proto/users/users.proto', 'proto/users/auth.proto'],
 				url: process.env.GRPC_URL || '0.0.0.0:50052',
 				loader: {
 					keepCase: true,
+					longs: String,
+					enums: String,
 					defaults: true,
-				}
+					oneofs: true,
+				},
 			},
 		},
 	);

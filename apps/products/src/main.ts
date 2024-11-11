@@ -18,7 +18,10 @@ async function bootstrap() {
 				url: process.env.GRPC_URL || '0.0.0.0:50051',
 				loader: {
 					keepCase: true,
+					longs: String,
+					enums: String,
 					defaults: true,
+					oneofs: true,
 				},
 			},
 		},
