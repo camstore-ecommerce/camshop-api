@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package users; 
 
+// import "proto/common.proto";
+// import "proto/users/auth.proto";
+
 import "../common.proto";
 import "./auth.proto";
 
