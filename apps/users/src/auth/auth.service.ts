@@ -16,9 +16,7 @@ import {
 } from '@app/contracts/auth';
 import { UsersService } from '../users/users.service';
 import { AdminTokenPayload, UserTokenPayload } from '@app/common/interfaces';
-import {
-	ClientProxy,
-} from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { VerificationService } from '../verification/verification.service';
 import { MAIL_PATTERNS } from '@app/contracts/mail';
 import * as jwt from 'jsonwebtoken';
@@ -27,14 +25,13 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthService {
-
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly jwtService: JwtService,
 		private readonly usersService: UsersService,
 		private readonly verificationService: VerificationService,
 		@Inject(MAIL_CLIENT) private readonly mailClient: ClientProxy,
-	) { }
+	) {}
 
 	async adminLogin(loginDto: AdminLoginDto) {
 		const user = await this.usersService.validateAdmin(

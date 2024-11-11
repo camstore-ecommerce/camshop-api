@@ -19,7 +19,7 @@ export class UsersService {
 
 	async findAll() {
 		const [users, count] = await Promise.all([
-			this.prismaService.user.findMany({}),
+			this.prismaService.user.findMany({ where: { deleted_at: null } }),
 			this.prismaService.user.count(),
 		]);
 

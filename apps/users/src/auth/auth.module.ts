@@ -32,8 +32,8 @@ import { MAIL_CLIENT } from '@app/common/constants/services';
 						durable: false,
 					},
 				},
-			}
-		])
+			},
+		]),
 	],
 	controllers: [AuthController],
 	providers: [AuthService, JwtStrategy, JwtAuthGuard],
