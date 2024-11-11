@@ -26,7 +26,8 @@ export class JwtAuthGuard implements CanActivate, OnModuleInit {
 	}
 
 	onModuleInit() {
-		this.authServiceClient = this.usersClient.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
+		this.authServiceClient =
+			this.usersClient.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
 	}
 
 	canActivate(
@@ -42,8 +43,7 @@ export class JwtAuthGuard implements CanActivate, OnModuleInit {
 
 		const request = context.switchToHttp().getRequest();
 		const jwt =
-			request.cookies?.Authentication ||
-			request.headers?.authentication;
+			request.cookies?.Authentication || request.headers?.authentication;
 
 		if (!jwt) {
 			return false;
@@ -51,22 +51,19 @@ export class JwtAuthGuard implements CanActivate, OnModuleInit {
 
 		const role = this.reflector.get<string>('role', context.getHandler());
 
-		return this.authServiceClient.authenticate({ Authentication: jwt })
-			.pipe(
-				tap((res) => {
-					console.log(res);
-					if (role && res.user.role !== role) {
-						this.logger.error('The user does not have valid roles.');
-						throw new UnauthorizedException();
-					}
-					context.switchToHttp().getRequest().user = res.user;
-					console.log(context.switchToHttp().getRequest().user);
-				}),
-				map(() => true),
-				catchError((err) => {
-					this.logger.error(err);
-					return of(false);
-				}),
-			);
+		return this.authServiceClient.authenticate({ Authentication: jwt }).pipe(
+			tap((res) => {
+				if (role && res.user.role !== role) {
+					this.logger.error('The user does not have valid roles.');
+					throw new UnauthorizedException();
+				}
+				context.switchToHttp().getRequest().user = res.user;
+			}),
+			map(() => true),
+			catchError((err) => {
+				this.logger.error(err);
+				return of(false);
+			}),
+		);
 	}
 }
