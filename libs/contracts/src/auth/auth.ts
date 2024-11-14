@@ -7,6 +7,7 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
+import { UserRegisterDto } from '.';
 
 export const protobufPackage = 'users';
 
@@ -30,14 +31,6 @@ export interface AdminLoginResponse {
 	token: string;
 	expires: Date;
 	user: Admin | undefined;
-}
-
-export interface UserRegisterDto {
-	first_name: string;
-	last_name: string;
-	email: string;
-	password: string;
-	phone: string;
 }
 
 export interface UserRegisterResponse {
