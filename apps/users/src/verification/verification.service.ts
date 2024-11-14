@@ -24,14 +24,14 @@ export class VerificationService {
 		return randomNumber.toString().padStart(size, '0');
 	}
 
-	async generateOtpCode(userId: string, size: number = 6): Promise<string> {
+	async generateOtpCode(user_id: string, size: number = 6): Promise<string> {
 		const now = new Date();
 
 		// Check if a token was requested too recently
 		// Feel free to implement robust throthling/security
 		const recentToken = await this.prismaService.verification.findFirst({
 			where: {
-				userId,
+				user_id,
 				created_at: {
 					gt: new Date(
 						now.getTime() - this.minRequestIntervalMinutes * 60 * 1000,
@@ -49,11 +49,11 @@ export class VerificationService {
 		const otp = this.generateOtp(size);
 		const hashedToken = await bcrypt.hash(otp, this.saltRounds);
 
-		await this.prismaService.verification.deleteMany({ where: { userId } });
+		await this.prismaService.verification.deleteMany({ where: { user_id } });
 
 		await this.prismaService.verification.create({
 			data: {
-				userId,
+				user_id,
 				token: hashedToken,
 				expires_at: new Date(
 					now.getTime() + this.tokenExpirationMinutes * 60 * 1000,
@@ -64,10 +64,10 @@ export class VerificationService {
 		return otp;
 	}
 
-	async validateOtp(userId: string, token: string): Promise<boolean> {
+	async validateOtp(user_id: string, token: string): Promise<boolean> {
 		const validToken = await this.prismaService.verification.findFirst({
 			where: {
-				userId,
+				user_id,
 				expires_at: { gt: new Date() },
 			},
 		});

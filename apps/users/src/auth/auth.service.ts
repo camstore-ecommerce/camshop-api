@@ -85,8 +85,7 @@ export class AuthService {
 		const user = await this.usersService.registerUser(registerDto);
 		this.sendVerificationEmail(user);
 		return {
-			message:
-				'User registered. Please check your email to verify your account.',
+			message: 'User registered. Please check your email to verify your account.',
 			user,
 		};
 	}

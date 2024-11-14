@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { VerificationModule } from './verification/verification.module';
+import { AddressesModule } from './addresses/addresses.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -30,6 +31,7 @@ import * as Joi from 'joi';
 		UsersModule,
 		AuthModule,
 		VerificationModule,
+		AddressesModule,
 	],
 	controllers: [],
 	providers: [],

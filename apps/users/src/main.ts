@@ -10,7 +10,10 @@ async function bootstrap() {
 			transport: Transport.GRPC,
 			options: {
 				package: USERS_PACKAGE_NAME,
-				protoPath: ['proto/users/users.proto', 'proto/users/auth.proto'],
+				protoPath: [
+					'proto/users/users.proto', 
+					'proto/users/auth.proto', 
+					'proto/users/addresses.proto'],
 				url: process.env.GRPC_URL || '0.0.0.0:50052',
 				loader: {
 					keepCase: true,
@@ -23,6 +26,6 @@ async function bootstrap() {
 		},
 	);
 	await app.listen();
-	console.log(`User microservice is listening on port: ${process.env.PORT}`);
+	console.log(`Users microservice is listening on port: ${process.env.PORT}`);
 }
 bootstrap();
