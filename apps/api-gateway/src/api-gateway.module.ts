@@ -11,6 +11,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
 import { CdnService } from './cdn/cdn.service';
+import { AddressesModule } from './addresses/addresses.module';
 
 @Module({
 	imports: [
@@ -31,6 +32,7 @@ import { CdnService } from './cdn/cdn.service';
 		}),
 		AuthModule,
 		OrdersModule,
+		AddressesModule,
 	],
 	controllers: [ApiGatewayController],
 	providers: [ApiGatewayService, ClientConfigService, CdnService],

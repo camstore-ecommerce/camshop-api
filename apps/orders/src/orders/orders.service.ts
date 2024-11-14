@@ -97,12 +97,11 @@ export class OrdersService implements OnModuleInit {
 	}
 
 	async findAll() {
-		const [orders, count] = await Promise.all([
+		const [orders] = await Promise.all([
 			this.prismaService.order.findMany({
 				where: { deleted_at: null },
 				include: { order_items: true },
 			}),
-			this.prismaService.order.count(),
 		]);
 
 		const products = await firstValueFrom(
@@ -129,7 +128,7 @@ export class OrdersService implements OnModuleInit {
 			};
 		});
 
-		return { count, orders: ordersResponse };
+		return { count: orders.length, orders: ordersResponse };
 	}
 
 	async findOne(id: string) {
