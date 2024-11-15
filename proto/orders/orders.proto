@@ -5,6 +5,7 @@ package orders;
 import "../common.proto";
 import "../products/products.proto";
 import "../users/users.proto";
+import "../users/addresses.proto";
 
 // import "proto/common.proto";
 // import "proto/products/products.proto";
@@ -13,6 +14,8 @@ import "../users/users.proto";
 service OrdersService {
     rpc FindOne(FindOneOrderDto) returns (OrderResponse) {}
     rpc FindAll(common.Empty) returns (OrdersResponse) {}
+    rpc FindOneByUser(FindOneOrderByUserDto) returns (OrderResponse) {}
+    rpc FindAllByUser(FindAllOrderByUserDto) returns (OrdersResponse) {}
     rpc Create(CreateOrderDto) returns (OrderResponse) {}
     rpc Update(UpdateOrderDto) returns (OrderResponse) {}
     rpc Remove(RemoveOrderDto) returns (common.Empty) {}
@@ -23,16 +26,37 @@ message FindOneOrderDto {
     string id = 1;
 }
 
+message FindAllOrderByUserDto {
+    string user_id = 1;
+}
+
+message FindOneOrderByUserDto {
+    string id = 1;
+    string user_id = 2;
+}
+
 message CreateOrderDto {
     string user_id = 1;
-    repeated OrderItems order_items = 5;
+    repeated OrderItems order_items = 2;
+    string address_id = 3;
+    float shipping_cost = 4;
+    string shipping_method = 5;
+    float tax = 6;
+    float discount = 7;
 }
 
 message UpdateOrderDto {
     string id = 1;
-    string user_id = 2;
-    string status = 3;
-    repeated OrderItems order_items = 4;
+    string status = 2;
+    string user_id = 3;
+    string address_id = 4;
+    float shipping_cost = 5;
+    string shipping_method = 6;
+    float tax = 7;
+    float discount = 8;
+    string notes = 9;
+    string canceled_reason = 10;
+    string refund_details = 11;
 }
 
 message RemoveOrderDto {
@@ -46,13 +70,21 @@ message PermanentlyRemoveOrderDto {
 message Order {
     string id = 1;
     string user_id = 2;
-    string order_date = 3;
-    string status = 4;
-    float total_price = 5;
-    int32 total_qty = 6;
-    string created_at = 7;
-    string updated_at = 8;
-    repeated OrderItems order_items = 9;
+    string status = 3;
+    string order_date = 4;
+    string updated_at = 5;
+    string deleted_at = 6;
+    repeated OrderItems order_items = 7;
+    string address_id = 8;
+    float shipping_cost = 9;
+    string shipping_method = 10;
+    float sub_total = 11;
+    float tax = 12;
+    float discount = 13;
+    float total = 14;
+    string notes = 15;
+    string canceled_reason = 16;
+    string refund_details = 17;
 }
 
 message OrderItems {
@@ -60,6 +92,8 @@ message OrderItems {
     string product_id = 2;
     int32 qty = 3;
     float price = 4;
+    float total_price = 5;
+    string options = 6;
 }
 
 message OrdersResponse {
@@ -70,13 +104,21 @@ message OrdersResponse {
 message OrderResponse {
     string id = 1;
     users.User user = 2;
-    string order_date = 3;
-    string status = 4;
-    float total_price = 5;
-    int32 total_qty = 6;
-    string created_at = 7;
-    string updated_at = 8;
-    repeated OrderItemsResponse order_items = 9;
+    string status = 3;
+    string order_date = 4;
+    string updated_at = 5;
+    string deleted_at = 6;
+    repeated OrderItemsResponse order_items = 7;
+    users.Address address = 8;
+    float shipping_cost = 9;
+    string shipping_method = 10;
+    float sub_total = 11;
+    float tax = 12;
+    float discount = 13;
+    float total = 14;
+    string notes = 15;
+    string canceled_reason = 16;
+    string refund_details = 17;
 }
 
 message OrderItemsResponse {
@@ -84,4 +126,6 @@ message OrderItemsResponse {
     products.Product product = 2;
     int32 qty = 3;
     float price = 4;
+    float total_price = 5;
+    string options = 6;
 }
