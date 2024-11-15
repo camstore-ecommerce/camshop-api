@@ -27,16 +27,31 @@ export class OrdersController {
 	}
 
 	@Get()
+	@Roles(Role.Admin)
 	findAll() {
 		return this.ordersService.findAll();
 	}
 
+	@Get('/me')
+	@Roles(Role.User)
+	findAllByUser(@AuthUser() user: UserDto) {
+		return this.ordersService.findAllByUser(user.id);
+	}
+
+	@Get('/me/:id')
+	@Roles(Role.User)
+	findOneByUser(@Param('id') id: string, @AuthUser() user: UserDto) {
+		return this.ordersService.findOneByUser(id, user.id);
+	}
+
 	@Get(':id')
+	@Roles(Role.Admin)
 	findOne(@Param('id') id: string) {
 		return this.ordersService.findOne(id);
 	}
 
 	@Patch(':id')
+	@Roles(Role.Admin)
 	update(
 		@Param('id') id: string,
 		@Body() updateOrderDto: UpdateOrderDto,
@@ -49,6 +64,7 @@ export class OrdersController {
 	}
 
 	@Delete(':id')
+	@Roles(Role.Admin)
 	remove(@Param('id') id: string) {
 		return this.ordersService.remove(id);
 	}

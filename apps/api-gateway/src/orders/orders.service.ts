@@ -17,7 +17,7 @@ export class OrdersService implements OnModuleInit {
 
 	constructor(
 		@Inject(ORDERS_CLIENT) private readonly ordersClient: ClientGrpc,
-	) {}
+	) { }
 
 	onModuleInit() {
 		this.ordersServiceClient =
@@ -36,8 +36,23 @@ export class OrdersService implements OnModuleInit {
 			},
 			order_date: order.order_date,
 			status: order.status,
-			total_price: order.total_price,
-			total_qty: order.total_qty,
+			address: {
+				id: order.address.id,
+				address: order.address.address,
+				city: order.address.city,
+				state: order.address.state,
+				country: order.address.country,
+				postal_code: order.address.postal_code
+			},
+			shipping_cost: order.shipping_cost,
+			shipping_method: order.shipping_method,
+			sub_total: order.sub_total,
+			tax: order.tax,
+			discount: order.discount,
+			total: order.total,
+			notes: order.notes,
+			canceled_reason: order.canceled_reason,
+			refund_details: order.refund_details,
 			updated_at: order.updated_at,
 			order_items: order.order_items.map((item) => ({
 				...item,
@@ -63,6 +78,24 @@ export class OrdersService implements OnModuleInit {
 				orders: orders.orders.map((order) => this.mapOrder(order)),
 			})),
 		);
+	}
+
+	findAllByUser(user_id: string): Observable<OrdersDto> {
+		return this.ordersServiceClient
+			.findAllByUser({ user_id })
+			.pipe(
+				map((orders) => ({
+					count: orders.orders.length,
+					orders: orders.orders.map((order) => this.mapOrder(order)),
+				}),
+				)
+			);
+	}
+
+	findOneByUser(id: string, user_id: string) {
+		return this.ordersServiceClient
+			.findOneByUser({ id, user_id })
+			.pipe(map((order) => this.mapOrder(order)));
 	}
 
 	findOne(id: string) {
