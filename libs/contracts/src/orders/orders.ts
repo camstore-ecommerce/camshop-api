@@ -10,6 +10,7 @@ import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { User } from '../auth';
 import { Product } from '../products';
+import { Address } from '../addresses';
 
 export const protobufPackage = 'orders';
 
@@ -17,16 +18,37 @@ export interface FindOneOrderDto {
 	id: string;
 }
 
+export interface FindAllOrderByUserDto {
+	user_id: string;
+}
+
+export interface FindOneOrderByUserDto {
+	id: string;
+	user_id: string;
+}
+
 export interface CreateOrderDto {
 	user_id: string;
 	order_items: OrderItems[];
+	address_id: string;
+	shipping_cost: number;
+	shipping_method: string;
+	tax: number;
+	discount: number;
 }
 
 export interface UpdateOrderDto {
 	id: string;
-	user_id: string;
 	status: string;
-	order_items: OrderItems[];
+	user_id: string;
+	address_id: string;
+	shipping_cost: number;
+	shipping_method: string;
+	tax: number;
+	discount: number;
+	notes: string;
+	canceled_reason: string;
+	refund_details: string;
 }
 
 export interface RemoveOrderDto {
@@ -40,13 +62,21 @@ export interface PermanentlyRemoveOrderDto {
 export interface Order {
 	id: string;
 	user_id: string;
-	order_date: Date;
 	status: string;
-	total_price: number;
-	total_qty: number;
-	created_at: Date;
-	updated_at: Date;
+	order_date: Date | undefined;
+	updated_at: Date | undefined;
+	deleted_at: Date | undefined;
 	order_items: OrderItems[];
+	address_id: string;
+	shipping_cost: number;
+	shipping_method: string;
+	sub_total: number;
+	tax: number;
+	discount: number;
+	total: number;
+	notes: string;
+	canceled_reason: string;
+	refund_details: string;
 }
 
 export interface OrderItems {
@@ -54,6 +84,8 @@ export interface OrderItems {
 	product_id: string;
 	qty: number;
 	price: number;
+	total_price: number;
+	options: any;
 }
 
 export interface OrdersResponse {
@@ -64,13 +96,21 @@ export interface OrdersResponse {
 export interface OrderResponse {
 	id: string;
 	user: User;
-	order_date: Date;
 	status: string;
-	total_price: number;
-	total_qty: number;
-	created_at: Date;
-	updated_at: Date;
+	order_date: Date | undefined;
+	updated_at: Date | undefined;
+	deleted_at: Date | undefined;
 	order_items: OrderItemsResponse[];
+	address: Address;
+	shipping_cost: number;
+	shipping_method: string;
+	sub_total: number;
+	tax: number;
+	discount: number;
+	total: number;
+	notes: string;
+	canceled_reason: string;
+	refund_details: string;
 }
 
 export interface OrderItemsResponse {
@@ -78,6 +118,8 @@ export interface OrderItemsResponse {
 	product: Product;
 	qty: number;
 	price: number;
+	total_price: number;
+	options: any;
 }
 
 export const ORDERS_PACKAGE_NAME = 'orders';
@@ -86,6 +128,10 @@ export interface OrdersServiceClient {
 	findOne(request: FindOneOrderDto): Observable<OrderResponse>;
 
 	findAll(request: Empty): Observable<OrdersResponse>;
+
+	findAllByUser(request: FindAllOrderByUserDto): Observable<OrdersResponse>;
+
+	findOneByUser(request: FindOneOrderByUserDto): Observable<OrderResponse>;
 
 	create(request: CreateOrderDto): Observable<OrderResponse>;
 
@@ -105,6 +151,14 @@ export interface OrdersServiceController {
 		request: Empty,
 	): Promise<OrdersResponse> | Observable<OrdersResponse> | OrdersResponse;
 
+	findAllByUser(
+		request: FindAllOrderByUserDto,
+	): Promise<OrdersResponse> | Observable<OrdersResponse> | OrdersResponse;
+
+	findOneByUser(
+		request: FindOneOrderByUserDto,
+	): Promise<OrderResponse> | Observable<OrderResponse> | OrderResponse;
+
 	create(
 		request: CreateOrderDto,
 	): Promise<OrderResponse> | Observable<OrderResponse> | OrderResponse;
@@ -123,11 +177,8 @@ export interface OrdersServiceController {
 export function OrdersServiceControllerMethods() {
 	return function (constructor: Function) {
 		const grpcMethods: string[] = [
-			'findOne',
-			'findAll',
-			'create',
-			'update',
-			'remove',
+			'findOne', 'findAll', 'findAllByUser',
+			'findOneByUser', 'create', 'update', 'remove',
 			'permanentlyRemove',
 		];
 		for (const method of grpcMethods) {

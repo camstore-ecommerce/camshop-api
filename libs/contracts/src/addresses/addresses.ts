@@ -46,6 +46,10 @@ export interface FindOneAddressDto {
   user_id: string;
 }
 
+export interface FindAddressByIdsDto {
+  ids: string[];
+}
+
 export interface UpdateAddressDto {
   id: string;
   user_id: string;
@@ -71,6 +75,8 @@ export interface AddressesServiceClient {
 
   findOne(request: FindOneAddressDto): Observable<Address>;
 
+  findByIds(request: FindAddressByIdsDto): Observable<Addresses>;
+
   update(request: UpdateAddressDto): Observable<Address>;
 
   remove(request: RemoveAddressDto): Observable<Empty>;
@@ -83,6 +89,8 @@ export interface AddressesServiceController {
 
   findOne(request: FindOneAddressDto): Promise<Address> | Observable<Address> | Address;
 
+  findByIds(request: FindAddressByIdsDto): Promise<Addresses> | Observable<Addresses> | Addresses;
+
   update(request: UpdateAddressDto): Promise<Address> | Observable<Address> | Address;
 
   remove(request: RemoveAddressDto): Promise<Empty> | Observable<Empty> | Empty;
@@ -90,7 +98,7 @@ export interface AddressesServiceController {
 
 export function AddressesServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["create", "findAll", "findOne", "update", "remove"];
+    const grpcMethods: string[] = ["create", "findAll", "findOne", "findByIds", "update", "remove"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AddressesService", method)(constructor.prototype[method], method, descriptor);
