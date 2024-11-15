@@ -2,6 +2,8 @@ import { Controller } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import {
 	CreateOrderDto,
+	FindAllOrderByUserDto,
+	FindOneOrderByUserDto,
 	FindOneOrderDto,
 	OrderResponse,
 	OrdersResponse,
@@ -23,6 +25,14 @@ export class OrdersController implements OrdersServiceController {
 
 	async findAll(): Promise<OrdersResponse> {
 		return await this.ordersService.findAll();
+	}
+
+	async findAllByUser(findAllOrderByUserDto: FindAllOrderByUserDto): Promise<OrdersResponse> {
+		return this.ordersService.findAllByUser(findAllOrderByUserDto.user_id);
+	}
+
+	async findOneByUser(findOneOrderByUserDto: FindOneOrderByUserDto): Promise<OrderResponse> {
+		return this.ordersService.findOneByUser(findOneOrderByUserDto.id, findOneOrderByUserDto.user_id);
 	}
 
 	async findOne(findOneOrderDto: FindOneOrderDto): Promise<OrderResponse> {

@@ -14,11 +14,13 @@ import {
 } from '@app/contracts/products';
 import { USERS_SERVICE_NAME, UsersServiceClient } from '@app/contracts/users';
 import { firstValueFrom } from 'rxjs';
+import { ADDRESSES_SERVICE_NAME, AddressesServiceClient } from '@app/contracts/addresses';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
 	private productsServiceClient: ProductsServiceClient;
 	private usersServiceClient: UsersServiceClient;
+	private addressesServiceClient: AddressesServiceClient;
 
 	constructor(
 		private readonly prismaService: PrismaService,
@@ -33,6 +35,8 @@ export class OrdersService implements OnModuleInit {
 			);
 		this.usersServiceClient =
 			this.usersClient.getService<UsersServiceClient>(USERS_SERVICE_NAME);
+
+		this.addressesServiceClient = this.usersClient.getService<AddressesServiceClient>(ADDRESSES_SERVICE_NAME);
 	}
 
 	private generateOrderId() {
@@ -58,24 +62,30 @@ export class OrdersService implements OnModuleInit {
 				ids: order_items.map((item) => item.product_id),
 			}),
 		);
+
 		const user = await firstValueFrom(
 			this.usersServiceClient.findOne({ id: orderData.user_id }),
 		);
+
+		const address = await firstValueFrom(
+			this.addressesServiceClient.findOne({ id: orderData.address_id, user_id: orderData.user_id }),
+		);
+
+		const sub_total = order_items.reduce( (acc, item) => acc + item.price * item.qty, 0);
 
 		const order = await this.prismaService.order.create({
 			data: {
 				...orderData,
 				id: this.generateOrderId(),
-				total_price: order_items.reduce(
-					(acc, item) => acc + item.price * item.qty,
-					0,
-				),
-				total_qty: order_items.reduce((acc, item) => acc + item.qty, 0),
+				sub_total,
+				total: (sub_total + orderData.shipping_cost) * (1 + (orderData.tax || 0) / 100) - (orderData.discount || 0),
 				order_items: {
 					create: order_items.map((item) => ({
 						product_id: item.product_id,
 						qty: item.qty,
 						price: item.price,
+						total_price: item.price * item.qty,
+						options: JSON.stringify(item.options || {}),
 					})),
 				},
 			},
@@ -85,6 +95,7 @@ export class OrdersService implements OnModuleInit {
 		const orderResponse: OrderResponse = {
 			...order,
 			user: user,
+			address: address,
 			order_items: order.order_items.map((item) => ({
 				...item,
 				product: products.products.find(
@@ -111,14 +122,24 @@ export class OrdersService implements OnModuleInit {
 				),
 			}),
 		);
+
+		const addresses = await firstValueFrom(
+			this.addressesServiceClient.findByIds({
+				ids: orders.map((order) => order.address_id),
+			}),
+		);
+
 		const users = await firstValueFrom(this.usersServiceClient.findAll({}));
 
-		const ordersResponse: OrderResponse[] = orders.map((order) => {
+
+		const ordersResponse: Promise<OrderResponse>[] = orders.map(async (order) => {
 			const user = users.users.find((user) => user.id === order.user_id);
+			const address = addresses.addresses.find((address) => address.id === order.address_id);
 
 			return {
 				...order,
-				user: user,
+				user,
+				address,
 				order_items: order.order_items.map((item) => ({
 					...item,
 					product: products.products.find(
@@ -128,7 +149,56 @@ export class OrdersService implements OnModuleInit {
 			};
 		});
 
-		return { count: orders.length, orders: ordersResponse };
+		const resolvedOrdersResponse = await Promise.all(ordersResponse);
+
+		return { count: orders.length, orders: resolvedOrdersResponse };
+	}
+
+	async findAllByUser(user_id: string) {
+		const [orders] = await Promise.all([
+			this.prismaService.order.findMany({
+				where: { deleted_at: null, user_id },
+				include: { order_items: true },
+			}),
+		]);
+
+		const products = await firstValueFrom(
+			this.productsServiceClient.findByIds({
+				ids: orders.flatMap((order) =>
+					order.order_items.map((item) => item.product_id),
+				),
+			}),
+		);
+
+		const addresses = await firstValueFrom(
+			this.addressesServiceClient.findByIds({
+				ids: orders.map((order) => order.address_id),
+			}),
+		);
+
+		const users = await firstValueFrom(this.usersServiceClient.findAll({}));
+
+
+		const ordersResponse: Promise<OrderResponse>[] = orders.map(async (order) => {
+			const user = users.users.find((user) => user.id === order.user_id);
+			const address = addresses.addresses.find((address) => address.id === order.address_id);
+
+			return {
+				...order,
+				user,
+				address,
+				order_items: order.order_items.map((item) => ({
+					...item,
+					product: products.products.find(
+						(product) => product._id.toString() === item.product_id,
+					),
+				})),
+			};
+		});
+
+		const resolvedOrdersResponse = await Promise.all(ordersResponse);
+
+		return { count: orders.length, orders: resolvedOrdersResponse };
 	}
 
 	async findOne(id: string) {
@@ -142,13 +212,54 @@ export class OrdersService implements OnModuleInit {
 				ids: order.order_items.map((item) => item.product_id),
 			}),
 		);
+
 		const user = await firstValueFrom(
 			this.usersServiceClient.findOne({ id: order.user_id }),
+		);
+
+		const address = await firstValueFrom(
+			this.addressesServiceClient.findOne({ id: order.address_id, user_id: order.user_id }),
 		);
 
 		const orderResponse: OrderResponse = {
 			...order,
 			user: user,
+			address: address,
+			order_items: order.order_items.map((item) => ({
+				...item,
+				product: products.products.find(
+					(product) => product._id.toString() === item.product_id,
+				),
+			})),
+		};
+
+		return orderResponse;
+	}
+
+	async findOneByUser(id: string, user_id: string) {
+		const order = await this.prismaService.order.findFirst({
+			where: { id, user_id },
+			include: { order_items: true },
+		});
+
+		const products = await firstValueFrom(
+			this.productsServiceClient.findByIds({
+				ids: order.order_items.map((item) => item.product_id),
+			}),
+		);
+
+		const user = await firstValueFrom(
+			this.usersServiceClient.findOne({ id: order.user_id }),
+		);
+
+		const address = await firstValueFrom(
+			this.addressesServiceClient.findOne({ id: order.address_id, user_id: order.user_id }),
+		);
+
+		const orderResponse: OrderResponse = {
+			...order,
+			user: user,
+			address: address,
 			order_items: order.order_items.map((item) => ({
 				...item,
 				product: products.products.find(
@@ -161,8 +272,6 @@ export class OrdersService implements OnModuleInit {
 	}
 
 	async update(id: string, updateOrderDto: UpdateOrderDto) {
-		const { order_items, ...orderData } = updateOrderDto;
-
 		const existOrderItems = await this.prismaService.orderItem.findMany({
 			where: { order_id: id },
 		});
@@ -173,48 +282,24 @@ export class OrdersService implements OnModuleInit {
 			}),
 		);
 
-		if (order_items.length) {
-			products = await firstValueFrom(
-				this.productsServiceClient.findByIds({
-					ids: order_items.map((item) => item.product_id),
-				}),
-			);
-
-			// Delete existing order items
-			await this.prismaService.orderItem.deleteMany({
-				where: { order_id: id },
-			});
-
-			// Create new order items
-			await this.prismaService.orderItem.createMany({
-				data: order_items.map((item) => ({
-					order_id: id,
-					product_id: item.product_id,
-					qty: item.qty,
-					price: item.price,
-				})),
-			});
-		}
 		const user = await firstValueFrom(
-			this.usersServiceClient.findOne({ id: orderData.user_id }),
+			this.usersServiceClient.findOne({ id: updateOrderDto.user_id }),
 		);
 
 		const order = await this.prismaService.order.update({
 			where: { id },
 			data: {
-				...orderData,
-				total_price: order_items.reduce(
-					(acc, item) => acc + item.price * item.qty,
-					0,
-				),
-				total_qty: order_items.reduce((acc, item) => acc + item.qty, 0),
+				...updateOrderDto,
 			},
 			include: { order_items: true },
 		});
 
 		const orderResponse: OrderResponse = {
 			...order,
-			user: user,
+			address: await firstValueFrom(
+				this.addressesServiceClient.findOne({ id: order.address_id, user_id: order.user_id }),
+			),
+			user,
 			order_items: order.order_items.map((item) => ({
 				...item,
 				product: products.products.find(
