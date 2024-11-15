@@ -2,13 +2,20 @@
 CREATE TABLE "orders" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
-    "order_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" TEXT NOT NULL DEFAULT 'pending',
-    "total_price" DOUBLE PRECISION NOT NULL,
-    "total_qty" INTEGER NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "order_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
+    "address_id" TEXT NOT NULL,
+    "shipping_cost" DOUBLE PRECISION NOT NULL,
+    "shipping_method" TEXT NOT NULL,
+    "sub_total" DOUBLE PRECISION NOT NULL,
+    "tax" DOUBLE PRECISION NOT NULL,
+    "discount" DOUBLE PRECISION,
+    "total" DOUBLE PRECISION NOT NULL,
+    "notes" TEXT,
+    "canceled_reason" TEXT,
+    "refund_details" TEXT,
 
     CONSTRAINT "orders_pkey" PRIMARY KEY ("id")
 );
@@ -19,9 +26,8 @@ CREATE TABLE "order_items" (
     "product_id" TEXT NOT NULL,
     "qty" INTEGER NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "deleted_at" TIMESTAMP(3),
+    "total_price" DOUBLE PRECISION NOT NULL,
+    "options" JSONB NOT NULL,
 
     CONSTRAINT "order_items_pkey" PRIMARY KEY ("order_id","product_id")
 );

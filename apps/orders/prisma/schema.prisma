@@ -10,28 +10,35 @@ datasource db {
 }
 
 model Order {
-    id          String    @id
-    user_id     String
-    order_date  DateTime  @default(now())
-    status      String    @default("pending")
-    total_price Float
-    total_qty   Int
-    created_at  DateTime  @default(now())
-    updated_at  DateTime  @default(now()) @updatedAt
-    deleted_at  DateTime?
-    order_items OrderItem[]
+    id              String      @id
+    user_id         String
+    status          String      @default("pending")
+    order_date      DateTime    @default(now())
+    updated_at      DateTime    @default(now()) @updatedAt
+    deleted_at      DateTime?
+    order_items     OrderItem[]
+    address_id      String
+    shipping_cost   Float
+    shipping_method String
+    sub_total       Float
+    tax             Float
+    discount        Float?
+    total           Float
+    notes           String?
+    canceled_reason String?
+    refund_details  String?
+
     @@map("orders")
 }
 
 model OrderItem {
-    order_id   String
-    product_id String
-    qty        Int
-    price      Float
-    created_at DateTime @default(now())
-    updated_at DateTime @default(now()) @updatedAt
-    deleted_at DateTime?
-    order      Order   @relation(fields: [order_id], references: [id])
+    order_id    String
+    product_id  String
+    qty         Int
+    price       Float
+    total_price Float
+    options     Json
+    order       Order  @relation(fields: [order_id], references: [id])
 
     @@id([order_id, product_id])
     @@map("order_items")

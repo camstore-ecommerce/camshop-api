@@ -35,7 +35,11 @@ export class ClientConfigService {
 			transport: Transport.GRPC,
 			options: {
 				package: USERS_PACKAGE_NAME,
-				protoPath: ['proto/users/users.proto', 'proto/users/auth.proto'],
+				protoPath: [
+					'proto/users/users.proto', 
+					'proto/users/auth.proto',
+					'proto/users/addresses.proto',
+				],
 				url: this.configService.get('USERS_CLIENT_URL') || '0.0.0.0:50052',
 				loader: {
 					keepCase: true,
