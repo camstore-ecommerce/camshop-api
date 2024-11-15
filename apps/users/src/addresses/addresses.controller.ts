@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { AddressesService } from './addresses.service';
-import { Address, Addresses, AddressesServiceController, AddressesServiceControllerMethods, CreateAddressDto, FindAllAddressDto, FindOneAddressDto, RemoveAddressDto, UpdateAddressDto } from '@app/contracts/addresses';
+import { Address, Addresses, AddressesServiceController, AddressesServiceControllerMethods, CreateAddressDto, FindAddressByIdsDto, FindAllAddressDto, FindOneAddressDto, RemoveAddressDto, UpdateAddressDto } from '@app/contracts/addresses';
 
 @Controller()
 @AddressesServiceControllerMethods()
@@ -17,6 +17,10 @@ export class AddressesController implements AddressesServiceController {
 
   async findOne(findOneAddressDto: FindOneAddressDto): Promise<Address> {
     return await this.addressesService.findOne(findOneAddressDto.id, findOneAddressDto.user_id);
+  }
+
+  async findByIds(findAddressByIdsDto: FindAddressByIdsDto): Promise<Addresses> {
+    return await this.addressesService.findByIds(findAddressByIdsDto.ids);
   }
 
   async update(updateAddressDto: UpdateAddressDto): Promise<Address> {

@@ -24,6 +24,16 @@ export class AddressesService {
         return await this.prismaService.userAddress.findUnique({ where: { id, user_id } });
     }
 
+    async findByIds(ids: string[]) {
+        const [addresses] = await Promise.all([
+            this.prismaService.userAddress.findMany({
+                where: { id: { in: ids } },
+                include: { user: true }
+            }),]);
+
+        return { count: addresses.length, addresses };
+    }
+
     async update(id: string, updateAddressDto: UpdateAddressDto, user_id: string) {
         return await this.prismaService.userAddress.update({ where: { id, user_id }, data: updateAddressDto });
     }
