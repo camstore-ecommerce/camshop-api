@@ -22,14 +22,14 @@ service ProductsService {
 
 message CreateProductDto {
     string name = 1;
-    optional string description = 2;
-    optional double price = 3;
-    optional int32 stock = 4;
+    string description = 2;
+    double price = 3;
+    int32 stock = 4;
     double original_price = 5;
     string category_id = 6;
     repeated string tags = 7;
     string manufacturer_id = 8;
-    optional string image_url = 9;
+    string image_url = 9;
 }
 
 message FindOneProductDto {

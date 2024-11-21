@@ -14,10 +14,9 @@ import {
 	UserRegisterDto,
 	UserRegisterResponse,
 	VerifyEmailDto,
-	AuthenticateDto,
-	User,
 } from '@app/contracts/auth';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { User } from '@app/contracts/users';
 
 @Controller()
 @AuthServiceControllerMethods()

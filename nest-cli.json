@@ -27,7 +27,7 @@
       "sourceRoot": "./",
       "compilerOptions": {
         "tsConfigPath": "apps/products/tsconfig.app.json",
-        "assets": ["proto/**/*.proto"],
+        "assets": ["proto/products/*.proto", "proto/*.proto"],
         "watchAssets": true
       }
     },
@@ -38,7 +38,7 @@
       "sourceRoot": "./",
       "compilerOptions": {
         "tsConfigPath": "apps/users/tsconfig.app.json",
-        "assets": ["proto/**/*.proto"],
+        "assets": ["proto/users/*.proto", "proto/*.proto"],
         "watchAssets": true
       }
     },

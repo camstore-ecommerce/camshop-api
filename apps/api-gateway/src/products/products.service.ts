@@ -2,7 +2,6 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { PRODUCTS_CLIENT } from '@app/common/constants/services';
 
 import {
-	ProductDto as ClientProductDto,
 	ProductsServiceClient,
 	PRODUCTS_SERVICE_NAME,
 	CreateProductDto,
