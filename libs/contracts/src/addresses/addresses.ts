@@ -8,33 +8,13 @@
 import { Empty } from "@app/common/interfaces";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
+import { Address, CreateAddressDto, UpdateAddressDto } from ".";
 
 export const protobufPackage = "users";
 
 export interface Addresses {
   count: number;
   addresses: Address[];
-}
-
-export interface Address {
-  id: string;
-  user_id: string;
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  postal_code: string;
-  is_primary: boolean;
-}
-
-export interface CreateAddressDto {
-  user_id: string;
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  postal_code: string;
-  is_primary: boolean;
 }
 
 export interface FindAllAddressDto {
@@ -48,17 +28,6 @@ export interface FindOneAddressDto {
 
 export interface FindAddressByIdsDto {
   ids: string[];
-}
-
-export interface UpdateAddressDto {
-  id: string;
-  user_id: string;
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  postal_code: string;
-  is_primary: boolean;
 }
 
 export interface RemoveAddressDto {

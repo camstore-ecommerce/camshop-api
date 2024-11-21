@@ -1,15 +1,16 @@
+import { Types } from 'mongoose';
 import { Category } from '../categories';
 import { Manufacturer } from '../manufacturers';
 
-export class ProductDto {
-	_id: string;
+export class Product {
+	_id: Types.ObjectId;
 	name: string;
 	description: string;
-	price: number;
 	original_price: number;
+	price: number;
+	stock: number;
 	category: Category;
 	tags: string[];
 	manufacturer: Manufacturer;
-	stock: number;
 	image_url: string;
 }

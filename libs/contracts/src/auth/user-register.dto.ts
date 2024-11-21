@@ -1,4 +1,5 @@
 import { IsEmail, IsPhoneNumber, IsString, IsStrongPassword } from "class-validator";
+import { User } from "../users";
 
 export class UserRegisterDto {
     @IsString()
@@ -21,4 +22,9 @@ export class UserRegisterDto {
     
     @IsPhoneNumber('VN')
     phone: string;
+}
+
+export interface UserRegisterResponse {
+	message: string;
+	user: User | undefined;
 }

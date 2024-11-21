@@ -7,36 +7,14 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { UserRegisterDto } from '.';
+import { UserLoginDto, UserLoginResponse } from './user-login.dto';
+import { AdminLoginDto, AdminLoginResponse } from './admin-login.dto';
+import { UserRegisterDto, UserRegisterResponse } from './user-register.dto';
+import { User } from '../users';
+import { VerifyEmailDto, VerifyEmailResponse } from './verify-email.dto';
+import { ResetPasswordDto, ResetPasswordResponse } from './reset-password.dto';
 
 export const protobufPackage = 'users';
-
-export interface UserLoginDto {
-	email: string;
-	password: string;
-}
-
-export interface UserLoginResponse {
-	token: string;
-	expires: Date;
-	user: User | undefined;
-}
-
-export interface AdminLoginDto {
-	username: string;
-	password: string;
-}
-
-export interface AdminLoginResponse {
-	token: string;
-	expires: Date;
-	user: Admin | undefined;
-}
-
-export interface UserRegisterResponse {
-	message: string;
-	user: User | undefined;
-}
 
 export interface AuthenticateDto {
 	Authentication: any;
@@ -44,21 +22,6 @@ export interface AuthenticateDto {
 
 export interface AuthenticateResponse {
 	user: User;
-}
-
-export interface VerifyEmailDto {
-	id: string;
-	email: string;
-	phone: string;
-	first_name: string;
-	last_name: string;
-	verified_email_at: Date;
-	status: string;
-	role: string;
-}
-
-export interface VerifyEmailResponse {
-	message: string;
 }
 
 export interface ConfirmVerifyEmailDto {
@@ -75,37 +38,6 @@ export interface ForgotPasswordDto {
 
 export interface ForgotPasswordResponse {
 	message: string;
-}
-
-export interface ResetPasswordDto {
-	token: string;
-	password: string;
-}
-
-export interface ResetPasswordResponse {
-	message: string;
-}
-
-export interface User {
-	id: string;
-	email: string;
-	phone: string;
-	first_name: string;
-	last_name: string;
-	verified_email_at: Date;
-	status: string;
-	role: string;
-	gender: unknown | null;
-	birth_date: Date | null;
-	profile_pic: string | null;
-}
-
-export interface Admin {
-	id: string;
-	username: string;
-	admin_level: string;
-	permissions: string[];
-	role: string;
 }
 
 export const USERS_PACKAGE_NAME = 'users';

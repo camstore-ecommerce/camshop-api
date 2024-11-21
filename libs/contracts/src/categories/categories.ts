@@ -7,22 +7,15 @@
 /* eslint-disable */
 import { Empty } from '@app/common/interfaces';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Types } from 'mongoose';
 import { Observable } from 'rxjs';
+import { Category } from './category.dto';
+import { CreateCategoryDto } from './create-category.dto';
+import { UpdateCategoryDto } from './update-category.dto';
 
 export const protobufPackage = 'products';
 
-export interface CreateCategoryDto {
-	name: string;
-}
-
 export interface FindOneCategoryDto {
 	id: string;
-}
-
-export interface UpdateCategoryDto {
-	id: string;
-	name: string;
 }
 
 export interface RemoveCategoryDto {
@@ -36,11 +29,6 @@ export interface PermanentlyRemoveCategoryDto {
 export interface Categories {
 	count: number;
 	categories: Category[];
-}
-
-export interface Category {
-	_id: Types.ObjectId;
-	name: string;
 }
 
 export const PRODUCTS_PACKAGE_NAME = 'products';

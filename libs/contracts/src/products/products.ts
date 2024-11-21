@@ -7,24 +7,12 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { Category } from '../categories';
-import { Manufacturer } from '../manufacturers';
 import { Empty } from '@app/common/interfaces';
-import { Types } from 'mongoose';
+import { CreateProductDto } from './create-product.dto';
+import { UpdateProductDto } from './update-product.dto';
+import { Product } from './product.dto';
 
 export const protobufPackage = 'products';
-
-export interface CreateProductDto {
-	name: string;
-	description?: string | undefined;
-	price?: number | undefined;
-	stock?: number | undefined;
-	original_price: number;
-	category_id: string;
-	tags: string[];
-	manufacturer_id: string;
-	image_url?: string | undefined;
-}
 
 export interface FindOneProductDto {
 	id: string;
@@ -33,38 +21,12 @@ export interface FindByIdsDto {
 	ids: string[];
 }
 
-export interface UpdateProductDto {
-	id: string;
-	name: string;
-	description: string;
-	price: number;
-	stock: number;
-	original_price: number;
-	category_id: string;
-	tags: string[];
-	manufacturer_id: string;
-	image_url: string;
-}
-
 export interface RemoveProductDto {
 	id: string;
 }
 
 export interface PermanentlyRemoveProductDto {
 	id: string;
-}
-
-export interface Product {
-	_id: Types.ObjectId;
-	name: string;
-	description: string;
-	original_price: number;
-	price: number;
-	stock: number;
-	category: Category;
-	tags: string[];
-	manufacturer: Manufacturer;
-	image_url: string;
 }
 
 export interface Products {

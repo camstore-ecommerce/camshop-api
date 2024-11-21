@@ -7,22 +7,15 @@
 /* eslint-disable */
 import { Empty } from '@app/common/interfaces';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Types } from 'mongoose';
 import { Observable } from 'rxjs';
+import { Manufacturer } from './manufacturer.dto';
+import { CreateManufacturerDto } from './create-manufacturer.dto';
+import { UpdateManufacturerDto } from './update-manufacturer.dto';
 
 export const protobufPackage = 'products';
 
-export interface CreateManufacturerDto {
-	name: string;
-}
-
 export interface FindOneManufacturerDto {
 	id: string;
-}
-
-export interface UpdateManufacturerDto {
-	id: string;
-	name: string;
 }
 
 export interface RemoveManufacturerDto {
@@ -31,11 +24,6 @@ export interface RemoveManufacturerDto {
 
 export interface PermanentlyRemoveManufacturerDto {
 	id: string;
-}
-
-export interface Manufacturer {
-	_id: Types.ObjectId;
-	name: string;
 }
 
 export interface Manufacturers {

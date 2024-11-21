@@ -8,7 +8,7 @@
 import { Empty } from '@app/common/interfaces';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { User } from '../auth';
+import { User } from './user.dto';
 
 export const protobufPackage = 'users';
 
