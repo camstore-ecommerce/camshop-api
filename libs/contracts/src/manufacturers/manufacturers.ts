@@ -8,7 +8,7 @@
 import { Empty } from '@app/common/interfaces';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { Manufacturer } from './manufacturer.dto';
+import { Manufacturer, Manufacturers } from './manufacturer.dto';
 import { CreateManufacturerDto } from './create-manufacturer.dto';
 import { UpdateManufacturerDto } from './update-manufacturer.dto';
 
@@ -24,11 +24,6 @@ export interface RemoveManufacturerDto {
 
 export interface PermanentlyRemoveManufacturerDto {
 	id: string;
-}
-
-export interface Manufacturers {
-	count: number;
-	manufacturers: Manufacturer[];
 }
 
 export const PRODUCTS_PACKAGE_NAME = 'products';

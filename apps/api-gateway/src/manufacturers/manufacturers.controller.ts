@@ -11,11 +11,14 @@ import {
 import { ManufacturersService } from './manufacturers.service';
 import {
 	CreateManufacturerDto,
+	Manufacturer,
+	Manufacturers,
 	UpdateManufacturerDto,
 } from '@app/contracts/manufacturers';
 import { JwtAuthGuard } from '@app/common/guards';
 import { Public, Roles } from '@app/common/decorators';
 import { Role } from '@app/common/enums';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('manufacturers')
 @UseGuards(JwtAuthGuard)
@@ -24,24 +27,28 @@ export class ManufacturersController {
 
 	@Post()
 	@Roles(Role.Admin)
+	@ApiResponse({ status: 201, type: Manufacturer })
 	create(@Body() createManufacturerDto: CreateManufacturerDto) {
 		return this.manufacturersService.create(createManufacturerDto);
 	}
 
 	@Get()
 	@Public()
+	@ApiResponse({ status: 201, type: Manufacturers })
 	findAll() {
 		return this.manufacturersService.findAll();
 	}
 
 	@Get(':id')
 	@Public()
+	@ApiResponse({ status: 201, type: Manufacturer })
 	findOne(@Param('id') id: string) {
 		return this.manufacturersService.findOne(id);
 	}
 
 	@Patch(':id')
 	@Roles(Role.Admin)
+	@ApiResponse({ status: 201, type: Manufacturer })
 	update(
 		@Param('id') id: string,
 		@Body() updateManufacturerDto: UpdateManufacturerDto,

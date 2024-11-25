@@ -11,6 +11,7 @@ RUN npm install glob rimraf
 RUN npm install
 
 COPY apps/api-gateway apps/api-gateway
+COPY proto proto
 COPY libs libs
 
 RUN npm run build api-gateway
@@ -28,6 +29,7 @@ COPY apps/api-gateway/.env ./apps/api-gateway/
 RUN npm install --only=production
 
 COPY --from=development /usr/src/app/dist ./dist
+RUN mv dist/proto proto
 
-CMD ["node", "dist/apps/api-gateway/main"]
+CMD ["node", "dist/apps/api-gateway/src/main"]
 

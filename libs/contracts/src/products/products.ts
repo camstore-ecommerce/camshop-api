@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { Empty } from '@app/common/interfaces';
 import { CreateProductDto } from './create-product.dto';
 import { UpdateProductDto } from './update-product.dto';
-import { Product } from './product.dto';
+import { Product, Products } from './product.dto';
 
 export const protobufPackage = 'products';
 
@@ -27,11 +27,6 @@ export interface RemoveProductDto {
 
 export interface PermanentlyRemoveProductDto {
 	id: string;
-}
-
-export interface Products {
-	count: number;
-	products: Product[];
 }
 
 export const PRODUCTS_PACKAGE_NAME = 'products';

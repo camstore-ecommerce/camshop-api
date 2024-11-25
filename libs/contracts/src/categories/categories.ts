@@ -8,7 +8,7 @@
 import { Empty } from '@app/common/interfaces';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { Category } from './category.dto';
+import { Categories, Category } from './category.dto';
 import { CreateCategoryDto } from './create-category.dto';
 import { UpdateCategoryDto } from './update-category.dto';
 
@@ -24,11 +24,6 @@ export interface RemoveCategoryDto {
 
 export interface PermanentlyRemoveCategoryDto {
 	id: string;
-}
-
-export interface Categories {
-	count: number;
-	categories: Category[];
 }
 
 export const PRODUCTS_PACKAGE_NAME = 'products';

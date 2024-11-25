@@ -11,11 +11,12 @@ import {
 	UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto, UpdateProductDto } from '@app/contracts/products';
+import { CreateProductDto, Product, Products, UpdateProductDto } from '@app/contracts/products';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '@app/common/guards';
 import { Public, Roles } from '@app/common/decorators';
 import { Role } from '@app/common/enums';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard)
@@ -25,6 +26,7 @@ export class ProductsController {
 	@Post()
 	@Roles(Role.Admin)
 	@UseInterceptors(FileInterceptor('image'))
+	@ApiResponse({ status: 201, type: Product })
 	create(
 		@Body() createProductDto: CreateProductDto,
 		@UploadedFile() image?: Express.Multer.File,
@@ -34,12 +36,14 @@ export class ProductsController {
 
 	@Get()
 	@Public()
+	@ApiResponse({ status: 201, type: Products })
 	findAll() {
 		return this.productsService.findAll();
 	}
 
 	@Get(':id')
 	@Public()
+	@ApiResponse({ status: 201, type: Product })
 	findOne(@Param('id') id: string) {
 		return this.productsService.findOne(id);
 	}
@@ -47,6 +51,7 @@ export class ProductsController {
 	@Patch(':id')
 	@Roles(Role.Admin)
 	@UseInterceptors(FileInterceptor('image'))
+	@ApiResponse({ status: 201, type: Product })
 	update(
 		@Param('id') id: string,
 		@Body() updateProductDto: UpdateProductDto,
