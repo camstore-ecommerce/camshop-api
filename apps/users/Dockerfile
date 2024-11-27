@@ -11,9 +11,8 @@ RUN npm install glob rimraf
 
 RUN npm install
 
-RUN npx prisma generate
-
 COPY apps/users apps/users
+COPY proto proto
 COPY libs libs
 
 RUN cd apps/users && npm install --only=production && npx tsc ./prisma/seed.ts
@@ -30,7 +29,7 @@ WORKDIR /usr/src/app
 COPY package*.json .
 COPY apps/users/prisma ./prisma
 COPY apps/users/.env ./apps/users/
-COPY apps/users/.env ./prisma/
+COPY apps/users/.env .
 
 RUN npm install --only=production
 
@@ -38,4 +37,6 @@ COPY --from=development /usr/src/app/apps/users/prisma/seed.js ./prisma/
 COPY --from=development /usr/src/app/apps/users/node_modules/ ./node_modules/
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma generate && node prisma/seed && node dist/apps/users/main"]
+RUN mv dist/proto proto
+
+CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma generate && node prisma/seed && node dist/apps/users/src/main"]

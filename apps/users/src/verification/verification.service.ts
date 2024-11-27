@@ -1,16 +1,14 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';
-import { Cron } from '@nestjs/schedule';
-import { ConfigService } from '@nestjs/config';
+import { UsersRedisService } from '../redis/users-redis.service';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class VerificationService {
 	constructor(
-		private readonly prismaService: PrismaService,
-		private readonly configService: ConfigService,
-	) {}
+		private readonly redisService: UsersRedisService,
+	) { }
 
 	// Minimum interval between requests
 	// Feel free to implement robust throthling/security
@@ -25,23 +23,13 @@ export class VerificationService {
 	}
 
 	async generateOtpCode(user_id: string, size: number = 6): Promise<string> {
-		const now = new Date();
 
 		// Check if a token was requested too recently
 		// Feel free to implement robust throthling/security
-		const recentToken = await this.prismaService.verification.findFirst({
-			where: {
-				user_id,
-				created_at: {
-					gt: new Date(
-						now.getTime() - this.minRequestIntervalMinutes * 60 * 1000,
-					),
-				},
-			},
-		});
+		const recentToken = await this.redisService.get(`otp:${user_id}`);
 
 		if (recentToken) {
-			throw new UnprocessableEntityException(
+			throw new RpcException(
 				'Please wait a minute before requesting a new token.',
 			);
 		}
@@ -49,50 +37,20 @@ export class VerificationService {
 		const otp = this.generateOtp(size);
 		const hashedToken = await bcrypt.hash(otp, this.saltRounds);
 
-		await this.prismaService.verification.deleteMany({ where: { user_id } });
-
-		await this.prismaService.verification.create({
-			data: {
-				user_id,
-				token: hashedToken,
-				expires_at: new Date(
-					now.getTime() + this.tokenExpirationMinutes * 60 * 1000,
-				),
-			},
-		});
+		await this.redisService.set(`otp:${user_id}`, hashedToken, this.tokenExpirationMinutes * 60);
 
 		return otp;
 	}
 
 	async validateOtp(user_id: string, token: string): Promise<boolean> {
-		const validToken = await this.prismaService.verification.findFirst({
-			where: {
-				user_id,
-				expires_at: { gt: new Date() },
-			},
-		});
+		const hashedToken = await this.redisService.get(`otp:${user_id}`);
 
-		if (validToken && (await bcrypt.compare(token, validToken.token))) {
-			await this.prismaService.verification.delete({
-				where: { id: validToken.id },
-			});
+		if (hashedToken && (await bcrypt.compare(token, hashedToken))) {
+			await this.redisService.delete(`otp:${user_id}`);
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	private async cleanUpExpiredTokens(): Promise<void> {
-		const now = new Date();
-		await this.prismaService.verification.deleteMany({
-			where: {
-				expires_at: { lt: now },
-			},
-		});
-	}
-
-	@Cron('0 0 * * *') // This cron expression runs the task every day at midnight
-	async handleCron() {
-		await this.cleanUpExpiredTokens();
-	}
 }

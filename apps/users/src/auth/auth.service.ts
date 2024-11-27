@@ -3,7 +3,6 @@ import {
 	HttpStatus,
 	Inject,
 	Injectable,
-	UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -16,7 +15,7 @@ import {
 } from '@app/contracts/auth';
 import { UsersService } from '../users/users.service';
 import { AdminTokenPayload, UserTokenPayload } from '@app/common/interfaces';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { VerificationService } from '../verification/verification.service';
 import { MAIL_PATTERNS } from '@app/contracts/mail';
 import * as jwt from 'jsonwebtoken';
@@ -40,7 +39,7 @@ export class AuthService {
 		);
 
 		if (!user) {
-			throw new UnauthorizedException();
+			throw new RpcException('Invalid username or password');
 		}
 
 		const tokenPayload: AdminTokenPayload = {
@@ -63,7 +62,7 @@ export class AuthService {
 		);
 
 		if (!user) {
-			throw new UnauthorizedException();
+			throw new RpcException('Invalid email or password');
 		}
 
 		const tokenPayload: UserTokenPayload = {
@@ -92,7 +91,7 @@ export class AuthService {
 
 	async sendVerificationEmail(user: VerifyEmailDto) {
 		if (user.verified_email_at) {
-			throw new UnauthorizedException('User already verified');
+			throw new RpcException('User already verified');
 		}
 
 		const otp = await this.verificationService.generateOtpCode(user.id);
@@ -126,13 +125,13 @@ export class AuthService {
 			const user = await this.usersService.findOne(decoded.user);
 
 			if (!user) {
-				throw new UnauthorizedException('User not found');
+				throw new RpcException('User not found');
 			}
 
 			const isValid = await this.verifyOtp(user.id, decoded.otp);
 
 			if (!isValid) {
-				throw new UnauthorizedException('Invalid or expired OTP');
+				throw new RpcException('Invalid or expired OTP');
 			}
 
 			user.verified_email_at = new Date();
@@ -141,11 +140,7 @@ export class AuthService {
 
 			return { message: 'Email verified successfully' };
 		} catch (err) {
-			console.log(err);
-			throw new HttpException(
-				'Invalid or expired token',
-				HttpStatus.BAD_REQUEST,
-			);
+			throw new RpcException(err.message);
 		}
 	}
 
@@ -153,11 +148,11 @@ export class AuthService {
 		const user = await this.usersService.findOne(userId);
 
 		if (!user) {
-			throw new UnauthorizedException('User not found');
+			throw new RpcException('User not found');
 		}
 
 		if (user.verified_email_at) {
-			throw new UnauthorizedException('User already verified');
+			throw new RpcException('User already verified');
 		}
 
 		const otp = await this.verificationService.generateOtpCode(user.id);
@@ -175,17 +170,17 @@ export class AuthService {
 		const user = await this.usersService.findOne(userId);
 
 		if (!user) {
-			throw new UnauthorizedException('User not found');
+			throw new RpcException('User not found');
 		}
 
 		if (user.verified_email_at) {
-			throw new UnauthorizedException('User already verified');
+			throw new RpcException('User already verified');
 		}
 
 		const isValid = await this.verificationService.validateOtp(user.id, token);
 
 		if (!isValid) {
-			throw new UnauthorizedException('Invalid or Expired OTP');
+			throw new RpcException('Invalid or Expired OTP');
 		}
 
 		return true;
@@ -195,7 +190,7 @@ export class AuthService {
 		const user = await this.usersService.findOne(email);
 
 		if (!user) {
-			throw new UnauthorizedException('User not found');
+			throw new RpcException('User not found');
 		}
 
 		const otp = await this.verificationService.generateOtpCode(user.id);
@@ -229,13 +224,13 @@ export class AuthService {
 			const user = await this.usersService.findOne(decoded.user);
 
 			if (!user) {
-				throw new UnauthorizedException('User not found');
+				throw new RpcException('User not found');
 			}
 
 			const isValid = await this.verifyOtp(user.id, decoded.otp);
 
 			if (!isValid) {
-				throw new UnauthorizedException('Invalid or expired OTP');
+				throw new RpcException('Invalid or expired OTP');
 			}
 
 			user.password = resetPasswordDto.password;

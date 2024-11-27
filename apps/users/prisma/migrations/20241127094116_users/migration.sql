@@ -54,17 +54,6 @@ CREATE TABLE "user_addresses" (
     CONSTRAINT "user_addresses_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "verifications" (
-    "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "expires_at" TIMESTAMP(3) NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "verifications_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -76,6 +65,3 @@ CREATE UNIQUE INDEX "admins_username_key" ON "admins"("username");
 
 -- AddForeignKey
 ALTER TABLE "user_addresses" ADD CONSTRAINT "user_addresses_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "verifications" ADD CONSTRAINT "verifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
