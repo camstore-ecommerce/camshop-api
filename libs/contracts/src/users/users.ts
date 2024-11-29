@@ -8,26 +8,13 @@
 import { Empty } from '@app/common/interfaces';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { User } from './user.dto';
+import { User, Users } from './user.dto';
+import { UpdateUserDto } from './update-user.dto';
 
 export const protobufPackage = 'users';
 
-export interface Users {
-	count: number;
-	users: User[];
-}
-
 export interface FindOneUserDto {
 	id: string;
-}
-
-export interface UpdateUserDto {
-	id: string;
-	email: string;
-	phone: string;
-	role: string;
-	status: string;
-	verified_email_at: Date;
 }
 
 export interface UpdateUserProfileDto {

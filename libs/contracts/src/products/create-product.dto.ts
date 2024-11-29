@@ -37,7 +37,6 @@ export class CreateProductDto {
     @IsString()
 	manufacturer_id: string;
 
-    @ApiPropertyOptional()
     @IsString()
     @IsOptional()
 	image_url: string;
