@@ -4,6 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/users.service';
 import { AdminTokenPayload, UserTokenPayload } from '@app/common/interfaces';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -28,20 +29,20 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 			if (payload.role === 'admin') {
 				const user = await this.userService.findAdmin(payload.sub);
 				if (!user) {
-					throw new UnauthorizedException('Invalid token');
+					throw new RpcException('Invalid token');
 				}
 				const { password, ...result } = user;
 				return result;
 			}
 			const user = await this.userService.findOne(payload.sub);
 			if (!user) {
-				throw new UnauthorizedException('Invalid token');
+				throw new RpcException('Invalid token');
 			}
 			const { password, created_at, updated_at, deleted_at, ...result } = user;
 			return result;
 		} catch (error) {
 			console.error('Error validating JWT:', error);
-			throw new UnauthorizedException('Invalid token');
+			throw new RpcException('Invalid token');
 		}
 	}
 }

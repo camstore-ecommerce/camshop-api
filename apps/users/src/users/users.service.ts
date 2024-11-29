@@ -1,8 +1,9 @@
 import { UpdateUserDto } from '@app/contracts/users';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { UserRegisterDto } from '@app/contracts/auth';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class UsersService {
@@ -65,7 +66,7 @@ export class UsersService {
 		const isValid = await bcrypt.compare(password, user.password);
 
 		if (!isValid) {
-			throw new UnauthorizedException('Credentials are invalid');
+			throw new RpcException('Credentials are invalid');
 		}
 
 		const { password: _, created_at, updated_at, deleted_at, ...result } = user;
@@ -95,7 +96,7 @@ export class UsersService {
 		const isValid = await bcrypt.compare(password, user.password);
 
 		if (!isValid) {
-			throw new UnauthorizedException('Credentials are invalid');
+			throw new RpcException('Credentials are invalid');
 		}
 
 		const { password: _, ...result } = user;
