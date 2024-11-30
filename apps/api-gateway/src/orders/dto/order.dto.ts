@@ -1,57 +1,125 @@
-import { Address } from '@app/contracts/addresses';
+import { ApiProperty } from '@nestjs/swagger';
 import { Types } from 'mongoose';
 
-export interface OrdersDto {
-	count: number;
-	orders: OrderDto[];
-}
-
-export interface OrderItemsDto {
-	product: OrderProductDto;
-	qty: number;
-	price: number;
-	total_price: number;
-	options: any;
-}
-
-export interface OrderDto {
-	id: string;
-	status: string;
-	user: OrderUserDto;
-	order_date: Date;
-	updated_at: Date;
-	address: OrderAddressDto;
-	shipping_cost: number;
-	shipping_method: string;
-	sub_total: number;
-	tax: number;
-	discount: number;
-	total: number;
-	notes: string;
-	canceled_reason: string;
-	refund_details: string;
-	order_items: OrderItemsDto[];
-}
-
-export interface OrderProductDto {
+export class OrderProductDto {
+	@ApiProperty()
 	_id: Types.ObjectId;
+
+	@ApiProperty()
 	name: string;
+
+	@ApiProperty()
 	image_url: string;
 }
 
-export interface OrderUserDto {
+export class OrderUserDto {
+	@ApiProperty()
 	id: string;
+
+	@ApiProperty()
 	email: string;
+
+	@ApiProperty()
 	phone: string;
+
+	@ApiProperty()
 	first_name: string;
+
+	@ApiProperty()
 	last_name: string;
 }
 
-export interface OrderAddressDto {
+export class OrderAddressDto {
+	@ApiProperty()
 	id: string;
+
+	@ApiProperty()
 	address: string;
+
+	@ApiProperty()
 	city: string;
+
+	@ApiProperty()
 	state: string;
+
+	@ApiProperty()
 	country: string;
+
+	@ApiProperty()
 	postal_code: string;
+}
+
+export class OrderItemsDto {
+	@ApiProperty({type: OrderProductDto})
+	product: OrderProductDto;
+
+	@ApiProperty()
+	qty: number;
+
+	@ApiProperty()
+	price: number;
+
+	@ApiProperty()
+	total_price: number;
+
+	@ApiProperty()
+	options: any;
+}
+
+export class OrderDto {
+	@ApiProperty()
+	id: string;
+
+	@ApiProperty()
+	status: string;
+
+	@ApiProperty({type: OrderUserDto})
+	user: OrderUserDto;
+
+	@ApiProperty()
+	order_date: Date;
+
+	@ApiProperty()
+	updated_at: Date;
+
+	@ApiProperty({type: OrderAddressDto})
+	address: OrderAddressDto;
+
+	@ApiProperty()
+	shipping_cost: number;
+
+	@ApiProperty()
+	shipping_method: string;
+
+	@ApiProperty()
+	sub_total: number;
+
+	@ApiProperty()
+	tax: number;
+
+	@ApiProperty()
+	discount: number;
+
+	@ApiProperty()
+	total: number;
+
+	@ApiProperty()
+	notes: string;
+
+	@ApiProperty()
+	canceled_reason: string;
+
+	@ApiProperty()
+	refund_details: string;
+
+	@ApiProperty({type: OrderItemsDto})
+	order_items: OrderItemsDto[];
+}
+
+export class OrdersDto {
+	@ApiProperty()
+	count: number;
+
+	@ApiProperty({type: OrderDto})
+	orders: OrderDto[];
 }
