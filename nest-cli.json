@@ -7,7 +7,9 @@
     "deleteOutDir": true,
     "webpack": true,
     "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
-    "assets": ["proto/**/*.proto"],
+    "assets": [
+      "proto/**/*.proto"
+    ],
     "watchAssets": true
   },
   "projects": {
@@ -27,7 +29,16 @@
       "sourceRoot": "./",
       "compilerOptions": {
         "tsConfigPath": "apps/products/tsconfig.app.json",
-        "assets": ["proto/products/*.proto", "proto/*.proto"],
+        "assets": [
+          {
+            "include": "proto/products/*.proto",
+            "outDir": "dist/proto"
+          },
+          {
+            "include": "proto/*.proto",
+            "outDir": "dist/proto"
+          }
+        ],
         "watchAssets": true
       }
     },
@@ -38,7 +49,16 @@
       "sourceRoot": "./",
       "compilerOptions": {
         "tsConfigPath": "apps/users/tsconfig.app.json",
-        "assets": ["proto/users/*.proto", "proto/*.proto"],
+        "assets": [
+          {
+            "include": "proto/users/*.proto",
+            "outDir": "dist/proto"
+          },
+          {
+            "include": "proto/*.proto",
+            "outDir": "dist/proto"
+          }
+        ],
         "watchAssets": true
       }
     },
@@ -49,7 +69,12 @@
       "sourceRoot": "./",
       "compilerOptions": {
         "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
-        "assets": ["proto/**/*.proto"],
+        "assets": [
+          {
+            "include": "proto/**/*",
+            "outDir": "dist/proto"
+          }
+        ],
         "watchAssets": true
       }
     },
@@ -78,7 +103,12 @@
       "sourceRoot": "./",
       "compilerOptions": {
         "tsConfigPath": "apps/orders/tsconfig.app.json",
-        "assets": ["proto/**/*.proto"],
+        "assets": [
+          {
+            "include": "proto/**/*",
+            "outDir": "dist/proto"
+          }
+        ],
         "watchAssets": true
       }
     }
