@@ -11,6 +11,7 @@ RUN npm install glob rimraf
 RUN npm install
 
 COPY apps/products apps/products
+COPY proto proto
 COPY libs libs
 
 RUN npm run build products
@@ -28,5 +29,6 @@ COPY apps/products/.env ./apps/products/
 RUN npm install --only=production
 
 COPY --from=development /usr/src/app/dist ./dist
+RUN mv dist/proto proto
 
-CMD ["node", "dist/apps/products/main"]
+CMD ["node", "dist/apps/products/src/main"]
