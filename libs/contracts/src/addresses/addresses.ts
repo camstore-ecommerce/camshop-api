@@ -8,14 +8,9 @@
 import { Empty } from "@app/common/interfaces";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
-import { Address, CreateAddressDto, UpdateAddressDto } from ".";
+import { Address, Addresses, CreateAddressDto, UpdateAddressDto } from ".";
 
 export const protobufPackage = "users";
-
-export interface Addresses {
-  count: number;
-  addresses: Address[];
-}
 
 export interface FindAllAddressDto {
   user_id: string;
