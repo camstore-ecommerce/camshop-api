@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit, BadRequestException } from '@nestjs/common';
 import { PRODUCTS_CLIENT } from '@app/common/constants/services';
 
 import {
@@ -11,7 +11,7 @@ import {
 
 import { ClientGrpc } from '@nestjs/microservices';
 import { CdnService } from '../cdn/cdn.service';
-import { lastValueFrom, map, switchMap } from 'rxjs';
+import { lastValueFrom, map, switchMap, throwError, catchError } from 'rxjs';
 
 @Injectable()
 export class ProductsService implements OnModuleInit {
@@ -50,7 +50,10 @@ export class ProductsService implements OnModuleInit {
 				}
 				return product;
 			}),
-			map((response) => response), // Ensure the response is properly handled
+			map((response) => response),
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			}),
 		);
 	}
 
@@ -59,7 +62,12 @@ export class ProductsService implements OnModuleInit {
 	}
 
 	findOne(id: string) {
-		return this.productsServiceClient.findOne({ id });
+		return this.productsServiceClient.findOne({ id }).pipe(
+			map((response) => response),
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			}),
+		);
 	}
 
 	update(
@@ -88,17 +96,25 @@ export class ProductsService implements OnModuleInit {
 				return product;
 			}),
 			map((response) => response), // Ensure the response is properly handled
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			})
 		);
 	}
 
 	remove(id: string) {
-		return this.productsServiceClient.remove({ id });
+		return this.productsServiceClient.remove({ id }).pipe(
+			map((response) => response),
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			}),
+		);
 	}
 
 	async permanentlyRemove(id: string) {
 		return this.productsServiceClient.permanentlyRemove({ id }).pipe(
 			switchMap(async () => {
-				await this.cdnService.deleteImage(id);
+				await this.cdnService.deleteImage(`camshop/products/${id}`);
 				return id;
 			}),
 		);

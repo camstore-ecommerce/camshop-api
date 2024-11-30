@@ -5,9 +5,9 @@ import {
 	ManufacturersServiceClient,
 	MANUFACTURERS_SERVICE_NAME,
 } from '@app/contracts/manufacturers';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { map } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 
 @Injectable()
 export class ManufacturersService implements OnModuleInit {
@@ -33,21 +33,37 @@ export class ManufacturersService implements OnModuleInit {
 	}
 
 	findOne(id: string) {
-		return this.manufacturersServiceClient.findOne({ id });
+		return this.manufacturersServiceClient.findOne({ id }).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			}),
+		);
 	}
 
 	update(id: string, updateManufacturerDto: ClientUpdateManufacturerDto) {
 		return this.manufacturersServiceClient.update({
 			id,
 			...updateManufacturerDto,
-		});
+		}).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			}),
+		);
 	}
 
 	remove(id: string) {
-		return this.manufacturersServiceClient.remove({ id });
+		return this.manufacturersServiceClient.remove({ id }).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			}),
+		);
 	}
 
 	permanentlyRemove(id: string) {
-		return this.manufacturersServiceClient.permanentlyRemove({ id });
+		return this.manufacturersServiceClient.permanentlyRemove({ id }).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			}),
+		);
 	}
 }

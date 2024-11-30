@@ -14,7 +14,7 @@ export class AddressesController {
 
   @Post()
   @Roles(Role.User)
-  @ApiOperation({ summary: 'Create address' })
+  @ApiOperation({ summary: 'Create address', description: 'User access' })
   @ApiResponse({ status: 201, type: Address})
   create(@Body() createAddressDto: CreateAddressDto, @AuthUser() user: UserDto) {
     return this.addressesService.create(createAddressDto, user.id);
@@ -22,7 +22,7 @@ export class AddressesController {
 
   @Get()
   @Roles(Role.User)
-  @ApiOperation({ summary: 'Find all addresses' })
+  @ApiOperation({ summary: 'Find all addresses', description: 'User access' })
   @ApiResponse({ status: 200, type: Addresses})
   findAll(@AuthUser() user: UserDto) {
     return this.addressesService.findAll(user.id);
@@ -30,7 +30,7 @@ export class AddressesController {
 
   @Get(':id')
   @Roles(Role.User)
-  @ApiOperation({ summary: 'Find one address' })
+  @ApiOperation({ summary: 'Find one address', description: 'User access' })
   @ApiResponse({ status: 200, type: Address})
   findOne(@Param('id') id: string, @AuthUser() user: UserDto) {
     return this.addressesService.findOne(id, user.id);
@@ -38,7 +38,7 @@ export class AddressesController {
 
   @Patch(':id')
   @Roles(Role.User)
-  @ApiOperation({ summary: 'Update address' })
+  @ApiOperation({ summary: 'Update address', description: 'User access' })
   @ApiResponse({ status: 200, type: Address})
   update(@Param('id') id: string, @Body() updateAddressDto: UpdateAddressDto, @AuthUser() user: UserDto) {
     return this.addressesService.update(id, updateAddressDto, user.id);
@@ -46,7 +46,7 @@ export class AddressesController {
 
   @Delete(':id')
   @Roles(Role.User)
-  @ApiOperation({ summary: 'Remove address' })
+  @ApiOperation({ summary: 'Remove address', description: 'User access' })
   remove(@Param('id') id: string, @AuthUser() user: UserDto) {
     return this.addressesService.remove(id, user.id);
   }

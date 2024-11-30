@@ -1,7 +1,7 @@
 import { USERS_CLIENT } from '@app/common/constants/services';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, throwError } from 'rxjs';
 import {
 	AdminLoginDto,
 	AUTH_SERVICE_NAME,
@@ -40,12 +40,20 @@ export class AuthService implements OnModuleInit {
 	}
 
 	async sendVerifyEmail(user: VerifyEmailDto) {
-		return await firstValueFrom(this.authServiceClient.verifyEmail(user));
+		return await firstValueFrom(this.authServiceClient.verifyEmail(user).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			}),
+		));
 	}
 
 	async confirmVerifyEmail(token: string) {
 		return await firstValueFrom(
-			this.authServiceClient.confirmVerifyEmail({ token }),
+			this.authServiceClient.confirmVerifyEmail({ token }).pipe(
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				}),
+			)
 		);
 	}
 

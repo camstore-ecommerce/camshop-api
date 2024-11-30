@@ -6,10 +6,11 @@ import {
 	OrdersServiceClient,
 	UpdateOrderDto,
 } from '@app/contracts/orders';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { OrderDto, OrdersDto } from './dto/order.dto';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
+import { error } from 'console';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
@@ -68,7 +69,12 @@ export class OrdersService implements OnModuleInit {
 	create(createOrderDto: CreateOrderDto): Observable<OrderDto> {
 		return this.ordersServiceClient
 			.create(createOrderDto)
-			.pipe(map((order) => this.mapOrder(order)));
+			.pipe(
+				map((order) => this.mapOrder(order)),
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				})
+			);
 	}
 
 	findAll(): Observable<OrdersDto> {
@@ -95,13 +101,23 @@ export class OrdersService implements OnModuleInit {
 	findOneByUser(id: string, user_id: string) {
 		return this.ordersServiceClient
 			.findOneByUser({ id, user_id })
-			.pipe(map((order) => this.mapOrder(order)));
+			.pipe(
+				map((order) => this.mapOrder(order)),
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				})
+			);
 	}
 
 	findOne(id: string) {
 		return this.ordersServiceClient
 			.findOne({ id })
-			.pipe(map((order) => this.mapOrder(order)));
+			.pipe(
+				map((order) => this.mapOrder(order)),
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				})
+			);
 	}
 
 	update(id: string, updateOrderDto: UpdateOrderDto) {
@@ -110,14 +126,27 @@ export class OrdersService implements OnModuleInit {
 				id,
 				...updateOrderDto,
 			})
-			.pipe(map((order) => this.mapOrder(order)));
+			.pipe(
+				map((order) => this.mapOrder(order)),
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				})
+			);
 	}
 
 	remove(id: string) {
-		return this.ordersServiceClient.remove({ id });
+		return this.ordersServiceClient.remove({ id }).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			})
+		);
 	}
 
 	permanentlyRemove(id: string) {
-		return this.ordersServiceClient.permanentlyRemove({ id });
+		return this.ordersServiceClient.permanentlyRemove({ id }).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			})
+		);
 	}
 }

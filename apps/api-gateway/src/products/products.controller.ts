@@ -6,17 +6,16 @@ import {
 	Patch,
 	Param,
 	Delete,
-	UseInterceptors,
 	UploadedFile,
 	UseGuards,
+	BadRequestException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto, Product, Products, UpdateProductDto } from '@app/contracts/products';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '@app/common/guards';
 import { Public, Roles } from '@app/common/decorators';
 import { Role } from '@app/common/enums';
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, getSchemaPath } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ApiBodyWithSingleFile, ApiDocsPagination } from '@app/common/decorators/swagger-form-data.decorators';
 
 @Controller('products')
@@ -36,13 +35,13 @@ export class ProductsController {
 			stock: { type: 'number', },
 			original_price: { type: 'number', },
 			category_id: { type: 'string', },
+			manufacturer_id: { type: 'string', },
 			tags: {
 				type: 'array',
 				items: {
 					type: 'string',
 				},
 			},
-			manufacturer_id: { type: 'string', },
 			image: {
 				type: 'string',
 				format: 'binary',
@@ -88,13 +87,13 @@ export class ProductsController {
 			stock: { type: 'number', },
 			original_price: { type: 'number', },
 			category_id: { type: 'string', },
+			manufacturer_id: { type: 'string', },
 			tags: {
 				type: 'array',
 				items: {
 					type: 'string',
 				},
 			},
-			manufacturer_id: { type: 'string', },
 			image: {
 				type: 'string',
 				format: 'binary',

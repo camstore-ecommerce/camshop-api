@@ -19,7 +19,7 @@ import {
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthUser } from '@app/common/decorators';
 import { Admin, UserDto } from '@app/contracts/users';
-import {  ApiBody, ApiExcludeEndpoint, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiExcludeEndpoint, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RpcException } from '@nestjs/microservices';
 
 @Controller('auth')
@@ -94,25 +94,18 @@ export class AuthController {
 	@ApiOperation({ summary: 'Send verify email to logged in user' })
 	@UseGuards(JwtAuthGuard)
 	async sendVerifyEmail(@AuthUser() user: UserDto) {
-		try {
-			if (user.role === 'user') {
-				return await this.authService.sendVerifyEmail(user);
-			}
-
-			return { message: 'Only users can verify email' };
-		} catch (error) {
-			throw new BadRequestException(error.message);
+		if (user.role === 'user') {
+			return await this.authService.sendVerifyEmail(user);
 		}
+
+		return { message: 'Only users can verify email' };
+
 	}
 
 	@Get('confirm-verify-email')
 	@ApiOperation({ summary: 'Confirm verify email', description: 'Confirm verify email using token from mail' })
 	async verify(@Query('token') token: string) {
-		try {
-			return await this.authService.confirmVerifyEmail(token);
-		} catch (error) {
-			throw new BadRequestException(error.message);
-		}
+		return await this.authService.confirmVerifyEmail(token);
 	}
 
 	@ApiExcludeEndpoint()

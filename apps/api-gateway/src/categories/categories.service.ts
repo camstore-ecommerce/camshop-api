@@ -5,8 +5,9 @@ import {
 	CreateCategoryDto,
 	UpdateCategoryDto,
 } from '@app/contracts/categories';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
+import { catchError, throwError } from 'rxjs';
 
 @Injectable()
 export class CategoriesService implements OnModuleInit {
@@ -31,18 +32,34 @@ export class CategoriesService implements OnModuleInit {
 	}
 
 	findOne(id: string) {
-		return this.categtoriesServiceClient.findOne({ id });
+		return this.categtoriesServiceClient.findOne({ id }).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			}),
+		);
 	}
 
 	update(id: string, updateCategoryDto: UpdateCategoryDto) {
-		return this.categtoriesServiceClient.update({ id, ...updateCategoryDto });
+		return this.categtoriesServiceClient.update({ id, ...updateCategoryDto }).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			})
+		);
 	}
 
 	remove(id: string) {
-		return this.categtoriesServiceClient.remove({ id });
+		return this.categtoriesServiceClient.remove({ id }).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			})
+		);
 	}
 
 	permanentlyRemove(id: string) {
-		return this.categtoriesServiceClient.permanentlyRemove({ id });
+		return this.categtoriesServiceClient.permanentlyRemove({ id }).pipe(
+			catchError((error) => {
+				return throwError(() => new BadRequestException(error.message));
+			})
+		);
 	}
 }
