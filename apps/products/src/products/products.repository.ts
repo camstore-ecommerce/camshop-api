@@ -1,8 +1,9 @@
 import { AbstractMongoRepository } from '@app/common/database';
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Product } from './schema/products.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class ProductsRepository extends AbstractMongoRepository<Product> {
@@ -17,19 +18,23 @@ export class ProductsRepository extends AbstractMongoRepository<Product> {
 		filterQuery: FilterQuery<Product>,
 		options?: QueryOptions<Product>,
 	): Promise<{ count: number; documents: Product[] }> {
-		const [count, documents] = await Promise.all([
-			this.model.countDocuments({ ...filterQuery, deleted_at: undefined }),
-			this.model
-				.find(
-					{ ...filterQuery, deleted_at: null },
-					options?.projection,
-					options,
-				)
-				.lean<Product[]>(true)
-				.populate('category')
-				.populate('manufacturer'),
-		]); // Implement this
-		return { count, documents };
+		try {
+			const [count, documents] = await Promise.all([
+				this.model.countDocuments({ ...filterQuery, deleted_at: undefined }),
+				this.model
+					.find(
+						{ ...filterQuery, deleted_at: null },
+						options?.projection,
+						options,
+					)
+					.lean<Product[]>(true)
+					.populate('category')
+					.populate('manufacturer'),
+			]); // Implement this
+			return { count, documents };
+		} catch (error) {
+			throw new RpcException(error.message);
+		}
 	}
 
 	async findOne(filterQuery: FilterQuery<Product>): Promise<Product> {
@@ -46,7 +51,7 @@ export class ProductsRepository extends AbstractMongoRepository<Product> {
 			}
 			return document.deleted_at ? null : document;
 		} catch (error) {
-			throw new NotFoundException('Document not found');
+			throw new RpcException('Document not found');
 		}
 	}
 
@@ -65,7 +70,7 @@ export class ProductsRepository extends AbstractMongoRepository<Product> {
 			this.logger.warn(
 				`Document not found with filter: ${JSON.stringify(filterQuery)}`,
 			);
-			throw new NotFoundException('Document not found');
+			throw new RpcException('Document not found');
 		}
 		return document;
 	}
