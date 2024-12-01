@@ -1,5 +1,5 @@
 {
-    "name": "@camshop/mail",
+    "name": "@camshop/products",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -12,11 +12,6 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "amqp-connection-manager": "^4.1.14",
-        "amqplib": "^0.10.5",
-        "nodemailer": "^6.9.15"
-    },
-    "devDependencies": {
-        "@types/nodemailer": "^6.4.16"
+        "mongoose": "^8.8.3"
     }
 }

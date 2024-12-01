@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/api/test/jest-e2e.json",
-    "protoc": "npx protoc --plugin=protoc-gen-ts_proto=node_modules\\.bin\\protoc-gen-ts_proto.cmd --ts_proto_out=./ --ts_proto_opt=nestJs=true ./proto/users/addresses.proto"
+    "protoc": "npx protoc --plugin=protoc-gen-ts_proto=node_modules\\.bin\\protoc-gen-ts_proto.cmd --ts_proto_out=./ --ts_proto_opt=nestJs=true ./proto/cart/cart.proto"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.12.2",
@@ -30,12 +30,10 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/microservices": "^10.4.1",
-    "@nestjs/mongoose": "^10.0.10",
+    "@nestjs/mongoose": "^10.1.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/schedule": "^4.1.1",
     "@nestjs/swagger": "^8.0.7",
-    "amqp-connection-manager": "^4.1.14",
-    "amqplib": "^0.10.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cloudinary": "^2.5.1",
@@ -43,7 +41,6 @@
     "csurf": "^1.11.0",
     "helmet": "^7.1.0",
     "joi": "^17.13.3",
-    "mongoose": "^8.7.0",
     "nestjs-pino": "^4.1.0",
     "pino-http": "^10.3.0",
     "pino-pretty": "^11.2.2",
