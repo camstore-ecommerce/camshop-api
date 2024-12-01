@@ -15,7 +15,7 @@ async function bootstrap() {
 					'proto/products/manufacturers.proto',
 					'proto/products/categories.proto',
 				],
-				url: process.env.GRPC_URL || '0.0.0.0:50051',
+				url: process.env.GRPC_URL,
 				loader: {
 					keepCase: true,
 					longs: String,

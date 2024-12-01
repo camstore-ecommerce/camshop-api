@@ -7,7 +7,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
     RedisModule.forRootAsync({
       useFactory: () => ({
         type: 'single',
-        url: `redis://${process.env.REDIS_HOST || 'localhost'}:6379`,
+        url: `redis://${process.env.REDIS_HOST || '0.0.0.0'}:6379`,
       }),
     }),
   ],

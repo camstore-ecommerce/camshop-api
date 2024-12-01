@@ -26,7 +26,7 @@ import { MAIL_CLIENT } from '@app/common/constants/services';
 				name: MAIL_CLIENT,
 				transport: Transport.RMQ,
 				options: {
-					urls: [process.env.RMQ_URL || 'amqp://localhost:5672'],
+					urls: [process.env.MAIL_CLIENT_URL],
 					queue: 'mail_queue',
 					queueOptions: {
 						durable: false,

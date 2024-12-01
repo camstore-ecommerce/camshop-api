@@ -14,7 +14,7 @@ async function bootstrap() {
 					'proto/users/users.proto', 
 					'proto/users/auth.proto', 
 					'proto/users/addresses.proto'],
-				url: process.env.GRPC_URL || '0.0.0.0:50052',
+				url: process.env.GRPC_URL,
 				loader: {
 					keepCase: true,
 					longs: String,
