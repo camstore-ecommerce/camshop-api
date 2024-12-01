@@ -11,7 +11,7 @@ async function bootstrap() {
 			options: {
 				package: ORDERS_PACKAGE_NAME,
 				protoPath: ['proto/orders/orders.proto'],
-				url: process.env.GRPC_URL || '0.0.0.0:50053',
+				url: process.env.GRPC_URL,
 				loader: {
 					keepCase: true,
 					longs: String,

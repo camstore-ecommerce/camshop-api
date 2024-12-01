@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { OrdersModule } from './orders/orders.module';
-import { ClientConfigService } from './client-config/client-config.service';
 import * as Joi from 'joi';
 import { ClientConfigModule } from './client-config/client-config.module';
 

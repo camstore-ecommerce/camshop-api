@@ -18,7 +18,7 @@ export class ClientConfigService {
 					'proto/products/manufacturers.proto',
 					'proto/products/categories.proto',
 				],
-				url: this.configService.get('PRODUCTS_CLIENT_URL') || '0.0.0.0:50051',
+				url: this.configService.get('PRODUCTS_CLIENT_URL'),
 				loader: {
 					keepCase: true,
 					longs: String,
@@ -40,7 +40,7 @@ export class ClientConfigService {
 					'proto/users/auth.proto',
 					'proto/users/addresses.proto',
 				],
-				url: this.configService.get('USERS_CLIENT_URL') || '0.0.0.0:50052',
+				url: this.configService.get('USERS_CLIENT_URL'),
 				loader: {
 					keepCase: true,
 					longs: String,
