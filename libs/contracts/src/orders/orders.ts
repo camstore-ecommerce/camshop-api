@@ -8,11 +8,9 @@
 import { Empty } from '@app/common/interfaces';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { Product } from '../products';
-import { Address } from '../addresses';
-import { User } from '../users';
 import { UpdateOrderDto } from './update-order.dto';
 import { CreateOrderDto } from './create-order.dto';
+import { Order, Orders } from './order.dto';
 
 export const protobufPackage = 'orders';
 
@@ -37,54 +35,20 @@ export interface PermanentlyRemoveOrderDto {
 	id: string;
 }
 
-export interface OrdersResponse {
-	count: number;
-	orders: OrderResponse[];
-}
-
-export interface OrderResponse {
-	id: string;
-	user: User;
-	status: string;
-	order_date: Date | undefined;
-	updated_at: Date | undefined;
-	deleted_at: Date | undefined;
-	order_items: OrderItemsResponse[];
-	address: Address;
-	shipping_cost: number;
-	shipping_method: string;
-	sub_total: number;
-	tax: number;
-	discount: number;
-	total: number;
-	notes: string;
-	canceled_reason: string;
-	refund_details: string;
-}
-
-export interface OrderItemsResponse {
-	order_id: string;
-	product: Product;
-	qty: number;
-	price: number;
-	total_price: number;
-	options: any;
-}
-
 export const ORDERS_PACKAGE_NAME = 'orders';
 
 export interface OrdersServiceClient {
-	findOne(request: FindOneOrderDto): Observable<OrderResponse>;
+	findOne(request: FindOneOrderDto): Observable<Order>;
 
-	findAll(request: Empty): Observable<OrdersResponse>;
+	findAll(request: Empty): Observable<Orders>;
 
-	findAllByUser(request: FindAllOrderByUserDto): Observable<OrdersResponse>;
+	findAllByUser(request: FindAllOrderByUserDto): Observable<Orders>;
 
-	findOneByUser(request: FindOneOrderByUserDto): Observable<OrderResponse>;
+	findOneByUser(request: FindOneOrderByUserDto): Observable<Order>;
 
-	create(request: CreateOrderDto): Observable<OrderResponse>;
+	create(request: CreateOrderDto): Observable<Order>;
 
-	update(request: UpdateOrderDto): Observable<OrderResponse>;
+	update(request: UpdateOrderDto): Observable<Order>;
 
 	remove(request: RemoveOrderDto): Observable<Empty>;
 
@@ -94,27 +58,27 @@ export interface OrdersServiceClient {
 export interface OrdersServiceController {
 	findOne(
 		request: FindOneOrderDto,
-	): Promise<OrderResponse> | Observable<OrderResponse> | OrderResponse;
+	): Promise<Order> | Observable<Order> | Order;
 
 	findAll(
 		request: Empty,
-	): Promise<OrdersResponse> | Observable<OrdersResponse> | OrdersResponse;
+	): Promise<Orders> | Observable<Orders> | Orders;
 
 	findAllByUser(
 		request: FindAllOrderByUserDto,
-	): Promise<OrdersResponse> | Observable<OrdersResponse> | OrdersResponse;
+	): Promise<Orders> | Observable<Orders> | Orders;
 
 	findOneByUser(
 		request: FindOneOrderByUserDto,
-	): Promise<OrderResponse> | Observable<OrderResponse> | OrderResponse;
+	): Promise<Order> | Observable<Order> | Order;
 
 	create(
 		request: CreateOrderDto,
-	): Promise<OrderResponse> | Observable<OrderResponse> | OrderResponse;
+	): Promise<Order> | Observable<Order> | Order;
 
 	update(
 		request: UpdateOrderDto,
-	): Promise<OrderResponse> | Observable<OrderResponse> | OrderResponse;
+	): Promise<Order> | Observable<Order> | Order;
 
 	remove(request: RemoveOrderDto): Promise<Empty> | Observable<Empty> | Empty;
 

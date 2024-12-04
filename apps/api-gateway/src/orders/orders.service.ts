@@ -1,8 +1,8 @@
 import { ORDERS_CLIENT } from '@app/common/constants/services';
 import {
 	CreateOrderDto,
-	OrderResponse,
 	ORDERS_SERVICE_NAME,
+	Order,
 	OrdersServiceClient,
 	UpdateOrderDto,
 } from '@app/contracts/orders';
@@ -10,7 +10,6 @@ import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/c
 import { ClientGrpc } from '@nestjs/microservices';
 import { OrderDto, OrdersDto } from './dto/order.dto';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { error } from 'console';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
@@ -25,7 +24,7 @@ export class OrdersService implements OnModuleInit {
 			this.ordersClient.getService<OrdersServiceClient>(ORDERS_SERVICE_NAME);
 	}
 
-	private mapOrder(order: OrderResponse): OrderDto {
+	private mapOrder(order: Order): OrderDto {
 		return {
 			id: order.id,
 			user: {
@@ -58,7 +57,7 @@ export class OrdersService implements OnModuleInit {
 			order_items: order.order_items.map((item) => ({
 				...item,
 				product: {
-					_id: item.product._id,
+					id: item.product._id.toString(),
 					name: item.product.name,
 					image_url: item.product.image_url,
 				},

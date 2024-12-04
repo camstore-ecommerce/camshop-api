@@ -1,6 +1,6 @@
 import {
 	CreateOrderDto,
-	OrderResponse,
+	Order,
 	UpdateOrderDto,
 } from '@app/contracts/orders';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
@@ -92,7 +92,7 @@ export class OrdersService implements OnModuleInit {
 			include: { order_items: true },
 		});
 
-		const orderResponse: OrderResponse = {
+		const orderResponse: Order = {
 			...order,
 			user: user,
 			address: address,
@@ -132,7 +132,7 @@ export class OrdersService implements OnModuleInit {
 		const users = await firstValueFrom(this.usersServiceClient.findAll({}));
 
 
-		const ordersResponse: Promise<OrderResponse>[] = orders.map(async (order) => {
+		const ordersResponse: Promise<Order>[] = orders.map(async (order) => {
 			const user = users.users.find((user) => user.id === order.user_id);
 			const address = addresses.addresses.find((address) => address.id === order.address_id);
 
@@ -179,7 +179,7 @@ export class OrdersService implements OnModuleInit {
 		const users = await firstValueFrom(this.usersServiceClient.findAll({}));
 
 
-		const ordersResponse: Promise<OrderResponse>[] = orders.map(async (order) => {
+		const ordersResponse: Promise<Order>[] = orders.map(async (order) => {
 			const user = users.users.find((user) => user.id === order.user_id);
 			const address = addresses.addresses.find((address) => address.id === order.address_id);
 
@@ -221,7 +221,7 @@ export class OrdersService implements OnModuleInit {
 			this.addressesServiceClient.findOne({ id: order.address_id, user_id: order.user_id }),
 		);
 
-		const orderResponse: OrderResponse = {
+		const orderResponse: Order = {
 			...order,
 			user: user,
 			address: address,
@@ -256,7 +256,7 @@ export class OrdersService implements OnModuleInit {
 			this.addressesServiceClient.findOne({ id: order.address_id, user_id: order.user_id }),
 		);
 
-		const orderResponse: OrderResponse = {
+		const orderResponse: Order = {
 			...order,
 			user: user,
 			address: address,
@@ -294,7 +294,7 @@ export class OrdersService implements OnModuleInit {
 			include: { order_items: true },
 		});
 
-		const orderResponse: OrderResponse = {
+		const orderResponse: Order = {
 			...order,
 			address: await firstValueFrom(
 				this.addressesServiceClient.findOne({ id: order.address_id, user_id: order.user_id }),

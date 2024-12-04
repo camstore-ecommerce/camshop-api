@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 
 export class OrderProductDto {
 	@ApiProperty()
-	_id: Types.ObjectId;
+	id: string;
 
 	@ApiProperty()
 	name: string;

@@ -5,8 +5,8 @@ import {
 	FindAllOrderByUserDto,
 	FindOneOrderByUserDto,
 	FindOneOrderDto,
-	OrderResponse,
-	OrdersResponse,
+	Order,
+	Orders,
 	OrdersServiceController,
 	OrdersServiceControllerMethods,
 	PermanentlyRemoveOrderDto,
@@ -19,27 +19,27 @@ import {
 export class OrdersController implements OrdersServiceController {
 	constructor(private readonly ordersService: OrdersService) {}
 
-	async create(createOrderDto: CreateOrderDto): Promise<OrderResponse> {
+	async create(createOrderDto: CreateOrderDto): Promise<Order> {
 		return await this.ordersService.create(createOrderDto);
 	}
 
-	async findAll(): Promise<OrdersResponse> {
+	async findAll(): Promise<Orders> {
 		return await this.ordersService.findAll();
 	}
 
-	async findAllByUser(findAllOrderByUserDto: FindAllOrderByUserDto): Promise<OrdersResponse> {
+	async findAllByUser(findAllOrderByUserDto: FindAllOrderByUserDto): Promise<Orders> {
 		return this.ordersService.findAllByUser(findAllOrderByUserDto.user_id);
 	}
 
-	async findOneByUser(findOneOrderByUserDto: FindOneOrderByUserDto): Promise<OrderResponse> {
+	async findOneByUser(findOneOrderByUserDto: FindOneOrderByUserDto): Promise<Order> {
 		return this.ordersService.findOneByUser(findOneOrderByUserDto.id, findOneOrderByUserDto.user_id);
 	}
 
-	async findOne(findOneOrderDto: FindOneOrderDto): Promise<OrderResponse> {
+	async findOne(findOneOrderDto: FindOneOrderDto): Promise<Order> {
 		return this.ordersService.findOne(findOneOrderDto.id);
 	}
 
-	async update(updateOrderDto: UpdateOrderDto): Promise<OrderResponse> {
+	async update(updateOrderDto: UpdateOrderDto): Promise<Order> {
 		return this.ordersService.update(updateOrderDto.id, updateOrderDto);
 	}
 
