@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package cart;
+
+import "../products/products.proto";
+import "../users/users.proto";
+import "google/protobuf/struct.proto";
+
+// import "proto/products/products.proto";
+// import "proto/users/users.proto";
+
+service CartService {
+  rpc AddToCart(AddToCartDto) returns (Cart);
+  rpc GetCart(GetCartDto) returns (Cart);
+  rpc RemoveFromCart(RemoveFromCartDto) returns (Cart);
+}
+
+message AddToCartDto {
+  string user_id = 1;
+  string product_id = 2;
+  int32 quantity = 3;
+  float price = 4;
+  google.protobuf.Struct options = 5;
+}
+
+message GetCartDto {
+  string user_id = 1;
+}
+
+message RemoveFromCartDto {
+  string user_id = 1;
+  string product_id = 2;
+}
+
+message Cart {
+  users.User user = 1;
+  repeated CartItem items = 2;
+}
+
+message CartItem {
+  products.Product product = 1;
+  int32 quantity = 2;
+  float price = 3;
+  google.protobuf.Struct options = 4;
+}
