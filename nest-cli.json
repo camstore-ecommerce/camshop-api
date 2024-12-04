@@ -111,6 +111,30 @@
         ],
         "watchAssets": true
       }
+    },
+    "cart": {
+      "type": "application",
+      "root": "apps/cart",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cart/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "proto/users/*.proto",
+            "outDir": "dist/proto"
+          },
+          {
+            "include": "proto/products/*.proto",
+            "outDir": "dist/proto"
+          },
+          {
+            "include": "proto/cart/*.proto",
+            "outDir": "dist/proto"
+          }
+        ],
+        "watchAssets": true
+      }
     }
   },
   "monorepo": true,
