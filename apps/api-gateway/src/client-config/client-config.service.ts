@@ -97,6 +97,7 @@ export class ClientConfigService {
 					enums: String,
 					defaults: true,
 					oneofs: true,
+					objects: true,
 				},
 			},
 		};
