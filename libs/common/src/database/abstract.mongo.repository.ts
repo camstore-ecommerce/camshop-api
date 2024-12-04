@@ -21,8 +21,8 @@ export abstract class AbstractMongoRepository<
 
 			return (await createdDocument.save()).toJSON() as unknown as TDocument;
 		} catch (error) {
-			this.logger.error(error);
-			throw new RpcException('Failed to create document');
+			this.logger.error(error.message);
+			throw new RpcException(error.message);
 		}
 	}
 
@@ -31,8 +31,12 @@ export abstract class AbstractMongoRepository<
 			const document = await this.model
 				.findOne(filterQuery)
 				.lean<TDocument>(true);
+			if (!document) {
+				return null;
+			}
 			return document.deleted_at ? null : document;
 		} catch (error) {
+			this.logger.error(error.message);
 			throw new RpcException(error.message);
 		}
 	}
@@ -48,14 +52,12 @@ export abstract class AbstractMongoRepository<
 				})
 				.lean<TDocument>(true);
 			if (!document) {
-				this.logger.warn(
-					`Document not found with filter: ${JSON.stringify(filterQuery)}`,
-				);
-				throw new RpcException('Document not found');
+				return null;
 			}
 			return document;
 
 		} catch (error) {
+			this.logger.error(error.message);
 			throw new RpcException(error.message);
 		}
 	}
@@ -74,26 +76,19 @@ export abstract class AbstractMongoRepository<
 						options,
 					)
 					.lean<TDocument[]>(true),
-			]); // Implement this
+			]);
 			return { count, documents };
 		} catch (error) {
+			this.logger.error(error.message);
 			throw new RpcException(error.message);
 		}
 	}
 
 	async softDelete(filterQuery: FilterQuery<TDocument>): Promise<TDocument> {
-		try {			
-			const document = await this.model
-				.findOne(filterQuery)
-				.lean<TDocument>(true);
-			if (!document) {
-				this.logger.warn(
-					`Document not found with filter: ${JSON.stringify(filterQuery)}`,
-				);
-				throw new RpcException('Document not found');
-			}
+		try {
 			return this.findOneAndUpdate(filterQuery, { deleted_at: new Date() });
 		} catch (error) {
+			this.logger.error(error.message);
 			throw new RpcException(error.message);
 		}
 	}
@@ -101,6 +96,12 @@ export abstract class AbstractMongoRepository<
 	async findOneAndDelete(
 		filterQuery: FilterQuery<TDocument>,
 	): Promise<TDocument> {
-		return this.model.findOneAndDelete(filterQuery).lean<TDocument>(true);
+		try {
+			return this.model.findOneAndDelete(filterQuery).lean<TDocument>(true);
+		}
+		catch (error) {
+			this.logger.error(error.message);
+			throw new RpcException(error.message);
+		}
 	}
 }
