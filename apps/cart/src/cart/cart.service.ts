@@ -51,6 +51,7 @@ export class CartService implements OnModuleInit {
   }
 
   async addToCart(addToCartDto: AddToCartDto) {
+    addToCartDto.options = Struct.unwrap(addToCartDto.options);
     const { user_id, ...cartDto } = addToCartDto;
 
     let cart = await this.cartRepository.findOne({ user_id: addToCartDto.user_id });
