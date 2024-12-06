@@ -13,14 +13,13 @@ import {
 	RemoveProductDto,
 	UpdateProductDto,
 } from '@app/contracts/products';
-import { Observable } from 'rxjs';
 
 @Controller()
 @ProductsServiceControllerMethods()
 export class ProductsController implements ProductsServiceController {
 	constructor(private readonly productsService: ProductsService) {}
 
-	async create(createProductDto: CreateProductDto): Promise<Product> {
+	async create(createProductDto: CreateProductDto) {
 		return await this.productsService.create(createProductDto);
 	}
 
@@ -28,15 +27,15 @@ export class ProductsController implements ProductsServiceController {
 		return await this.productsService.findAll();
 	}
 
-	async findByIds(findByIdsDto: FindByIdsDto): Promise<Products> {
+	async findByIds(findByIdsDto: FindByIdsDto) {
 		return await this.productsService.findByIds(findByIdsDto.ids);
 	}
 
-	async findOne(findOneProductDto: FindOneProductDto): Promise<Product> {
+	async findOne(findOneProductDto: FindOneProductDto) {
 		return await this.productsService.findOne(findOneProductDto.id);
 	}
 
-	async update(updateProductDto: UpdateProductDto): Promise<Product> {
+	async update(updateProductDto: UpdateProductDto) {
 		return await this.productsService.update(
 			updateProductDto.id,
 			updateProductDto,

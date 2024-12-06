@@ -17,11 +17,9 @@ export class ProductsRepository extends AbstractMongoRepository<Product> {
 	async find(
 		filterQuery: FilterQuery<Product>,
 		options?: QueryOptions<Product>,
-	): Promise<{ count: number; documents: Product[] }> {
+	): Promise<Product[]> {
 		try {
-			const [count, documents] = await Promise.all([
-				this.model.countDocuments({ ...filterQuery, deleted_at: undefined }),
-				this.model
+			const documents = this.model
 					.find(
 						{ ...filterQuery, deleted_at: null },
 						options?.projection,
@@ -29,10 +27,10 @@ export class ProductsRepository extends AbstractMongoRepository<Product> {
 					)
 					.lean<Product[]>(true)
 					.populate('category')
-					.populate('manufacturer'),
-			]); // Implement this
-			return { count, documents };
+					.populate('manufacturer');
+			return documents;
 		} catch (error) {
+			console.error(error);
 			throw new RpcException(error.message);
 		}
 	}
@@ -51,7 +49,8 @@ export class ProductsRepository extends AbstractMongoRepository<Product> {
 			}
 			return document.deleted_at ? null : document;
 		} catch (error) {
-			throw new RpcException('Document not found');
+			console.error(error);
+			throw new RpcException(error.message);
 		}
 	}
 
@@ -59,19 +58,24 @@ export class ProductsRepository extends AbstractMongoRepository<Product> {
 		filterQuery: FilterQuery<Product>,
 		update: UpdateQuery<Product>,
 	): Promise<Product> {
-		const document = await this.model
-			.findOneAndUpdate({ ...filterQuery, deleted_at: null }, update, {
-				new: true,
-			})
-			.lean<Product>(true)
-			.populate('category')
-			.populate('manufacturer');
-		if (!document) {
-			this.logger.warn(
-				`Document not found with filter: ${JSON.stringify(filterQuery)}`,
-			);
-			throw new RpcException('Document not found');
+		try {
+			const document = await this.model
+				.findOneAndUpdate({ ...filterQuery, deleted_at: null }, update, {
+					new: true,
+				})
+				.lean<Product>(true)
+				.populate('category')
+				.populate('manufacturer');
+			if (!document) {
+				this.logger.warn(
+					`Document not found with filter: ${JSON.stringify(filterQuery)}`,
+				);
+				throw new RpcException('Document not found');
+			}
+			return document;
+		} catch (error) {
+			console.error(error);
+			throw new RpcException(error.message);
 		}
-		return document;
 	}
 }

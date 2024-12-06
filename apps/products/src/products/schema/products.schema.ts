@@ -19,7 +19,7 @@ export class Product extends AbstractDocument {
 	description: string;
 
 	@Prop({ default: null })
-	price: number;
+	price: number | null;
 
 	@Prop({ required: true })
 	original_price: number;
@@ -40,9 +40,6 @@ export class Product extends AbstractDocument {
 		required: true,
 	})
 	manufacturer: Manufacturer;
-
-	@Prop({ default: 0 })
-	stock: number;
 
 	@Prop({ default: '' })
 	image_url: string;
