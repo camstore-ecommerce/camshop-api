@@ -1,11 +1,10 @@
-import { Types } from 'mongoose';
 import { Category } from '../categories';
 import { Manufacturer } from '../manufacturers';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class Product {
 	@ApiProperty()
-	_id: Types.ObjectId;
+	id: string;
 
 	@ApiProperty()
 	name: string;
@@ -17,18 +16,15 @@ export class Product {
 	original_price: number;
 
 	@ApiProperty()
-	price: number;
-
-	@ApiProperty()
-	stock: number;
+	price: number | null;
 
 	@ApiProperty()
 	category: Category;
-	
+
 	@ApiProperty()
 	manufacturer: Manufacturer;
 
-	@ApiProperty()
+	@ApiProperty({ type: [String] })
 	tags: string[];
 
 	@ApiProperty()
