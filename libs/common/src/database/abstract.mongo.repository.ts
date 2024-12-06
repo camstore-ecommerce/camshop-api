@@ -65,19 +65,16 @@ export abstract class AbstractMongoRepository<
 	async find(
 		filterQuery: FilterQuery<TDocument>,
 		options?: QueryOptions<TDocument>,
-	): Promise<{ count: number; documents: TDocument[] }> {
+	): Promise<TDocument[]> {
 		try {
-			const [count, documents] = await Promise.all([
-				this.model.countDocuments({ ...filterQuery, deleted_at: undefined }),
-				this.model
-					.find(
-						{ ...filterQuery, deleted_at: null },
-						options?.projection,
-						options,
-					)
-					.lean<TDocument[]>(true),
-			]);
-			return { count, documents };
+			const documents = await this.model
+				.find(
+					{ ...filterQuery, deleted_at: null },
+					options?.projection,
+					options,
+				)
+				.lean<TDocument[]>(true);
+			return documents;
 		} catch (error) {
 			this.logger.error(error.message);
 			throw new RpcException(error.message);
