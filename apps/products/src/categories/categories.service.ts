@@ -1,13 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { CategoriesRepository } from './categories.repository';
 import {
+	Category,
 	CreateCategoryDto,
 	UpdateCategoryDto,
 } from '@app/contracts/categories';
+import { Category as CategorySchema } from './schema/categories.schema';
 
 @Injectable()
 export class CategoriesService {
 	constructor(private readonly categoriesRepository: CategoriesRepository) {}
+
+	/**
+	 * Convert CategorySchema to proto Category
+	 * @param category 
+	 * @returns 
+	 */
+	toCategory(category: CategorySchema): Category {
+		return {
+			id: category._id.toString(),
+			name: category.name,
+		};
+	}
 
 	async create(createCategoryDto: CreateCategoryDto) {
 		return await this.categoriesRepository.create(createCategoryDto);
@@ -16,8 +30,8 @@ export class CategoriesService {
 	async findAll() {
 		const categories = await this.categoriesRepository.find({});
 		return {
-			count: categories.count,
-			categories: categories.documents,
+			count: categories.length,
+			categories,
 		};
 	}
 
