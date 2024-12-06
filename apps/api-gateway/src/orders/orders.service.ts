@@ -57,7 +57,7 @@ export class OrdersService implements OnModuleInit {
 			order_items: order.order_items.map((item) => ({
 				...item,
 				product: {
-					id: item.product._id.toString(),
+					id: item.product.id,
 					name: item.product.name,
 					image_url: item.product.image_url,
 				},

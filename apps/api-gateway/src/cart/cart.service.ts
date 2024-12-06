@@ -33,7 +33,7 @@ export class CartService implements OnModuleInit {
       },
       items: cart.items.map((item) => ({
         product: {
-          id: item.product._id.toString(),
+          id: item.product.id,
           name: item.product.name,
           image_url: item.product.image_url,
         },
