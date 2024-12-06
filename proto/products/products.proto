@@ -24,12 +24,11 @@ message CreateProductDto {
     string name = 1;
     string description = 2;
     double price = 3;
-    int32 stock = 4;
-    double original_price = 5;
-    string category_id = 6;
-    repeated string tags = 7;
-    string manufacturer_id = 8;
-    string image_url = 9;
+    double original_price = 4;
+    string category_id = 5;
+    repeated string tags = 6;
+    string manufacturer_id = 7;
+    string image_url = 8;
 }
 
 message FindOneProductDto {
@@ -45,12 +44,11 @@ message UpdateProductDto {
     string name = 2;
     string description = 3;
     double price = 4;
-    int32 stock = 5;
-    double original_price = 6;
-    string category_id = 7;
-    repeated string tags = 8;
-    string manufacturer_id = 9;
-    string image_url = 10;
+    double original_price = 5;
+    string category_id = 6;
+    repeated string tags = 7;
+    string manufacturer_id = 8;
+    string image_url = 9;
 }
 
 message RemoveProductDto {
@@ -62,16 +60,15 @@ message PermanentlyRemoveProductDto {
 }
 
 message Product {
-    string _id = 1;
+    string id = 1;
     string name = 2;
     string description = 3;
     double original_price = 4;
     double price = 5;
-    int32 stock = 6;
-    Category category = 7;
-    repeated string tags = 8;
-    Manufacturer manufacturer = 9;
-    string image_url = 10;
+    Category category = 6;
+    repeated string tags = 7;
+    Manufacturer manufacturer = 8;
+    string image_url = 9;
 }
 
 message Products {
