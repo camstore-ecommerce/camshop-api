@@ -8,7 +8,6 @@ import {
 	Delete,
 	UploadedFile,
 	UseGuards,
-	BadRequestException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto, Product, Products, UpdateProductDto } from '@app/contracts/products';
@@ -32,7 +31,6 @@ export class ProductsController {
 			name: { type: 'string', },
 			description: { type: 'string', },
 			price: { type: 'number', },
-			stock: { type: 'number', },
 			original_price: { type: 'number', },
 			category_id: { type: 'string', },
 			manufacturer_id: { type: 'string', },
@@ -84,7 +82,6 @@ export class ProductsController {
 			name: { type: 'string', },
 			description: { type: 'string', },
 			price: { type: 'number', },
-			stock: { type: 'number', },
 			original_price: { type: 'number', },
 			category_id: { type: 'string', },
 			manufacturer_id: { type: 'string', },
@@ -99,8 +96,6 @@ export class ProductsController {
 				format: 'binary',
 			}
 		},
-		['name', 'original_price', 'category_id', 'manufacturer_id', 'image']
-
 	)
 	@ApiResponse({ status: 201, type: Product })
 	update(

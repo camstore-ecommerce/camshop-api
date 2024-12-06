@@ -1,6 +1,5 @@
 import { Inject, Injectable, OnModuleInit, BadRequestException } from '@nestjs/common';
 import { PRODUCTS_CLIENT } from '@app/common/constants/services';
-
 import {
 	ProductsServiceClient,
 	PRODUCTS_SERVICE_NAME,
@@ -12,6 +11,7 @@ import {
 import { ClientGrpc } from '@nestjs/microservices';
 import { CdnService } from '../cdn/cdn.service';
 import { lastValueFrom, map, switchMap, throwError, catchError } from 'rxjs';
+import { convertEmptyStringsToNull } from '@app/common/utils';
 
 @Injectable()
 export class ProductsService implements OnModuleInit {
@@ -35,15 +35,15 @@ export class ProductsService implements OnModuleInit {
 				if (image) {
 					const { secure_url } = await this.cdnService.uploadImage(
 						image,
-						product._id.toString(),
+						product.id,
 						'products',
 					);
 					return await lastValueFrom(
 						this.productsServiceClient.update({
-							id: product._id.toString(),
+							id: product.id,
 							...product, // Spread the existing product properties
-							category_id: product.category._id.toString(),
-							manufacturer_id: product.manufacturer._id.toString(),
+							category_id: product.category.id,
+							manufacturer_id: product.manufacturer.id,
 							image_url: secure_url as string,
 						}),
 					);
@@ -75,27 +75,28 @@ export class ProductsService implements OnModuleInit {
 		updateProductDto: UpdateProductDto,
 		image?: Express.Multer.File,
 	) {
+		updateProductDto = convertEmptyStringsToNull(updateProductDto);
 		return this.productsServiceClient.update({ id, ...updateProductDto }).pipe(
 			switchMap(async (product: Product) => {
 				if (image) {
 					const { secure_url } = await this.cdnService.uploadImage(
 						image,
-						product._id.toString(),
+						product.id,
 						'products',
 					);
 					return await lastValueFrom(
 						this.productsServiceClient.update({
-							id: product._id.toString(),
+							id: product.id,
 							...product, // Spread the existing product properties
-							category_id: product.category._id.toString(),
-							manufacturer_id: product.manufacturer._id.toString(),
+							category_id: product.category.id,
+							manufacturer_id: product.manufacturer.id,
 							image_url: secure_url as string,
 						}),
 					);
 				}
 				return product;
 			}),
-			map((response) => response), // Ensure the response is properly handled
+			map((response) => response),
 			catchError((error) => {
 				return throwError(() => new BadRequestException(error.message));
 			})

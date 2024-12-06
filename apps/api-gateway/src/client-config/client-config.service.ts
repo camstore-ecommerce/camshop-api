@@ -37,7 +37,7 @@ export class ClientConfigService {
 					keepCase: true,
 					longs: String,
 					enums: String,
-					defaults: true,
+					defaults: false,
 					oneofs: true,
 				},
 			},
