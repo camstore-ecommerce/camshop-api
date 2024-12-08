@@ -30,8 +30,6 @@ export class ProductsController {
 		{
 			name: { type: 'string', },
 			description: { type: 'string', },
-			price: { type: 'number', },
-			original_price: { type: 'number', },
 			category_id: { type: 'string', },
 			manufacturer_id: { type: 'string', },
 			tags: {
@@ -40,12 +38,22 @@ export class ProductsController {
 					type: 'string',
 				},
 			},
+			attributes: {
+				type: 'array',
+				items: {
+					type: 'object',
+					properties: {
+						key: { type: 'string' },
+						value: { type: 'string' },
+					},
+				}
+			},
 			image: {
 				type: 'string',
 				format: 'binary',
 			}
 		},
-		['name', 'original_price', 'category_id', 'manufacturer_id', 'image']
+		['name', 'category_id', 'manufacturer_id', 'image']
 
 	)
 	@ApiResponse({ status: 201, type: Product })
@@ -81,14 +89,22 @@ export class ProductsController {
 		{
 			name: { type: 'string', },
 			description: { type: 'string', },
-			price: { type: 'number', },
-			original_price: { type: 'number', },
 			category_id: { type: 'string', },
 			manufacturer_id: { type: 'string', },
 			tags: {
 				type: 'array',
 				items: {
 					type: 'string',
+				},
+			},
+			attributes: {
+				type: 'array',
+				items: {
+					type: 'object',
+					properties: {
+						key: { type: 'string' },
+						value: { type: 'string' },
+					},
 				},
 			},
 			image: {

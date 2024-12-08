@@ -20,7 +20,7 @@ export class ProductsService implements OnModuleInit {
 	constructor(
 		@Inject(PRODUCTS_CLIENT) private readonly productsClient: ClientGrpc,
 		private readonly cdnService: CdnService,
-	) {}
+	) { }
 
 	onModuleInit() {
 		this.productsServiceClient =
@@ -29,7 +29,23 @@ export class ProductsService implements OnModuleInit {
 			);
 	}
 
+	/**
+	 * Convert form data text to array
+	 * @param obj 
+	 */
+	fromStringToArray(obj: any) {
+		for (const key in obj) {
+			if (key === 'attributes' && obj[key]) {
+				obj[key] = JSON.parse(`[${obj[key]}]`);
+			} else if (key === 'tags' && obj[key]) {
+				obj[key] = obj[key].split(',').map((tag: string) => tag.trim());
+			}
+		}
+
+	}
+
 	create(createProductDto: CreateProductDto, image?: Express.Multer.File) {
+		this.fromStringToArray(createProductDto);
 		return this.productsServiceClient.create(createProductDto).pipe(
 			switchMap(async (product: Product) => {
 				if (image) {
@@ -41,10 +57,7 @@ export class ProductsService implements OnModuleInit {
 					return await lastValueFrom(
 						this.productsServiceClient.update({
 							id: product.id,
-							...product, // Spread the existing product properties
-							category_id: product.category.id,
-							manufacturer_id: product.manufacturer.id,
-							image_url: secure_url as string,
+							image_url: secure_url,
 						}),
 					);
 				}
@@ -76,6 +89,7 @@ export class ProductsService implements OnModuleInit {
 		image?: Express.Multer.File,
 	) {
 		updateProductDto = convertEmptyStringsToNull(updateProductDto);
+		this.fromStringToArray(updateProductDto);
 		return this.productsServiceClient.update({ id, ...updateProductDto }).pipe(
 			switchMap(async (product: Product) => {
 				if (image) {

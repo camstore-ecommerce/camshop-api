@@ -14,6 +14,7 @@ import { CdnService } from './cdn/cdn.service';
 import { AddressesModule } from './addresses/addresses.module';
 import { CartModule } from './cart/cart.module';
 import { ConfigModule } from '@nestjs/config';
+import { InventoryModule } from './inventory/inventory.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -54,6 +55,7 @@ import * as Joi from 'joi';
 		OrdersModule,
 		AddressesModule,
 		CartModule,
+		InventoryModule,
 	],
 	controllers: [ApiGatewayController],
 	providers: [ApiGatewayService, ClientConfigService, CdnService],
