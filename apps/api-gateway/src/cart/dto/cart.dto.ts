@@ -37,9 +37,6 @@ export class CartItem {
 
     @ApiProperty()
     price: number;
-
-    @ApiProperty()
-    options: any;
 }
 
 export class CartDto {

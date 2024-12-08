@@ -4,7 +4,6 @@ import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/c
 import { ClientGrpc } from '@nestjs/microservices';
 import { CartDto } from './dto/cart.dto';
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { Struct } from '@app/common/interfaces/struct';
 
 @Injectable()
 export class CartService implements OnModuleInit {
@@ -39,7 +38,6 @@ export class CartService implements OnModuleInit {
         },
         quantity: item.quantity,
         price: item.price,
-        options: Struct.unwrap(item.options),
       })),
     };
   }
@@ -58,7 +56,7 @@ export class CartService implements OnModuleInit {
       throw new BadRequestException('Quantity must be greater than 0');
     }
 
-    return this.cartServiceClient.addToCart({...addToCartDto, options: Struct.wrap(addToCartDto.options)}).pipe(
+    return this.cartServiceClient.addToCart(addToCartDto).pipe(
       map((cart) => this.mapCart(cart)),
       catchError((error) => {
         return throwError(() => new BadRequestException(error.message));
