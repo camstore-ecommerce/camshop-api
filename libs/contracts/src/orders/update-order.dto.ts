@@ -1,7 +1,6 @@
 import { IsOptional, IsString } from "class-validator";
 import { CreateOrderDto } from "./create-order.dto";
-import { OmitType, PartialType } from "@nestjs/mapped-types";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, OmitType, PartialType } from "@nestjs/swagger";
 
 class CreateOrderWithoutItemsDto extends OmitType(CreateOrderDto, ['order_items']) {}
 

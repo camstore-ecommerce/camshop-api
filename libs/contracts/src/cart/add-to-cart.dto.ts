@@ -18,9 +18,4 @@ export class AddToCartDto {
     @IsNumber()
     @Type(() => Number)
     price: number;
-
-    @ApiProperty()
-    @IsObject()
-    @Type(() => Object)
-    options: any;
 }

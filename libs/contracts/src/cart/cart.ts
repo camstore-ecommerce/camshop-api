@@ -26,7 +26,6 @@ export interface CartItem {
   product: Product;
   quantity: number;
   price: number;
-  options: any;
 }
 
 export const CART_PACKAGE_NAME = "cart";
