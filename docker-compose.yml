@@ -1,35 +1,35 @@
 services:
-  # mongo:
-  #   image: mongo:7.0
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: root
-  #     MONGO_INITDB_DATABASE: camshop_micro_product
-  #   ports:
-  #     - 27017:27017
-  #   volumes:
-  #     - mongo_data:/data/db
+  mongo:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: camshop_micro_product
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
 
-  # mongo-express:
-  #   image: mongo-express:1.0.2-20-alpine3.19
-  #   ports:
-  #     - 8081:8081
-  #   environment:
-  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
-  #     ME_CONFIG_MONGODB_ADMINPASSWORD: root
-  #     ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo:27017/
-  #     ME_CONFIG_BASICAUTH: false
+  mongo-express:
+    image: mongo-express:1.0.2-20-alpine3.19
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
 
-  # postgres_user:
-  #   image: postgres:15-alpine3.20
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: postgres
-  #     POSTGRES_DB: camshop_micro_user
-  #   ports:
-  #     - 5432:5432
-  #   # volumes:
-  #   #   - postgres_user:/var/lib/postgresql/data
+  postgres_user:
+    image: postgres:15-alpine3.20
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: camshop_micro_user
+    ports:
+      - 5432:5432
+    # volumes:
+    #   - postgres_user:/var/lib/postgresql/data
 
   postgres_order:
     image: postgres:15-alpine3.20
@@ -52,58 +52,64 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
-  # rabbitmq:
-  #   image: rabbitmq:3.9.10-management-alpine
-  #   ports:
-  #     - 5672:5672
+  rabbitmq:
+    image: rabbitmq:3.9.10-management-alpine
+    ports:
+      - 5672:5672
   
-  # api-gateway:
-  #   container_name: api-gateway
-  #   # image: reg.findurjob.uk/camshop/api-gateway:0.0.1
-  #   build:
-  #     context: .
-  #     dockerfile: apps/api-gateway/Dockerfile
-  #     # target: development
-  #   # command: sh -c "npm run start:dev"
-  #   ports:
-  #     - 3001:3001
-
-  # products-service:
-  #   container_name: products-service
-  #   # image: reg.findurjob.uk/camshop/products-service:0.0.1
-  #   build:
-  #     context: .
-  #     dockerfile: apps/products/Dockerfile
-  #     # target: development
-  #   # command: sh -c "npm run start:dev products"
-  #   ports:
-  #     - 3002:3002
-  #   depends_on:
-  #     - mongo
+  redis:
+    image: redis:7.2.6-alpine
+    ports:
+      - 6379:6379  
+  # ------------------------------------SERVICES--------------------------------------------
   
-  # mail-service:
-  #   container_name: mail-service
-  #   image: reg.findurjob.uk/camshop/mail-service:0.0.1
-  #   build:
-  #     context: .
-  #     dockerfile: apps/mail/Dockerfile
-  #     # target: development
-  #   # command: sh -c "npm run start:dev mail"
-  #   ports:
-  #     - 3004:3004
+  api-gateway:
+    container_name: api-gateway
+    # image: reg.findurjob.uk/camshop/api-gateway:0.0.1
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+      # target: development
+    # command: sh -c "npm run start:dev"
+    ports:
+      - 3001:3001
 
-  # users-service:
-  #   container_name: users-service
-  #   # image: reg.findurjob.uk/camshop/users-service:0.0.1
-  #   build:
-  #     context: .
-  #     dockerfile: apps/users/Dockerfile
-  #     # target: development
-  #   # command: sh -c "npx prisma migrate deploy && npx prisma generate && npm run start:dev users"
-  #   ports:
-  #     - 3003:3003
-  #   depends_on:
-  #     - postgres_user
+  products-service:
+    container_name: products-service
+    # image: reg.findurjob.uk/camshop/products-service:0.0.1
+    build:
+      context: .
+      dockerfile: apps/products/Dockerfile
+      # target: development
+    # command: sh -c "npm run start:dev products"
+    ports:
+      - 3002:3002
+    depends_on:
+      - mongo
+  
+  mail-service:
+    container_name: mail-service
+    # image: reg.findurjob.uk/camshop/mail-service:0.0.1
+    build:
+      context: .
+      dockerfile: apps/mail/Dockerfile
+      # target: development
+    # command: sh -c "npm run start:dev mail"
+    ports:
+      - 3004:3004
+
+  users-service:
+    container_name: users-service
+    # image: reg.findurjob.uk/camshop/users-service:0.0.1
+    build:
+      context: .
+      dockerfile: apps/users/Dockerfile
+      # target: development
+    # command: sh -c "npx prisma migrate deploy && npx prisma generate && npm run start:dev users"
+    ports:
+      - 3003:3003
+    depends_on:
+      - postgres_user
 
   orders-service:
     container_name: orders-service
