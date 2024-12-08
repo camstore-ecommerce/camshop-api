@@ -23,12 +23,11 @@ service ProductsService {
 message CreateProductDto {
     string name = 1;
     string description = 2;
-    double price = 3;
-    double original_price = 4;
-    string category_id = 5;
-    repeated string tags = 6;
-    string manufacturer_id = 7;
-    string image_url = 8;
+    string category_id = 3;
+    repeated string tags = 4;
+    string manufacturer_id = 5;
+    repeated ProductAttribute attributes = 6;
+    string image_url = 7;
 }
 
 message FindOneProductDto {
@@ -43,12 +42,11 @@ message UpdateProductDto {
     string id = 1;
     string name = 2;
     string description = 3;
-    double price = 4;
-    double original_price = 5;
-    string category_id = 6;
-    repeated string tags = 7;
-    string manufacturer_id = 8;
-    string image_url = 9;
+    string category_id = 4;
+    repeated string tags = 5;
+    string manufacturer_id = 6;
+    repeated ProductAttribute attributes = 7;
+    string image_url = 8;
 }
 
 message RemoveProductDto {
@@ -63,15 +61,19 @@ message Product {
     string id = 1;
     string name = 2;
     string description = 3;
-    double original_price = 4;
-    double price = 5;
-    Category category = 6;
-    repeated string tags = 7;
-    Manufacturer manufacturer = 8;
-    string image_url = 9;
+    Category category = 4;
+    repeated string tags = 5;
+    Manufacturer manufacturer = 6;
+    repeated ProductAttribute attributes = 7;
+    string image_url = 8;
 }
 
 message Products {
     int32 count = 1;
     repeated Product products = 2;
+}
+
+message ProductAttribute {
+    string key = 1;
+    string value = 2;
 }

@@ -4,7 +4,6 @@ package cart;
 
 import "../products/products.proto";
 import "../users/users.proto";
-import "google/protobuf/struct.proto";
 
 // import "proto/products/products.proto";
 // import "proto/users/users.proto";
@@ -20,7 +19,6 @@ message AddToCartDto {
   string product_id = 2;
   int32 quantity = 3;
   float price = 4;
-  google.protobuf.Struct options = 5;
 }
 
 message GetCartDto {
@@ -41,5 +39,4 @@ message CartItem {
   products.Product product = 1;
   int32 quantity = 2;
   float price = 3;
-  google.protobuf.Struct options = 4;
 }

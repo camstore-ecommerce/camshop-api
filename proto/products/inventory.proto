@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package products;
+
+import "../common.proto";
+import "./products.proto";
+
+service InventoryService {
+  rpc Create(CreateInventoryDto) returns (Inventory);
+  rpc Update(UpdateInventoryDto) returns (Inventory);
+  rpc FindByProduct(FindInventoryByProductDto) returns (Inventories);
+  rpc FindAll(common.Empty) returns (Inventories);
+  rpc FindOne(InventoryId) returns (Inventory);
+  rpc Remove(InventoryId) returns (common.Empty);
+  rpc PermanentlyRemove(InventoryId) returns (common.Empty);
+  rpc ReserveStock(UpdateReservedStockDto) returns (Inventory);
+  rpc ReleaseStock(UpdateReservedStockDto) returns (Inventory);
+}
+
+message CreateInventoryDto {
+  string product_id = 1;
+  double price = 2;
+  string sku = 3;
+  string barcode = 4;
+  string serial = 5;
+  int32 stock = 6;
+  bool active = 7;
+}
+
+message UpdateInventoryDto {
+  string id = 1;
+  string product_id = 2;
+  double price = 3;
+  string sku = 4;
+  string barcode = 5;
+  string serial = 6;
+  int32 stock = 7;
+  bool active = 8;
+}
+
+message FindInventoryByProductDto {
+  string product_id = 1;
+}
+
+message InventoryId {
+  string id = 1;
+}
+
+message UpdateReservedStockDto {
+  string id = 1;
+  int32 reserved_stock = 2;
+}
+
+message Inventory {
+  string id = 1;
+  Product product = 2;
+  double price = 3;
+  string sku = 4;
+  string barcode = 5;
+  string serial = 6;
+  int32 stock = 7;
+  int32 reserved_stock = 8;
+  bool active = 9;
+}
+
+message Inventories {
+  int32 count = 1;
+  repeated Inventory inventories = 2;  
+}
