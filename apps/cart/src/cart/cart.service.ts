@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { CartRepository } from './cart.repository';
-import { AddToCartDto, Cart, RemoveFromCartDto } from '@app/contracts/cart';
+import { AddToCartDto, RemoveFromCartDto } from '@app/contracts/cart';
 import { PRODUCTS_SERVICE_NAME, Products, ProductsServiceClient } from '@app/contracts/products';
 import { USERS_SERVICE_NAME, User, UsersServiceClient } from '@app/contracts/users';
 import { PRODUCTS_CLIENT, USERS_CLIENT } from '@app/common/constants/services';
@@ -38,10 +38,9 @@ export class CartService implements OnModuleInit {
     return {
       user,
       items: cart.items.map(item => ({
-        product: products.products.find(product => product._id.toString() === item.product_id),
+        product: products.products.find(product => product.id === item.product_id),
         quantity: item.quantity,
         price: item.price,
-        options: Struct.wrap(item.options),
       })),
     }
   }
@@ -51,7 +50,6 @@ export class CartService implements OnModuleInit {
   }
 
   async addToCart(addToCartDto: AddToCartDto) {
-    addToCartDto.options = Struct.unwrap(addToCartDto.options);
     const { user_id, ...cartDto } = addToCartDto;
 
     let cart = await this.cartRepository.findOne({ user_id: addToCartDto.user_id });
