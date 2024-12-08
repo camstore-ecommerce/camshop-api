@@ -6,7 +6,6 @@ import {
 	FindByIdsDto,
 	FindOneProductDto,
 	PermanentlyRemoveProductDto,
-	Product,
 	Products,
 	ProductsServiceController,
 	ProductsServiceControllerMethods,
@@ -17,29 +16,45 @@ import {
 @Controller()
 @ProductsServiceControllerMethods()
 export class ProductsController implements ProductsServiceController {
-	constructor(private readonly productsService: ProductsService) {}
+	constructor(private readonly productsService: ProductsService) { }
 
 	async create(createProductDto: CreateProductDto) {
-		return await this.productsService.create(createProductDto);
+		const product = await this.productsService.create(createProductDto);
+		return this.productsService.toProduct(product, product.category, product.manufacturer);
 	}
 
 	async findAll(): Promise<Products> {
-		return await this.productsService.findAll();
+		const products = await this.productsService.findAll();
+		return {
+			...products,
+			products: products.products.map((product) =>
+				this.productsService.toProduct(product, product.category, product.manufacturer)
+			),
+		};
 	}
 
 	async findByIds(findByIdsDto: FindByIdsDto) {
-		return await this.productsService.findByIds(findByIdsDto.ids);
+		const products = await this.productsService.findByIds(findByIdsDto.ids);
+		return {
+			...products,
+			products: products.products.map((product) =>
+				this.productsService.toProduct(product, product.category, product.manufacturer)
+			),
+		};
 	}
 
 	async findOne(findOneProductDto: FindOneProductDto) {
-		return await this.productsService.findOne(findOneProductDto.id);
+		const product = await this.productsService.findOne(findOneProductDto.id);
+		return this.productsService.toProduct(product, product.category, product.manufacturer);
 	}
 
 	async update(updateProductDto: UpdateProductDto) {
-		return await this.productsService.update(
+		const product = await this.productsService.update(
 			updateProductDto.id,
 			updateProductDto,
 		);
+
+		return this.productsService.toProduct(product, product.category, product.manufacturer);
 	}
 
 	async remove(removeProductDto: RemoveProductDto) {

@@ -14,6 +14,7 @@ async function bootstrap() {
 					'proto/products/products.proto',
 					'proto/products/manufacturers.proto',
 					'proto/products/categories.proto',
+					'proto/products/inventory.proto',
 				],
 				url: process.env.GRPC_URL,
 				loader: {

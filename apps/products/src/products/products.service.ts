@@ -16,7 +16,15 @@ export class ProductsService {
 		private readonly categoriesService: CategoriesService,
 	) {}
 
-	private toProduct(product: ProductSchema, category: CategorySchema, manufacturer: ManufacturerSchema): Product {
+
+	/**
+	 * Convert product schema to product
+	 * @param product 
+	 * @param category 
+	 * @param manufacturer 
+	 * @returns 
+	 */
+	toProduct(product: ProductSchema, category: CategorySchema, manufacturer: ManufacturerSchema): Product {
 		return {
 			id: product._id.toString(),
 			...product,
@@ -29,25 +37,20 @@ export class ProductsService {
 		const { manufacturer_id, category_id, ...productData } = createProductDto;
 
 		const category = await this.categoriesService.findOne(category_id);
-		const manufacturer =
-			await this.manufacturersService.findOne(manufacturer_id);
+		const manufacturer = await this.manufacturersService.findOne(manufacturer_id);
 
-		const product = await this.productsRepository.create({
+		return await this.productsRepository.create({
 			...productData,
 			category,
 			manufacturer,
 		});
-
-		return this.toProduct(product, category, manufacturer);
 	}
 
 	async findAll() {
 		const products = await this.productsRepository.find({});
 		return {
 			count: products.length,
-			products: products.map((product) => {
-				return this.toProduct(product, product.category, product.manufacturer);
-			}),
+			products
 		};
 	}
 
@@ -55,21 +58,16 @@ export class ProductsService {
 		const products = await this.productsRepository.find({ _id: { $in: ids } });
 		return {
 			count: products.length,
-			products: products.map((product) => {
-				return this.toProduct(product, product.category, product.manufacturer);
-			}),
+			products
 		};
 	}
 
 	async findOne(_id: string) {
-		const product = await this.productsRepository.findOne({ _id });
-		return this.toProduct(product, product.category, product.manufacturer);
+		return await this.productsRepository.findOne({ _id });
 	}
 
 	async update(_id: string, updateProductDto: UpdateProductDto) {
-		updateProductDto = convertNaNToNull(updateProductDto);
 		const existProduct = await this.productsRepository.findOne({ _id });
-		
 		if (updateProductDto.category_id) {
 			existProduct.category = await this.categoriesService.findOne(
 				updateProductDto.category_id,
@@ -82,10 +80,7 @@ export class ProductsService {
 			);
 		}
 
-		console.log(updateProductDto);
-
-		const product = await this.productsRepository.findOneAndUpdate({ _id }, { ...existProduct,...updateProductDto });
-		return this.toProduct(product, product.category, product.manufacturer);
+		return await this.productsRepository.findOneAndUpdate({ _id }, { ...existProduct,...updateProductDto });
 	}
 
 	remove(_id: string) {
