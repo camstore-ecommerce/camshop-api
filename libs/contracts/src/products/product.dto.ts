@@ -2,6 +2,14 @@ import { Category } from '../categories';
 import { Manufacturer } from '../manufacturers';
 import { ApiProperty } from '@nestjs/swagger';
 
+export class ProductAttribute {
+	@ApiProperty()
+	key: string;
+
+	@ApiProperty()
+	value: string;
+}
+
 export class Product {
 	@ApiProperty()
 	id: string;
@@ -13,12 +21,6 @@ export class Product {
 	description: string;
 
 	@ApiProperty()
-	original_price: number;
-
-	@ApiProperty()
-	price: number | null;
-
-	@ApiProperty()
 	category: Category;
 
 	@ApiProperty()
@@ -26,6 +28,9 @@ export class Product {
 
 	@ApiProperty({ type: [String] })
 	tags: string[];
+
+	@ApiProperty({ type: [ProductAttribute] })
+	attributes: ProductAttribute[];
 
 	@ApiProperty()
 	image_url: string;
