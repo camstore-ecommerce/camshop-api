@@ -31,6 +31,7 @@ export class ClientConfigService {
 					'proto/products/products.proto',
 					'proto/products/manufacturers.proto',
 					'proto/products/categories.proto',
+					'proto/products/inventory.proto',
 				],
 				url: this.configService.get('PRODUCTS_CLIENT_URL'),
 				loader: {
