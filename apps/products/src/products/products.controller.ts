@@ -1,17 +1,16 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductsService } from './products.service';
 import {
 	CreateProductDto,
+	FilterProductDto,
 	FindByIdsDto,
-	FindOneProductDto,
-	PermanentlyRemoveProductDto,
+	ProductId,
 	Products,
 	ProductsServiceController,
 	ProductsServiceControllerMethods,
-	RemoveProductDto,
 	UpdateProductDto,
 } from '@app/contracts/products';
+import { Pagination } from '@app/common/interfaces';
 
 @Controller()
 @ProductsServiceControllerMethods()
@@ -23,14 +22,25 @@ export class ProductsController implements ProductsServiceController {
 		return this.productsService.toProduct(product, product.category, product.manufacturer);
 	}
 
-	async findAll(): Promise<Products> {
-		const products = await this.productsService.findAll();
+	async findAll(pagination: Pagination): Promise<Products> {
+		const products = await this.productsService.findAll(pagination);
 		return {
 			...products,
 			products: products.products.map((product) =>
 				this.productsService.toProduct(product, product.category, product.manufacturer)
 			),
 		};
+	}
+
+	async filter(filterProductDto: FilterProductDto) {
+		const products = await this.productsService.filter(filterProductDto);
+
+		return {
+			...products,
+			products: products.products.map((product) =>
+				this.productsService.toProduct(product, product.category, product.manufacturer)
+			),
+		}
 	}
 
 	async findByIds(findByIdsDto: FindByIdsDto) {
@@ -43,8 +53,8 @@ export class ProductsController implements ProductsServiceController {
 		};
 	}
 
-	async findOne(findOneProductDto: FindOneProductDto) {
-		const product = await this.productsService.findOne(findOneProductDto.id);
+	async findOne(productId: ProductId) {
+		const product = await this.productsService.findOne(productId.id);
 		return this.productsService.toProduct(product, product.category, product.manufacturer);
 	}
 
@@ -57,15 +67,15 @@ export class ProductsController implements ProductsServiceController {
 		return this.productsService.toProduct(product, product.category, product.manufacturer);
 	}
 
-	async remove(removeProductDto: RemoveProductDto) {
-		return await this.productsService.remove(removeProductDto.id);
+	async remove(productId: ProductId) {
+		return await this.productsService.remove(productId.id);
 	}
 
 	async permanentlyRemove(
-		permanentlyRemoveProductDto: PermanentlyRemoveProductDto,
+		productId: ProductId,
 	) {
 		return await this.productsService.permanentlyRemove(
-			permanentlyRemoveProductDto.id,
+			productId.id,
 		);
 	}
 }

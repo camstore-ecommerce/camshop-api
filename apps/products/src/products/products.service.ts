@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto, Product, UpdateProductDto } from '@app/contracts/products';
+import { CreateProductDto, FilterProductDto, Product, UpdateProductDto } from '@app/contracts/products';
 import { ProductsRepository } from './products.repository';
 import { ManufacturersService } from '../manufacturers/manufacturers.service';
 import { CategoriesService } from '../categories/categories.service';
 import { Product as ProductSchema } from './schema/products.schema';
 import { Category as CategorySchema } from '../categories/schema/categories.schema';
 import { Manufacturer as ManufacturerSchema } from '../manufacturers/schema/manufacturers.schema';
-import { convertNaNToNull } from '@app/common/utils';
+import { Pagination } from '@app/common/interfaces';
+import { handlePagination } from '@app/common/utils';
 
 @Injectable()
 export class ProductsService {
@@ -14,7 +15,7 @@ export class ProductsService {
 		private readonly productsRepository: ProductsRepository,
 		private readonly manufacturersService: ManufacturersService,
 		private readonly categoriesService: CategoriesService,
-	) {}
+	) { }
 
 
 	/**
@@ -46,19 +47,70 @@ export class ProductsService {
 		});
 	}
 
-	async findAll() {
-		const products = await this.productsRepository.find({});
+	async findAll(pagination: Pagination) {
+		const queryOptions = handlePagination(pagination, '_id');
+		const products = (await this.productsRepository.find({},
+			{ skip: queryOptions.offset, limit: queryOptions.limit, sort: { [queryOptions.sort]: queryOptions.order } })
+		);
+
 		return {
-			count: products.length,
-			products
+			products,
+			pagination: {
+				total: products.length,
+				...pagination,
+			}
+		};
+	}
+
+	async filter(filterProductDto: FilterProductDto) {
+		const { pagination, ...filter } = filterProductDto;
+		const queryOptions = handlePagination(pagination, '_id');
+		const query = {};
+
+		// Apply filters dynamically based on the DTO fields
+		if (filter.name) {
+			query['name'] = { $regex: filter.name, $options: 'i' };  // Case-insensitive name filter
+		}
+		if (filter.category_id) {
+			query['category'] = filter.category_id;
+		}
+		if (filter.manufacturer_id) {
+			query['manufacturer'] = filter.manufacturer_id;
+		}
+		if (filter.tags && filter.tags.length > 0) {
+			query['tags'] = { $in: filter.tags };
+		}
+		if (filter.attributes && filter.attributes.length > 0) {
+			filter.attributes.forEach((attribute) => {
+				query['attributes'] = { $elemMatch: attribute };  // Example for filtering based on attributes
+			});
+		}
+
+		const products = (await this.productsRepository.find(query,
+			{ skip: queryOptions.offset, limit: queryOptions.limit, sort: { [queryOptions.sort]: queryOptions.order } }
+		));
+
+		return {
+			products,
+			pagination: {
+				total: products.length,
+				...pagination,
+			}
 		};
 	}
 
 	async findByIds(ids: string[]) {
 		const products = await this.productsRepository.find({ _id: { $in: ids } });
 		return {
-			count: products.length,
-			products
+			products,
+			pagination: {
+				total: products.length,
+				page: 1,
+				limit: products.length,
+				offset: 0,
+				sort: 'asc',
+				order: 'id',
+			}
 		};
 	}
 
@@ -80,7 +132,7 @@ export class ProductsService {
 			);
 		}
 
-		return await this.productsRepository.findOneAndUpdate({ _id }, { ...existProduct,...updateProductDto });
+		return await this.productsRepository.findOneAndUpdate({ _id }, { ...existProduct, ...updateProductDto });
 	}
 
 	remove(_id: string) {

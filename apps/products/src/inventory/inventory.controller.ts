@@ -3,13 +3,14 @@ import { InventoryService } from './inventory.service';
 import { Inventory as InventorySchema } from './schema/inventory.schema';
 import {
   CreateInventoryDto,
-  FindInventoryByProductDto, 
   Inventories, 
   InventoryId, 
   InventoryServiceController, 
   InventoryServiceControllerMethods, 
   UpdateInventoryDto, UpdateReservedStockDto
 } from '@app/contracts/inventory';
+import { Pagination } from '@app/common/interfaces';
+import { FilterInventoryDto } from '@app/contracts/inventory/filter-inventory.dto';
 
 @Controller()
 @InventoryServiceControllerMethods()
@@ -22,20 +23,21 @@ export class InventoryController implements InventoryServiceController {
   }
 
   async update(updateInventoryDto: UpdateInventoryDto) {
+    console.log('updateInventoryDto', updateInventoryDto);
     const inventory = await this.inventoryService.update(updateInventoryDto.id, updateInventoryDto);
     return this.inventoryService.toInventory(inventory);
   }
 
-  async findByProduct(findInventoryByProductDto: FindInventoryByProductDto) {
-    const inventories = await this.inventoryService.findByProduct(findInventoryByProductDto.product_id);
+  async findAll(pagination: Pagination): Promise<Inventories> {
+    const inventories = await this.inventoryService.findAll(pagination);
     return {
       ...inventories,
       inventories: inventories.inventories.map(inventory => this.inventoryService.toInventory(inventory)),
     }
   }
 
-  async findAll(): Promise<Inventories> {
-    const inventories = await this.inventoryService.findAll();
+  async filter(filterInventoryDto: FilterInventoryDto) {
+    const inventories = await this.inventoryService.filter(filterInventoryDto);
     return {
       ...inventories,
       inventories: inventories.inventories.map(inventory => this.inventoryService.toInventory(inventory)),
