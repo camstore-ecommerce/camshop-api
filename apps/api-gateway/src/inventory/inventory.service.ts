@@ -1,5 +1,7 @@
 import { PRODUCTS_CLIENT } from '@app/common/constants/services';
+import { Pagination } from '@app/common/interfaces';
 import { CreateInventoryDto, INVENTORY_SERVICE_NAME, InventoryServiceClient, UpdateInventoryDto, UpdateReservedStockDto } from '@app/contracts/inventory';
+import { FilterInventoryDto } from '@app/contracts/inventory/filter-inventory.dto';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -22,8 +24,13 @@ export class InventoryService implements OnModuleInit {
     return this.inventoryServiceClient.create(createInventoryDto);
   }
 
-  findAll() {
-    return this.inventoryServiceClient.findAll({});
+  findAll(pagination: Pagination) {
+    return this.inventoryServiceClient.findAll(pagination);
+  }
+
+  filter(filterInventoryDto: FilterInventoryDto ) {
+    console.log('filterInventoryDto', filterInventoryDto);
+    return this.inventoryServiceClient.filter(filterInventoryDto);
   }
 
   findOne(id: string) {
@@ -31,6 +38,7 @@ export class InventoryService implements OnModuleInit {
   }
 
   update(id: string, updateInventoryDto: UpdateInventoryDto) {
+    console.log('updateInventoryDto', updateInventoryDto);
     return this.inventoryServiceClient.update({ id, ...updateInventoryDto });
   }
 
@@ -40,10 +48,6 @@ export class InventoryService implements OnModuleInit {
 
   permanentlyRemove(id: string) {
     return this.inventoryServiceClient.permanentlyRemove({ id });
-  }
-
-  findByProduct(product_id: string) {
-    return this.inventoryServiceClient.findByProduct({ product_id });
   }
 
   reserveStock(updateReservedStockDto: UpdateReservedStockDto) {

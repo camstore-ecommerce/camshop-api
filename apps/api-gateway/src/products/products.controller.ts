@@ -8,9 +8,10 @@ import {
 	Delete,
 	UploadedFile,
 	UseGuards,
+	Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto, Product, Products, UpdateProductDto } from '@app/contracts/products';
+import { CreateProductDto, FilterProductDto, Product, Products, UpdateProductDto } from '@app/contracts/products';
 import { JwtAuthGuard } from '@app/common/guards';
 import { Public, Roles } from '@app/common/decorators';
 import { Role } from '@app/common/enums';
@@ -67,11 +68,21 @@ export class ProductsController {
 	@Get()
 	@Public()
 	@ApiOperation({ summary: 'Get all products', description: 'Public access' })
-	@ApiDocsPagination('Products')
 	@ApiResponse({ status: 201, type: Products })
-	findAll() {
-		return this.productsService.findAll();
+	@ApiDocsPagination('products')
+	findAll(@Query() query: any) {
+		return this.productsService.findAll(query);
 	}
+
+	@Post('filter')
+	@Public()
+	@ApiOperation({ summary: 'Filter products', description: 'Public access' })
+	@ApiResponse({ status: 201, type: Products })
+	@ApiDocsPagination('products')
+	filter(@Query() query: any, @Body() filterProductDto: FilterProductDto) {
+		return this.productsService.filter({...filterProductDto, pagination: query});
+	}
+
 
 	@Get(':id')
 	@Public()

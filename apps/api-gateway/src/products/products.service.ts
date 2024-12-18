@@ -6,12 +6,14 @@ import {
 	CreateProductDto,
 	UpdateProductDto,
 	Product,
+	FilterProductDto,
 } from '@app/contracts/products';
 
 import { ClientGrpc } from '@nestjs/microservices';
 import { CdnService } from '../cdn/cdn.service';
 import { lastValueFrom, map, switchMap, throwError, catchError } from 'rxjs';
 import { convertEmptyStringsToNull } from '@app/common/utils';
+import { Pagination } from '@app/common/interfaces';
 
 @Injectable()
 export class ProductsService implements OnModuleInit {
@@ -35,9 +37,10 @@ export class ProductsService implements OnModuleInit {
 	 */
 	fromStringToArray(obj: any) {
 		for (const key in obj) {
-			if (key === 'attributes' && obj[key]) {
+			if (key === 'attributes' && obj[key] && typeof obj[key] === 'string') {
+				console.log('obj[key]', obj[key]);
 				obj[key] = JSON.parse(`[${obj[key]}]`);
-			} else if (key === 'tags' && obj[key]) {
+			} else if (key === 'tags' && obj[key] && typeof obj[key] === 'string') {
 				obj[key] = obj[key].split(',').map((tag: string) => tag.trim());
 			}
 		}
@@ -70,8 +73,12 @@ export class ProductsService implements OnModuleInit {
 		);
 	}
 
-	findAll() {
-		return this.productsServiceClient.findAll({});
+	findAll(pagination: Pagination) {
+		return this.productsServiceClient.findAll(pagination);
+	}
+
+	filter(filterProductDto: FilterProductDto) {
+		return this.productsServiceClient.filter(filterProductDto);
 	}
 
 	findOne(id: string) {
