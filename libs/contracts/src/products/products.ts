@@ -7,26 +7,19 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { Empty } from '@app/common/interfaces';
+import { Empty, Pagination } from '@app/common/interfaces';
 import { CreateProductDto } from './create-product.dto';
 import { UpdateProductDto } from './update-product.dto';
 import { Product, Products } from './product.dto';
+import { FilterProductDto } from './filter-product.dto';
 
 export const protobufPackage = 'products';
 
-export interface FindOneProductDto {
+export interface ProductId {
 	id: string;
 }
 export interface FindByIdsDto {
 	ids: string[];
-}
-
-export interface RemoveProductDto {
-	id: string;
-}
-
-export interface PermanentlyRemoveProductDto {
-	id: string;
 }
 
 export const PRODUCTS_PACKAGE_NAME = 'products';
@@ -34,17 +27,19 @@ export const PRODUCTS_PACKAGE_NAME = 'products';
 export interface ProductsServiceClient {
 	create(request: CreateProductDto): Observable<Product>;
 
-	findOne(request: FindOneProductDto): Observable<Product>;
+	findOne(request: ProductId): Observable<Product>;
 
 	findByIds(request: FindByIdsDto): Observable<Products>;
 
-	findAll(request: Empty): Observable<Products>;
+	findAll(request: Pagination): Observable<Products>;
+
+	filter(request: FilterProductDto): Observable<Products>;
 
 	update(request: UpdateProductDto): Observable<Product>;
 
-	remove(request: RemoveProductDto): Observable<Empty>;
+	remove(request: ProductId): Observable<Empty>;
 
-	permanentlyRemove(request: PermanentlyRemoveProductDto): Observable<Empty>;
+	permanentlyRemove(request: ProductId): Observable<Empty>;
 }
 
 export interface ProductsServiceController {
@@ -53,23 +48,25 @@ export interface ProductsServiceController {
 	): Promise<Product> | Observable<Product> | Product;
 
 	findOne(
-		request: FindOneProductDto,
+		request: ProductId,
 	): Promise<Product> | Observable<Product> | Product;
 
 	findByIds(
 		request: FindByIdsDto,
 	): Promise<Products> | Observable<Products> | Products;
 
-	findAll(request: Empty): Promise<Products> | Observable<Products> | Products;
+	findAll(request: Pagination): Promise<Products> | Observable<Products> | Products;
+
+	filter(request: FilterProductDto): Promise<Products> | Observable<Products> | Products;
 
 	update(
 		request: UpdateProductDto,
 	): Promise<Product> | Observable<Product> | Product;
 
-	remove(request: RemoveProductDto): Promise<Empty> | Observable<Empty> | Empty;
+	remove(request: ProductId): Promise<Empty> | Observable<Empty> | Empty;
 
 	permanentlyRemove(
-		request: PermanentlyRemoveProductDto,
+		request: ProductId,
 	): Promise<Empty> | Observable<Empty> | Empty;
 }
 
@@ -80,6 +77,7 @@ export function ProductsServiceControllerMethods() {
 			'findOne',
 			'findByIds',
 			'findAll',
+			'filter',
 			'update',
 			'remove',
 			'permanentlyRemove',

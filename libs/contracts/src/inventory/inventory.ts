@@ -5,16 +5,13 @@
 // source: proto/products/inventory.proto
 
 /* eslint-disable */
-import { Empty } from "@app/common/interfaces";
+import { Empty, Pagination } from "@app/common/interfaces";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 import { CreateInventoryDto, Inventories, Inventory, UpdateInventoryDto, UpdateReservedStockDto } from ".";
+import { FilterInventoryDto } from "./filter-inventory.dto";
 
 export const protobufPackage = "products";
-
-export interface FindInventoryByProductDto {
-  product_id: string;
-}
 
 export interface InventoryId {
   id: string;
@@ -27,9 +24,9 @@ export interface InventoryServiceClient {
 
   update(request: UpdateInventoryDto): Observable<Inventory>;
 
-  findByProduct(request: FindInventoryByProductDto): Observable<Inventories>;
+  findAll(request: Pagination): Observable<Inventories>;
 
-  findAll(request: Empty): Observable<Inventories>;
+  filter(request: FilterInventoryDto): Observable<Inventories>;
 
   findOne(request: InventoryId): Observable<Inventory>;
 
@@ -47,9 +44,9 @@ export interface InventoryServiceController {
 
   update(request: UpdateInventoryDto): Promise<Inventory> | Observable<Inventory> | Inventory;
 
-  findByProduct(request: FindInventoryByProductDto): Promise<Inventories> | Observable<Inventories> | Inventories;
+  findAll(request: Pagination): Promise<Inventories> | Observable<Inventories> | Inventories;
 
-  findAll(request: Empty): Promise<Inventories> | Observable<Inventories> | Inventories;
+  filter(request: FilterInventoryDto): Promise<Inventories> | Observable<Inventories> | Inventories;
 
   findOne(request: InventoryId): Promise<Inventory> | Observable<Inventory> | Inventory
 
@@ -67,8 +64,8 @@ export function InventoryServiceControllerMethods() {
     const grpcMethods: string[] = [
       "create",
       "update",
-      "findByProduct",
       "findAll",
+      "filter",
       "findOne",
       "remove",
       "permanentlyRemove",

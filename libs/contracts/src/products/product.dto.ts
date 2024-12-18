@@ -1,3 +1,4 @@
+import { PaginationResponse } from '@app/common/interfaces';
 import { Category } from '../categories';
 import { Manufacturer } from '../manufacturers';
 import { ApiProperty } from '@nestjs/swagger';
@@ -37,9 +38,9 @@ export class Product {
 }
 
 export class Products {
-	@ApiProperty()
-	count: number;
-	
 	@ApiProperty({ type: [Product] })
 	products: Product[];
+	
+	@ApiProperty({ type: PaginationResponse })
+	pagination: PaginationResponse;
 }
