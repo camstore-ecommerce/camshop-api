@@ -12,12 +12,13 @@ import "./manufacturers.proto";
 
 service ProductsService {
     rpc Create(CreateProductDto) returns (Product) {}
-    rpc FindOne(FindOneProductDto) returns (Product) {}
+    rpc FindOne(ProductId) returns (Product) {}
     rpc FindByIds(FindByIdsDto) returns (Products) {}
-    rpc FindAll(common.Empty) returns (Products) {}
+    rpc FindAll(common.Pagination) returns (Products) {}
+    rpc Filter(FilterProductDto) returns (Products) {}
     rpc Update(UpdateProductDto) returns (Product) {}
-    rpc Remove(RemoveProductDto) returns (common.Empty) {}
-    rpc PermanentlyRemove(PermanentlyRemoveProductDto) returns (common.Empty) {}
+    rpc Remove(ProductId) returns (common.Empty) {}
+    rpc PermanentlyRemove(ProductId) returns (common.Empty) {}
 }
 
 message CreateProductDto {
@@ -30,12 +31,21 @@ message CreateProductDto {
     string image_url = 7;
 }
 
-message FindOneProductDto {
+message ProductId {
     string id = 1;
 }
 
 message FindByIdsDto {
     repeated string ids = 1;
+}
+
+message FilterProductDto {
+    string name = 1;
+    string category_id = 2;
+    repeated string tags = 3;
+    string manufacturer_id = 4;
+    repeated ProductAttribute attributes = 5;
+    common.Pagination pagination = 6;
 }
 
 message UpdateProductDto {
@@ -47,14 +57,6 @@ message UpdateProductDto {
     string manufacturer_id = 6;
     repeated ProductAttribute attributes = 7;
     string image_url = 8;
-}
-
-message RemoveProductDto {
-    string id = 1;
-}
-
-message PermanentlyRemoveProductDto {
-    string id = 1;
 }
 
 message Product {
@@ -69,8 +71,8 @@ message Product {
 }
 
 message Products {
-    int32 count = 1;
-    repeated Product products = 2;
+    repeated Product products = 1;
+    common.PaginationResponse pagination = 2;
 }
 
 message ProductAttribute {

@@ -8,8 +8,8 @@ import "./products.proto";
 service InventoryService {
   rpc Create(CreateInventoryDto) returns (Inventory);
   rpc Update(UpdateInventoryDto) returns (Inventory);
-  rpc FindByProduct(FindInventoryByProductDto) returns (Inventories);
-  rpc FindAll(common.Empty) returns (Inventories);
+  rpc Filter(FilterInventoryDto) returns (Inventories);
+  rpc FindAll(common.Pagination) returns (Inventories);
   rpc FindOne(InventoryId) returns (Inventory);
   rpc Remove(InventoryId) returns (common.Empty);
   rpc PermanentlyRemove(InventoryId) returns (common.Empty);
@@ -38,8 +38,13 @@ message UpdateInventoryDto {
   bool active = 8;
 }
 
-message FindInventoryByProductDto {
-  string product_id = 1;
+message FilterInventoryDto {
+  Product product = 1;
+  double price = 2;
+  string sku = 3;
+  string barcode = 4;
+  string serial = 5;
+  common.Pagination pagination = 6;
 }
 
 message InventoryId {
@@ -64,6 +69,6 @@ message Inventory {
 }
 
 message Inventories {
-  int32 count = 1;
-  repeated Inventory inventories = 2;  
+  repeated Inventory inventories = 1;
+  common.PaginationResponse pagination = 2;  
 }
