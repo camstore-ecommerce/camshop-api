@@ -50,20 +50,6 @@ export function ApiBodyWithSingleFile(
 export function ApiDocsPagination(entity: string) {
 	return applyDecorators(
 		ApiQuery({
-			name: 'offset',
-			type: Number,
-			examples: {
-				'0': {
-					value: 0,
-					description: 'Start from 0',
-				},
-				'10': {
-					value: 10,
-					description: `Skip 10 ${entity}s`,
-				},
-			},
-		}),
-		ApiQuery({
 			name: 'limit',
 			type: Number,
 			examples: {
@@ -76,6 +62,53 @@ export function ApiDocsPagination(entity: string) {
 					description: `Get 50 ${entity}s`,
 				},
 			},
+			required: false,
 		}),
+		ApiQuery({
+			name: 'sort',
+			type:  String,
+			examples: {
+				'id': {
+					value: 'id',
+					description: 'Sort by id',
+				},
+				'_id': {
+					value: '_id',
+					description: 'Sort by _id',
+				}
+			},
+			required: false,
+		}),
+		ApiQuery({
+			name: 'order',
+			type: String,
+			examples: {
+				'asc': {
+					value: 'asc',
+					description: 'Ascending order',
+				},
+				'desc': {
+					value: 'desc',
+					description: 'Descending order',
+				},
+			},
+			required: false,
+		}),
+		ApiQuery({
+			name: 'page',
+			type: Number,
+			examples: {
+				'1': {
+					value: 1,
+					description: 'Page 1',
+				},
+				'2': {
+					value: 2,
+					description: 'Page 2',
+				},
+			},
+			required: false,
+		})
+
 	);
 }
