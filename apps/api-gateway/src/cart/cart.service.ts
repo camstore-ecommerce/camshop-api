@@ -1,4 +1,4 @@
-import { CART_CLIENT } from '@app/common/constants/services';
+import { USERS_CLIENT } from '@app/common/constants/services';
 import { AddToCartDto, CART_SERVICE_NAME, Cart, CartServiceClient, RemoveFromCartDto } from '@app/contracts/cart';
 import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -10,11 +10,11 @@ export class CartService implements OnModuleInit {
   private cartServiceClient: CartServiceClient;
 
   constructor(
-    @Inject(CART_CLIENT) private readonly cartClient: ClientGrpc,
+    @Inject(USERS_CLIENT) private readonly userClient: ClientGrpc,
   ) { }
 
   onModuleInit() {
-    this.cartServiceClient = this.cartClient.getService<CartServiceClient>(CART_SERVICE_NAME);
+    this.cartServiceClient = this.userClient.getService<CartServiceClient>(CART_SERVICE_NAME);
   }
 
   /**
@@ -32,12 +32,16 @@ export class CartService implements OnModuleInit {
       },
       items: cart.items.map((item) => ({
         product: {
-          id: item.product.id,
-          name: item.product.name,
-          image_url: item.product.image_url,
+          id: item.inventory.id,
+          name: item.inventory.product.name,
+          sku: item.inventory.sku,
+          serial: item.inventory.serial,
+          barcode: item.inventory.barcode,
+          image_url: item.inventory.product.image_url,
+          stock: item.inventory.stock,
         },
         quantity: item.quantity,
-        price: item.price,
+        price: item.inventory.price,
       })),
     };
   }

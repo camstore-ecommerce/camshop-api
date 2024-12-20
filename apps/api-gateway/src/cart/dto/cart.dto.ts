@@ -25,6 +25,18 @@ class CartProductDto {
 	name: string;
 
 	@ApiProperty()
+	sku: string;
+
+	@ApiProperty()
+	serial: string;
+
+	@ApiProperty()
+	barcode: string;
+
+	@ApiProperty()
+	stock: number;
+
+	@ApiProperty()
 	image_url: string;
 }
 
