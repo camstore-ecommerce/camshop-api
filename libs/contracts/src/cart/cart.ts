@@ -7,28 +7,15 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
-import { User } from "../users";
-import { Product } from "../products";
-import { AddToCartDto, RemoveFromCartDto } from ".";
+import { AddToCartDto, Cart, RemoveFromCartDto } from ".";
 
-export const protobufPackage = "cart";
+export const protobufPackage = "users";
 
 export interface GetCartDto {
   user_id: string;
 }
 
-export interface Cart {
-  user: User;
-  items: CartItem[];
-}
-
-export interface CartItem {
-  product: Product;
-  quantity: number;
-  price: number;
-}
-
-export const CART_PACKAGE_NAME = "cart";
+export const CART_PACKAGE_NAME = "users";
 
 export interface CartServiceClient {
   addToCart(request: AddToCartDto): Observable<Cart>;

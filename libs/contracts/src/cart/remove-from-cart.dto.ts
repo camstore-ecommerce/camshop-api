@@ -6,5 +6,5 @@ export class RemoveFromCartDto {
 
     @ApiProperty()
     @IsString()
-    product_id: string;
+    inventory_id: string;
 }

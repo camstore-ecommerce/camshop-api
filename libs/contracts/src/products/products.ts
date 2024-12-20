@@ -18,9 +18,6 @@ export const protobufPackage = 'products';
 export interface ProductId {
 	id: string;
 }
-export interface FindByIdsDto {
-	ids: string[];
-}
 
 export const PRODUCTS_PACKAGE_NAME = 'products';
 
@@ -28,8 +25,6 @@ export interface ProductsServiceClient {
 	create(request: CreateProductDto): Observable<Product>;
 
 	findOne(request: ProductId): Observable<Product>;
-
-	findByIds(request: FindByIdsDto): Observable<Products>;
 
 	findAll(request: Pagination): Observable<Products>;
 
@@ -51,10 +46,6 @@ export interface ProductsServiceController {
 		request: ProductId,
 	): Promise<Product> | Observable<Product> | Product;
 
-	findByIds(
-		request: FindByIdsDto,
-	): Promise<Products> | Observable<Products> | Products;
-
 	findAll(request: Pagination): Promise<Products> | Observable<Products> | Products;
 
 	filter(request: FilterProductDto): Promise<Products> | Observable<Products> | Products;
@@ -75,7 +66,6 @@ export function ProductsServiceControllerMethods() {
 		const grpcMethods: string[] = [
 			'create',
 			'findOne',
-			'findByIds',
 			'findAll',
 			'filter',
 			'update',

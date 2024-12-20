@@ -17,6 +17,10 @@ export interface InventoryId {
   id: string;
 }
 
+export interface FindByIdsDto {
+	ids: string[];
+}
+
 export const PRODUCTS_PACKAGE_NAME = 'products';
 
 export interface InventoryServiceClient {
@@ -27,6 +31,8 @@ export interface InventoryServiceClient {
   findAll(request: Pagination): Observable<Inventories>;
 
   filter(request: FilterInventoryDto): Observable<Inventories>;
+
+  findByIds(request: FindByIdsDto): Observable<Inventories>;
 
   findOne(request: InventoryId): Observable<Inventory>;
 
@@ -48,7 +54,9 @@ export interface InventoryServiceController {
 
   filter(request: FilterInventoryDto): Promise<Inventories> | Observable<Inventories> | Inventories;
 
-  findOne(request: InventoryId): Promise<Inventory> | Observable<Inventory> | Inventory
+  findOne(request: InventoryId): Promise<Inventory> | Observable<Inventory> | Inventory;
+
+  findByIds(request: FindByIdsDto): Promise<Inventories> | Observable<Inventories> | Inventories
 
   remove(request: InventoryId): Promise<Empty> | Observable<Empty> | Empty;
 
@@ -65,6 +73,7 @@ export function InventoryServiceControllerMethods() {
       "create",
       "update",
       "findAll",
+      "findByIds",
       "filter",
       "findOne",
       "remove",
