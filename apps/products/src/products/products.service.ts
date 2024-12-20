@@ -99,21 +99,6 @@ export class ProductsService {
 		};
 	}
 
-	async findByIds(ids: string[]) {
-		const products = await this.productsRepository.find({ _id: { $in: ids } });
-		return {
-			products,
-			pagination: {
-				total: products.length,
-				page: 1,
-				limit: products.length,
-				offset: 0,
-				sort: 'asc',
-				order: 'id',
-			}
-		};
-	}
-
 	async findOne(_id: string) {
 		return await this.productsRepository.findOne({ _id });
 	}

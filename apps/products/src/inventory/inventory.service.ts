@@ -105,6 +105,20 @@ export class InventoryService {
     return await this.inventoryRepository.findOne({ _id });
   }
 
+  async findByIds(ids: string[]) {
+		const inventories = await this.inventoryRepository.find({ _id: { $in: ids } });
+		return {
+			inventories,
+			pagination: {
+				total: inventories.length,
+				page: 1,
+				limit: inventories.length,
+				sort: 'asc',
+				order: 'id',
+			}
+		};
+	}
+
   async remove(_id: string) {
     return await this.inventoryRepository.softDelete({ _id });
   }

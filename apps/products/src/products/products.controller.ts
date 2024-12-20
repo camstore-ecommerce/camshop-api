@@ -3,7 +3,6 @@ import { ProductsService } from './products.service';
 import {
 	CreateProductDto,
 	FilterProductDto,
-	FindByIdsDto,
 	ProductId,
 	Products,
 	ProductsServiceController,
@@ -41,16 +40,6 @@ export class ProductsController implements ProductsServiceController {
 				this.productsService.toProduct(product, product.category, product.manufacturer)
 			),
 		}
-	}
-
-	async findByIds(findByIdsDto: FindByIdsDto) {
-		const products = await this.productsService.findByIds(findByIdsDto.ids);
-		return {
-			...products,
-			products: products.products.map((product) =>
-				this.productsService.toProduct(product, product.category, product.manufacturer)
-			),
-		};
 	}
 
 	async findOne(productId: ProductId) {

@@ -3,6 +3,7 @@ import { InventoryService } from './inventory.service';
 import { Inventory as InventorySchema } from './schema/inventory.schema';
 import {
   CreateInventoryDto,
+  FindByIdsDto,
   Inventories, 
   InventoryId, 
   InventoryServiceController, 
@@ -48,6 +49,16 @@ export class InventoryController implements InventoryServiceController {
     const inventory = await this.inventoryService.findOne(inventoryId.id);
     return this.inventoryService.toInventory(inventory);
   }
+
+  async findByIds(findByIdsDto: FindByIdsDto) {
+		const inventories = await this.inventoryService.findByIds(findByIdsDto.ids);
+		return {
+			...inventories,
+			inventories: inventories.inventories.map((product) =>
+				this.inventoryService.toInventory(product)
+			),
+		};
+	}
 
   async remove(inventoryId: InventoryId) {
     return await this.inventoryService.remove(inventoryId.id);
