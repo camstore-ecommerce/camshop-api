@@ -13,7 +13,6 @@ import "./manufacturers.proto";
 service ProductsService {
     rpc Create(CreateProductDto) returns (Product) {}
     rpc FindOne(ProductId) returns (Product) {}
-    rpc FindByIds(FindByIdsDto) returns (Products) {}
     rpc FindAll(common.Pagination) returns (Products) {}
     rpc Filter(FilterProductDto) returns (Products) {}
     rpc Update(UpdateProductDto) returns (Product) {}
@@ -33,10 +32,6 @@ message CreateProductDto {
 
 message ProductId {
     string id = 1;
-}
-
-message FindByIdsDto {
-    repeated string ids = 1;
 }
 
 message FilterProductDto {

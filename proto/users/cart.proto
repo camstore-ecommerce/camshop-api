@@ -1,12 +1,9 @@
 syntax = "proto3";
 
-package cart;
+package users;
 
-import "../products/products.proto";
-import "../users/users.proto";
-
-// import "proto/products/products.proto";
-// import "proto/users/users.proto";
+import "../products/inventory.proto";
+import "./users.proto";
 
 service CartService {
   rpc AddToCart(AddToCartDto) returns (Cart);
@@ -16,9 +13,8 @@ service CartService {
 
 message AddToCartDto {
   string user_id = 1;
-  string product_id = 2;
+  string inventory_id = 2;
   int32 quantity = 3;
-  float price = 4;
 }
 
 message GetCartDto {
@@ -27,16 +23,15 @@ message GetCartDto {
 
 message RemoveFromCartDto {
   string user_id = 1;
-  string product_id = 2;
+  string inventory_id = 2;
 }
 
 message Cart {
-  users.User user = 1;
+  User user = 1;
   repeated CartItem items = 2;
 }
 
 message CartItem {
-  products.Product product = 1;
+  products.Inventory inventory = 1;
   int32 quantity = 2;
-  float price = 3;
 }

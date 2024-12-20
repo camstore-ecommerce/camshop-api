@@ -9,6 +9,7 @@ service InventoryService {
   rpc Create(CreateInventoryDto) returns (Inventory);
   rpc Update(UpdateInventoryDto) returns (Inventory);
   rpc Filter(FilterInventoryDto) returns (Inventories);
+  rpc FindByIds(FindByIdsDto) returns (Inventories) {}
   rpc FindAll(common.Pagination) returns (Inventories);
   rpc FindOne(InventoryId) returns (Inventory);
   rpc Remove(InventoryId) returns (common.Empty);
@@ -46,6 +47,11 @@ message FilterInventoryDto {
   string serial = 5;
   common.Pagination pagination = 6;
 }
+
+message FindByIdsDto {
+  repeated string ids = 1;
+}
+
 
 message InventoryId {
   string id = 1;
