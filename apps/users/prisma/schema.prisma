@@ -9,6 +9,9 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// ==================
+// User Service
+// ==================
 model User {
     id                String    @id @default(cuid())
     first_name        String
@@ -28,6 +31,7 @@ model User {
     profile_pic String?
 
     addresses UserAddress[]
+    Cart      Cart[]
 
     @@map("users")
 }
@@ -72,4 +76,28 @@ enum Gender {
 enum Role {
     USER
     ADMIN
+}
+
+// ==================
+// Cart Service
+// ==================
+model Cart {
+    user_id    String     @id
+    cart_items CartItem[]
+    updated_at DateTime   @default(now()) @updatedAt
+
+    user User @relation(fields: [user_id], references: [id])
+
+    @@map("carts")
+}
+
+model CartItem {
+    user_id      String
+    inventory_id String
+    quantity     Int
+    
+    cart Cart @relation(fields: [user_id], references: [user_id])
+
+    @@map("cart_items")
+    @@id([user_id, inventory_id])
 }

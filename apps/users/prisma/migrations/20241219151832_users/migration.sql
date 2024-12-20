@@ -54,6 +54,23 @@ CREATE TABLE "user_addresses" (
     CONSTRAINT "user_addresses_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "carts" (
+    "user_id" TEXT NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "carts_pkey" PRIMARY KEY ("user_id")
+);
+
+-- CreateTable
+CREATE TABLE "cart_items" (
+    "user_id" TEXT NOT NULL,
+    "inventory_id" TEXT NOT NULL,
+    "quantity" INTEGER NOT NULL,
+
+    CONSTRAINT "cart_items_pkey" PRIMARY KEY ("user_id","inventory_id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -65,3 +82,9 @@ CREATE UNIQUE INDEX "admins_username_key" ON "admins"("username");
 
 -- AddForeignKey
 ALTER TABLE "user_addresses" ADD CONSTRAINT "user_addresses_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "carts" ADD CONSTRAINT "carts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "cart_items" ADD CONSTRAINT "cart_items_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "carts"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -21,6 +21,7 @@ import { MAIL_PATTERNS } from '@app/contracts/mail';
 import * as jwt from 'jsonwebtoken';
 import { MAIL_CLIENT } from '@app/common/constants/services';
 import { firstValueFrom } from 'rxjs';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class AuthService {
@@ -29,8 +30,9 @@ export class AuthService {
 		private readonly jwtService: JwtService,
 		private readonly usersService: UsersService,
 		private readonly verificationService: VerificationService,
+		private readonly prismaService: PrismaService,
 		@Inject(MAIL_CLIENT) private readonly mailClient: ClientProxy,
-	) {}
+	) { }
 
 	async adminLogin(loginDto: AdminLoginDto) {
 		const user = await this.usersService.validateAdmin(
@@ -81,38 +83,51 @@ export class AuthService {
 	}
 
 	async register(registerDto: UserRegisterDto) {
-		const user = await this.usersService.registerUser(registerDto);
-		this.sendVerificationEmail(user);
-		return {
-			message: 'User registered. Please check your email to verify your account.',
-			user,
-		};
+		try {
+			const user = await this.usersService.registerUser(registerDto);
+			this.sendVerificationEmail(user);
+			await this.prismaService.cart.create({
+				data: {
+					user_id: user.id,
+				},
+			});
+			return {
+				message: 'User registered. Please check your email to verify your account.',
+				user,
+			};
+		} catch (err) {
+			throw new RpcException(err.message);
+		}
 	}
 
 	async sendVerificationEmail(user: VerifyEmailDto) {
-		if (user.verified_email_at) {
-			throw new RpcException('User already verified');
+		try {
+			if (user.verified_email_at) {
+				throw new RpcException('User already verified');
+			}
+
+			const otp = await this.verificationService.generateOtpCode(user.id);
+
+			const token = jwt.sign(
+				{ user: user.email, otp },
+				this.configService.get('JWT_SECRET'),
+				{ expiresIn: '1h' },
+			);
+
+			await firstValueFrom(
+				this.mailClient.send(MAIL_PATTERNS.SEND, {
+					subject: 'Email Verification',
+					recipients: [
+						{ name: `${user.first_name} ${user.last_name}`, address: user.email },
+					],
+					html: `<p>Click <a href="${this.configService.get('APP_URL')}/confirm-verify-email?token=${token}">here</a> to verify your email</p>`,
+				}),
+			);
+
+			return { message: 'Please check your email to verify your account.' };
+		} catch (err) {
+
 		}
-
-		const otp = await this.verificationService.generateOtpCode(user.id);
-
-		const token = jwt.sign(
-			{ user: user.email, otp },
-			this.configService.get('JWT_SECRET'),
-			{ expiresIn: '1h' },
-		);
-
-		await firstValueFrom(
-			this.mailClient.send(MAIL_PATTERNS.SEND, {
-				subject: 'Email Verification',
-				recipients: [
-					{ name: `${user.first_name} ${user.last_name}`, address: user.email },
-				],
-				html: `<p>Click <a href="${this.configService.get('APP_URL')}/confirm-verify-email?token=${token}">here</a> to verify your email</p>`,
-			}),
-		);
-
-		return { message: 'Please check your email to verify your account.' };
 	}
 
 	async verifyEmail(token: string) {

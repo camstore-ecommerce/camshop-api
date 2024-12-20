@@ -9,6 +9,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { VerificationModule } from '../verification/verification.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MAIL_CLIENT } from '@app/common/constants/services';
+import { PrismaService } from '../prisma.service';
 
 @Module({
 	imports: [
@@ -36,6 +37,6 @@ import { MAIL_CLIENT } from '@app/common/constants/services';
 		]),
 	],
 	controllers: [AuthController],
-	providers: [AuthService, JwtStrategy, JwtAuthGuard],
+	providers: [AuthService, JwtStrategy, JwtAuthGuard, PrismaService],
 })
 export class AuthModule {}

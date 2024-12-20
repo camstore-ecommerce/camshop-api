@@ -6,6 +6,7 @@ import { VerificationModule } from './verification/verification.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { UsersRedisModule } from './redis/users-redis.module';
 import * as Joi from 'joi';
+import { CartModule } from './cart/cart.module';
 
 @Module({
 	imports: [
@@ -34,6 +35,7 @@ import * as Joi from 'joi';
 		VerificationModule,
 		AddressesModule,
 		UsersRedisModule,
+		CartModule
 	],
 	controllers: [],
 	providers: [],
