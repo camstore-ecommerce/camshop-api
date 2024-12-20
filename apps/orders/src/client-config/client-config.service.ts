@@ -1,3 +1,4 @@
+import { PRODUCTS_PATH, USERS_PATH } from '@app/common/constants/proto-path';
 import { PRODUCTS_PACKAGE_NAME } from '@app/contracts/products';
 import { USERS_PACKAGE_NAME } from '@app/contracts/users';
 import { Injectable } from '@nestjs/common';
@@ -13,11 +14,7 @@ export class ClientConfigService {
 			transport: Transport.GRPC,
 			options: {
 				package: PRODUCTS_PACKAGE_NAME,
-				protoPath: [
-					'proto/products/products.proto',
-					'proto/products/manufacturers.proto',
-					'proto/products/categories.proto',
-				],
+				protoPath: PRODUCTS_PATH,
 				url: this.configService.get('PRODUCTS_CLIENT_URL'),
 				loader: {
 					keepCase: true,
@@ -35,11 +32,7 @@ export class ClientConfigService {
 			transport: Transport.GRPC,
 			options: {
 				package: USERS_PACKAGE_NAME,
-				protoPath: [
-					'proto/users/users.proto', 
-					'proto/users/auth.proto',
-					'proto/users/addresses.proto',
-				],
+				protoPath: USERS_PATH,
 				url: this.configService.get('USERS_CLIENT_URL'),
 				loader: {
 					keepCase: true,
