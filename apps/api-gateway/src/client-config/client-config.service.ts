@@ -1,4 +1,4 @@
-import { CART_PACKAGE_NAME } from '@app/contracts/cart';
+import { ORDERS_PATH, PRODUCTS_PATH, USERS_PATH } from '@app/common/constants/proto-path';
 import { ORDERS_PACKAGE_NAME } from '@app/contracts/orders';
 import { PRODUCTS_PACKAGE_NAME } from '@app/contracts/products';
 import { USERS_PACKAGE_NAME } from '@app/contracts/users';
@@ -27,12 +27,7 @@ export class ClientConfigService {
 			transport: Transport.GRPC,
 			options: {
 				package: PRODUCTS_PACKAGE_NAME,
-				protoPath: [
-					'proto/products/products.proto',
-					'proto/products/manufacturers.proto',
-					'proto/products/categories.proto',
-					'proto/products/inventory.proto',
-				],
+				protoPath: PRODUCTS_PATH,
 				url: this.configService.get('PRODUCTS_CLIENT_URL'),
 				loader: {
 					keepCase: true,
@@ -50,11 +45,7 @@ export class ClientConfigService {
 			transport: Transport.GRPC,
 			options: {
 				package: USERS_PACKAGE_NAME,
-				protoPath: [
-					'proto/users/users.proto', 
-					'proto/users/auth.proto', 
-					'proto/users/addresses.proto'
-				],
+				protoPath: USERS_PATH,
 				url: this.configService.get('USERS_CLIENT_URL'),
 				loader: {
 					keepCase: true,
@@ -72,7 +63,7 @@ export class ClientConfigService {
 			transport: Transport.GRPC,
 			options: {
 				package: ORDERS_PACKAGE_NAME,
-				protoPath: ['proto/orders/orders.proto'],
+				protoPath: ORDERS_PATH,
 				url: this.configService.get('ORDERS_CLIENT_URL'),
 				loader: {
 					keepCase: true,
@@ -80,25 +71,6 @@ export class ClientConfigService {
 					enums: String,
 					defaults: true,
 					oneofs: true,
-				},
-			},
-		};
-	}
-
-	get cartClientOption(): ClientOptions {
-		return {
-			transport: Transport.GRPC,
-			options: {
-				package: CART_PACKAGE_NAME,
-				protoPath: ['proto/cart/cart.proto'],
-				url: this.configService.get('CART_CLIENT_URL'),
-				loader: {
-					keepCase: true,
-					longs: String,
-					enums: String,
-					defaults: true,
-					oneofs: true,
-					objects: true,
 				},
 			},
 		};
