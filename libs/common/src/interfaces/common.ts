@@ -19,6 +19,7 @@ export class Pagination {
     @IsOptional()
     @IsNumber()
     @IsNotEmpty()
+    @Type(() => Number)
     limit: number;
 
     @ApiPropertyOptional()

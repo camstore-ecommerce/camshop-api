@@ -37,13 +37,14 @@ export class JwtAuthGuard implements CanActivate, OnModuleInit {
 			context.getHandler(),
 			context.getClass(),
 		]);
-		if (isPublic) {
-			return true;
-		}
-
+		
 		const request = context.switchToHttp().getRequest();
 		const jwt =
-			request.cookies?.Authentication || request.headers?.authentication;
+		request.cookies?.Authentication || request.headers?.authentication;
+		
+		if (isPublic && !jwt) {
+			return true;
+		}
 
 		if (!jwt) {
 			return false;
