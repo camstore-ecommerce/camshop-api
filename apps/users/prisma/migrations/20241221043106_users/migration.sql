@@ -46,7 +46,7 @@ CREATE TABLE "user_addresses" (
     "user_id" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "city" TEXT NOT NULL,
-    "state" TEXT NOT NULL,
+    "province" TEXT NOT NULL,
     "country" TEXT NOT NULL,
     "postal_code" TEXT NOT NULL,
     "is_primary" BOOLEAN NOT NULL DEFAULT false,

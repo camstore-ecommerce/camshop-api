@@ -57,7 +57,7 @@ model UserAddress {
     user_id     String
     address     String
     city        String
-    state       String
+    province    String
     country     String
     postal_code String
     is_primary  Boolean @default(false)
@@ -95,9 +95,9 @@ model CartItem {
     user_id      String
     inventory_id String
     quantity     Int
-    
+
     cart Cart @relation(fields: [user_id], references: [user_id])
 
-    @@map("cart_items")
     @@id([user_id, inventory_id])
+    @@map("cart_items")
 }
