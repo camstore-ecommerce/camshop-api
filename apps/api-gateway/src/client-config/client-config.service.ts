@@ -71,6 +71,8 @@ export class ClientConfigService {
 					enums: String,
 					defaults: true,
 					oneofs: true,
+					json: true,
+					objects: true,
 				},
 			},
 		};
