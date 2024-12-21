@@ -11,18 +11,22 @@ datasource db {
 
 model Order {
     id              String      @id
-    user_id         String
+    // User
+    user_id         String?
+    email           String?
+    //
     status          String      @default("pending")
     order_date      DateTime    @default(now())
     updated_at      DateTime    @default(now()) @updatedAt
     deleted_at      DateTime?
     order_items     OrderItem[]
-    address_id      String
-    shipping_cost   Float
+    // Address
+    address_id      String?
+    user_address    Json?
+    // Shipping
     shipping_method String
+    //
     sub_total       Float
-    tax             Float
-    discount        Float?
     total           Float
     notes           String?
     canceled_reason String?
@@ -32,14 +36,14 @@ model Order {
 }
 
 model OrderItem {
-    order_id    String
-    product_id  String
-    qty         Int
-    price       Float
-    total_price Float
-    options     Json
-    order       Order  @relation(fields: [order_id], references: [id])
+    order_id     String
+    inventory_id String
+    qty          Int
+    price        Float
+    total_price  Float
 
-    @@id([order_id, product_id])
+    order Order @relation(fields: [order_id], references: [id])
+
+    @@id([order_id, inventory_id])
     @@map("order_items")
 }

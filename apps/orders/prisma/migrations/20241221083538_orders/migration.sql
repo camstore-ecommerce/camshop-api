@@ -1,17 +1,16 @@
 -- CreateTable
 CREATE TABLE "orders" (
     "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
+    "user_id" TEXT,
+    "email" TEXT,
     "status" TEXT NOT NULL DEFAULT 'pending',
     "order_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
-    "address_id" TEXT NOT NULL,
-    "shipping_cost" DOUBLE PRECISION NOT NULL,
+    "address_id" TEXT,
+    "user_address" JSONB,
     "shipping_method" TEXT NOT NULL,
     "sub_total" DOUBLE PRECISION NOT NULL,
-    "tax" DOUBLE PRECISION NOT NULL,
-    "discount" DOUBLE PRECISION,
     "total" DOUBLE PRECISION NOT NULL,
     "notes" TEXT,
     "canceled_reason" TEXT,
@@ -23,13 +22,12 @@ CREATE TABLE "orders" (
 -- CreateTable
 CREATE TABLE "order_items" (
     "order_id" TEXT NOT NULL,
-    "product_id" TEXT NOT NULL,
+    "inventory_id" TEXT NOT NULL,
     "qty" INTEGER NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "total_price" DOUBLE PRECISION NOT NULL,
-    "options" JSONB NOT NULL,
 
-    CONSTRAINT "order_items_pkey" PRIMARY KEY ("order_id","product_id")
+    CONSTRAINT "order_items_pkey" PRIMARY KEY ("order_id","inventory_id")
 );
 
 -- AddForeignKey
