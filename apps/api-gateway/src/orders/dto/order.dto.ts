@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Types } from 'mongoose';
+import { PaginationResponse } from '@app/common/interfaces';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class OrderProductDto {
+export class OrderInventoryDto {
 	@ApiProperty()
 	id: string;
 
@@ -10,6 +10,15 @@ export class OrderProductDto {
 
 	@ApiProperty()
 	image_url: string;
+
+	@ApiProperty()
+	sku: string;
+
+	@ApiProperty()
+	barcode: string;
+
+	@ApiProperty()
+	serial: string;
 }
 
 export class OrderUserDto {
@@ -18,15 +27,6 @@ export class OrderUserDto {
 
 	@ApiProperty()
 	email: string;
-
-	@ApiProperty()
-	phone: string;
-
-	@ApiProperty()
-	first_name: string;
-
-	@ApiProperty()
-	last_name: string;
 }
 
 export class OrderAddressDto {
@@ -40,18 +40,33 @@ export class OrderAddressDto {
 	city: string;
 
 	@ApiProperty()
-	state: string;
+	province: string;
 
 	@ApiProperty()
 	country: string;
 
 	@ApiProperty()
 	postal_code: string;
+
+	@ApiProperty()
+	phone: string;
+
+	@ApiProperty()
+	first_name: string;
+
+	@ApiProperty()
+	last_name: string;
+
+	@ApiPropertyOptional()
+	company?: string;
+
+	@ApiPropertyOptional()
+	apartment?: string;
 }
 
 export class OrderItemsDto {
-	@ApiProperty({type: OrderProductDto})
-	product: OrderProductDto;
+	@ApiProperty({type: OrderInventoryDto})
+	inventory: OrderInventoryDto;
 
 	@ApiProperty()
 	qty: number;
@@ -61,9 +76,6 @@ export class OrderItemsDto {
 
 	@ApiProperty()
 	total_price: number;
-
-	@ApiProperty()
-	options: any;
 }
 
 export class OrderDto {
@@ -73,8 +85,8 @@ export class OrderDto {
 	@ApiProperty()
 	status: string;
 
-	@ApiProperty({type: OrderUserDto})
-	user: OrderUserDto;
+	@ApiPropertyOptional({type: OrderUserDto})
+	user?: OrderUserDto;
 
 	@ApiProperty()
 	order_date: Date;
@@ -86,19 +98,10 @@ export class OrderDto {
 	address: OrderAddressDto;
 
 	@ApiProperty()
-	shipping_cost: number;
-
-	@ApiProperty()
 	shipping_method: string;
 
 	@ApiProperty()
 	sub_total: number;
-
-	@ApiProperty()
-	tax: number;
-
-	@ApiProperty()
-	discount: number;
 
 	@ApiProperty()
 	total: number;
@@ -117,9 +120,9 @@ export class OrderDto {
 }
 
 export class OrdersDto {
-	@ApiProperty()
-	count: number;
-
 	@ApiProperty({type: OrderDto})
 	orders: OrderDto[];
+
+	@ApiProperty({type: PaginationResponse})
+	pagination: PaginationResponse;
 }

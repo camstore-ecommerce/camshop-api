@@ -7,15 +7,18 @@ import {
 	Param,
 	Delete,
 	UseGuards,
+	Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, UpdateOrderDto } from '@app/contracts/orders';
 import { JwtAuthGuard } from '@app/common/guards';
-import { AuthUser, Roles } from '@app/common/decorators';
+import { AuthUser, Public, Roles } from '@app/common/decorators';
 import { UserDto } from '@app/contracts/users';
 import { Role } from '@app/common/enums';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { OrderDto, OrdersDto } from './dto/order.dto';
+import { ApiDocsPagination } from '@app/common/decorators/swagger-form-data.decorators';
+import { Pagination } from '@app/common/interfaces';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
@@ -23,27 +26,29 @@ export class OrdersController {
 	constructor(private readonly ordersService: OrdersService) { }
 
 	@Post()
-	@Roles(Role.User)
+	@Public()
 	@ApiOperation({ summary: 'Create order', description: 'User access' })
 	@ApiResponse({ status: 201, type: OrderDto })
 	create(@Body() createOrderDto: CreateOrderDto, @AuthUser() user: UserDto) {
-		return this.ordersService.create({ ...createOrderDto, user_id: user.id });
+		return this.ordersService.create({ ...createOrderDto, user_id: user?.id });
 	}
 
 	@Get()
 	@Roles(Role.Admin)
 	@ApiOperation({ summary: 'Get all orders', description: 'Admin access' })
 	@ApiResponse({ status: 200, type: OrdersDto })
-	findAll() {
-		return this.ordersService.findAll();
+	@ApiDocsPagination('order')
+	findAll(@Query() query: Pagination) {
+		return this.ordersService.findAll(query);
 	}
 
 	@Get('/me')
 	@Roles(Role.User)
 	@ApiOperation({ summary: 'Get all orders by user', description: 'User access' })
 	@ApiResponse({ status: 200, type: OrdersDto })
-	findAllByUser(@AuthUser() user: UserDto) {
-		return this.ordersService.findAllByUser(user.id);
+	@ApiDocsPagination('order')
+	findAllByUser(@AuthUser() user: UserDto, @Query() query: Pagination) {
+		return this.ordersService.findAllByUser({ user_id: user.id, pagination: query });
 	}
 
 	@Get('/me/:id')

@@ -1,15 +1,19 @@
 import { ORDERS_CLIENT } from '@app/common/constants/services';
 import {
 	CreateOrderDto,
+	FindAllOrderByUserDto,
 	ORDERS_SERVICE_NAME,
 	Order,
 	OrdersServiceClient,
 	UpdateOrderDto,
+	UserAddress,
 } from '@app/contracts/orders';
 import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { OrderDto, OrdersDto } from './dto/order.dto';
 import { catchError, map, Observable, throwError } from 'rxjs';
+import { Struct } from '@app/common/interfaces/struct';
+import { Pagination } from '@app/common/interfaces';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
@@ -25,30 +29,32 @@ export class OrdersService implements OnModuleInit {
 	}
 
 	private mapOrder(order: Order): OrderDto {
+		if (order.user_address) {
+			order.user_address = Struct.wrap(order.user_address as any) as any;
+		}
 		return {
 			id: order.id,
 			user: {
-				id: order.user.id,
-				email: order.user.email,
-				phone: order.user.phone,
-				first_name: order.user.first_name,
-				last_name: order.user.last_name,
+				id: order.user?.id,
+				email: order.user?.email ?? order?.email,
 			},
 			order_date: order.order_date,
 			status: order.status,
 			address: {
-				id: order.address.id,
-				address: order.address.address,
-				city: order.address.city,
-				state: order.address.state,
-				country: order.address.country,
-				postal_code: order.address.postal_code
+				id: order.address?.id,
+				address: order.address?.address ?? order.user_address?.address,
+				city: order.address?.city ?? order.user_address?.city,
+				province: order.address?.province ?? order.user_address?.province,
+				country: order.address?.country ?? order.user_address?.country,
+				postal_code: order.address?.postal_code ?? order.user_address?.postal_code,
+				phone: order.user?.phone ?? order.user_address?.phone,
+				first_name: order.user?.first_name ?? order.user_address?.first_name,
+				last_name: order.user?.last_name ?? order.user_address?.last_name,
+				company: order.user_address?.company,
+				apartment: order.user_address?.apartment,
 			},
-			shipping_cost: order.shipping_cost,
 			shipping_method: order.shipping_method,
 			sub_total: order.sub_total,
-			tax: order.tax,
-			discount: order.discount,
 			total: order.total,
 			notes: order.notes,
 			canceled_reason: order.canceled_reason,
@@ -56,16 +62,37 @@ export class OrdersService implements OnModuleInit {
 			updated_at: order.updated_at,
 			order_items: order.order_items.map((item) => ({
 				...item,
-				product: {
-					id: item.product.id,
-					name: item.product.name,
-					image_url: item.product.image_url,
+				inventory: {
+					id: item.inventory.id,
+					name: item.inventory.product.name,
+					image_url: item.inventory.product.image_url,
+					barcode: item.inventory.barcode,
+					serial: item.inventory.serial,
+					sku: item.inventory.sku,
+					price: item.inventory.price,
 				},
 			})),
 		};
 	}
 
 	create(createOrderDto: CreateOrderDto): Observable<OrderDto> {
+		if (!createOrderDto.user_address && !createOrderDto.address_id) {
+			throw new BadRequestException('Address is required');
+		}
+
+		if (!createOrderDto.email && !createOrderDto.user_id) {
+			throw new BadRequestException('User is required');
+		}
+
+		if (!createOrderDto.order_items || createOrderDto.order_items.length === 0) {
+			throw new BadRequestException('Order items are required');
+		}
+
+		if (createOrderDto.order_items.some((item) => !item.inventory_id || !item.qty)) {
+			throw new BadRequestException('Inventory qty must be greater than 0');
+		}
+
+		createOrderDto.user_address = Struct.wrap(createOrderDto.user_address as any) as any;
 		return this.ordersServiceClient
 			.create(createOrderDto)
 			.pipe(
@@ -76,22 +103,23 @@ export class OrdersService implements OnModuleInit {
 			);
 	}
 
-	findAll(): Observable<OrdersDto> {
-		return this.ordersServiceClient.findAll({}).pipe(
+	findAll(pagination: Pagination): Observable<OrdersDto> {
+		console.log('pagination', pagination);
+		return this.ordersServiceClient.findAll(pagination).pipe(
 			map((orders) => ({
-				count: orders.orders.length,
 				orders: orders.orders.map((order) => this.mapOrder(order)),
+				pagination: orders.pagination,
 			})),
 		);
 	}
 
-	findAllByUser(user_id: string): Observable<OrdersDto> {
+	findAllByUser(findAllByUser: FindAllOrderByUserDto): Observable<OrdersDto> {
 		return this.ordersServiceClient
-			.findAllByUser({ user_id })
+			.findAllByUser(findAllByUser)
 			.pipe(
 				map((orders) => ({
-					count: orders.orders.length,
 					orders: orders.orders.map((order) => this.mapOrder(order)),
+					pagination: orders.pagination,
 				}),
 				)
 			);
