@@ -4,7 +4,6 @@ import { ApiGatewayService } from './api-gateway.service';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { ClientConfigService } from './client-config/client-config.service';
-import { ClientConfigModule } from './client-config/client-config.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ManufacturersModule } from './manufacturers/manufacturers.module';
 import { LoggerModule } from 'nestjs-pino';

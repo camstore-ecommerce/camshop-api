@@ -6,49 +6,49 @@ import {
 	FindOneOrderByUserDto,
 	FindOneOrderDto,
 	Order,
+	OrderId,
 	Orders,
 	OrdersServiceController,
 	OrdersServiceControllerMethods,
-	PermanentlyRemoveOrderDto,
-	RemoveOrderDto,
 	UpdateOrderDto,
 } from '@app/contracts/orders';
+import { Pagination } from '@app/common/interfaces';
 
 @Controller()
 @OrdersServiceControllerMethods()
 export class OrdersController implements OrdersServiceController {
 	constructor(private readonly ordersService: OrdersService) {}
 
-	async create(createOrderDto: CreateOrderDto): Promise<Order> {
+	async create(createOrderDto: CreateOrderDto) {
 		return await this.ordersService.create(createOrderDto);
 	}
 
-	async findAll(): Promise<Orders> {
-		return await this.ordersService.findAll();
+	async findAll(pagination: Pagination) {
+		return await this.ordersService.findAll(pagination);
 	}
 
-	async findAllByUser(findAllOrderByUserDto: FindAllOrderByUserDto): Promise<Orders> {
-		return this.ordersService.findAllByUser(findAllOrderByUserDto.user_id);
+	async findAllByUser(findAllOrderByUserDto: FindAllOrderByUserDto) {
+		return this.ordersService.findAllByUser(findAllOrderByUserDto.user_id, findAllOrderByUserDto.pagination);
 	}
 
-	async findOneByUser(findOneOrderByUserDto: FindOneOrderByUserDto): Promise<Order> {
+	async findOneByUser(findOneOrderByUserDto: FindOneOrderByUserDto) {
 		return this.ordersService.findOneByUser(findOneOrderByUserDto.id, findOneOrderByUserDto.user_id);
 	}
 
-	async findOne(findOneOrderDto: FindOneOrderDto): Promise<Order> {
+	async findOne(findOneOrderDto: FindOneOrderDto) {
 		return this.ordersService.findOne(findOneOrderDto.id);
 	}
 
-	async update(updateOrderDto: UpdateOrderDto): Promise<Order> {
+	async update(updateOrderDto: UpdateOrderDto) {
 		return this.ordersService.update(updateOrderDto.id, updateOrderDto);
 	}
 
-	async remove(removeOrderDto: RemoveOrderDto) {
+	async remove(removeOrderDto: OrderId) {
 		return await this.ordersService.remove(removeOrderDto.id);
 	}
 
 	async permanentlyRemove(
-		permanentlyRemoveOrderDto: PermanentlyRemoveOrderDto,
+		permanentlyRemoveOrderDto: OrderId,
 	) {
 		return await this.ordersService.permanentlyRemove(
 			permanentlyRemoveOrderDto.id,
