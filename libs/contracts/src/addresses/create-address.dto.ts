@@ -15,7 +15,7 @@ export class CreateAddressDto {
 
     @IsString()
     @ApiProperty()
-    state: string;
+    province: string;
 
     @IsString()
     @ApiProperty()

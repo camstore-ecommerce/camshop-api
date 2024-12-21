@@ -17,6 +17,10 @@ export interface FindOneUserDto {
 	id: string;
 }
 
+export interface FindUsersByIds{
+	ids: string[];
+}
+
 export interface UpdateUserProfileDto {
 	id: string;
 	first_name: string;
@@ -47,6 +51,8 @@ export interface UsersServiceClient {
 
 	findOne(request: FindOneUserDto): Observable<User>;
 
+	findByIds(request: FindUsersByIds): Observable<Users>;
+
 	update(request: UpdateUserDto): Observable<User>;
 
 	updateUserProfile(request: UpdateUserProfileDto): Observable<User>;
@@ -62,6 +68,8 @@ export interface UsersServiceController {
 	findAll(request: Empty): Promise<Users> | Observable<Users> | Users;
 
 	findOne(request: FindOneUserDto): Promise<User> | Observable<User> | User;
+
+	findByIds(request: FindUsersByIds): Promise<Users> | Observable<Users> | Users;
 
 	update(request: UpdateUserDto): Promise<User> | Observable<User> | User;
 
@@ -81,6 +89,7 @@ export function UsersServiceControllerMethods() {
 		const grpcMethods: string[] = [
 			'findAll',
 			'findOne',
+			'findByIds',
 			'update',
 			'remove',
 			'permanentlyRemove',

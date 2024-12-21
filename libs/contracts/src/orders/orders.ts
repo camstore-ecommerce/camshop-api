@@ -5,7 +5,7 @@
 // source: proto/orders/orders.proto
 
 /* eslint-disable */
-import { Empty } from '@app/common/interfaces';
+import { Empty, Pagination } from '@app/common/interfaces';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { UpdateOrderDto } from './update-order.dto';
@@ -20,6 +20,7 @@ export interface FindOneOrderDto {
 
 export interface FindAllOrderByUserDto {
 	user_id: string;
+	pagination: Pagination;
 }
 
 export interface FindOneOrderByUserDto {
@@ -27,11 +28,7 @@ export interface FindOneOrderByUserDto {
 	user_id: string;
 }
 
-export interface RemoveOrderDto {
-	id: string;
-}
-
-export interface PermanentlyRemoveOrderDto {
+export interface OrderId{
 	id: string;
 }
 
@@ -40,7 +37,7 @@ export const ORDERS_PACKAGE_NAME = 'orders';
 export interface OrdersServiceClient {
 	findOne(request: FindOneOrderDto): Observable<Order>;
 
-	findAll(request: Empty): Observable<Orders>;
+	findAll(request: Pagination): Observable<Orders>;
 
 	findAllByUser(request: FindAllOrderByUserDto): Observable<Orders>;
 
@@ -50,9 +47,9 @@ export interface OrdersServiceClient {
 
 	update(request: UpdateOrderDto): Observable<Order>;
 
-	remove(request: RemoveOrderDto): Observable<Empty>;
+	remove(request: OrderId): Observable<Empty>;
 
-	permanentlyRemove(request: PermanentlyRemoveOrderDto): Observable<Empty>;
+	permanentlyRemove(request: OrderId): Observable<Empty>;
 }
 
 export interface OrdersServiceController {
@@ -61,7 +58,7 @@ export interface OrdersServiceController {
 	): Promise<Order> | Observable<Order> | Order;
 
 	findAll(
-		request: Empty,
+		request: Pagination,
 	): Promise<Orders> | Observable<Orders> | Orders;
 
 	findAllByUser(
@@ -80,10 +77,10 @@ export interface OrdersServiceController {
 		request: UpdateOrderDto,
 	): Promise<Order> | Observable<Order> | Order;
 
-	remove(request: RemoveOrderDto): Promise<Empty> | Observable<Empty> | Empty;
+	remove(request: OrderId): Promise<Empty> | Observable<Empty> | Empty;
 
 	permanentlyRemove(
-		request: PermanentlyRemoveOrderDto,
+		request: OrderId,
 	): Promise<Empty> | Observable<Empty> | Empty;
 }
 

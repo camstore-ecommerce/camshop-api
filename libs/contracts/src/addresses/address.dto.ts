@@ -14,7 +14,7 @@ export class Address {
   city: string;
 
   @ApiProperty()
-  state: string;
+  province: string;
 
   @ApiProperty()
   country: string;
