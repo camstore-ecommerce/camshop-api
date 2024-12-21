@@ -35,6 +35,17 @@ export class UsersService {
 		});
 	}
 
+	async findByIds(ids: string[]) {
+		const users = await this.prismaService.user.findMany({
+			where: { id: { in: ids }, deleted_at: null },
+		});
+
+		return {
+			count: users.length,
+			users: users.map(({ password, ...user }) => user),
+		}
+	}
+
 	async findAdmin(id: string) {
 		return await this.prismaService.admin.findUniqueOrThrow({ where: { id } });
 	}

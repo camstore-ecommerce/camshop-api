@@ -2,12 +2,15 @@ import { Controller } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
 	FindOneUserDto,
+	FindUsersByIds,
 	PermanentlyRemoveUserDto,
 	RemoveUserDto,
 	UpdateUserDto,
+	Users,
 	UsersServiceController,
 	UsersServiceControllerMethods,
 } from '@app/contracts/users';
+import { Observable } from 'rxjs';
 
 @Controller()
 @UsersServiceControllerMethods()
@@ -25,6 +28,10 @@ export class UsersController implements UsersServiceController {
 
 	findOne(findOneUserDto: FindOneUserDto) {
 		return this.usersService.findOne(findOneUserDto.id);
+	}
+
+	async findByIds(findUsersByIds: FindUsersByIds) {
+		return await this.usersService.findByIds(findUsersByIds.ids);
 	}
 
 	update(updateUserDto: UpdateUserDto) {
