@@ -51,11 +51,7 @@
         "tsConfigPath": "apps/users/tsconfig.app.json",
         "assets": [
           {
-            "include": "proto/users/*.proto",
-            "outDir": "dist/proto"
-          },
-          {
-            "include": "proto/*.proto",
+            "include": "proto/**/*",
             "outDir": "dist/proto"
           }
         ],
