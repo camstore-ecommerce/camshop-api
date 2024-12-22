@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package users;
+
+service AuthService {
+    rpc Login(UserLoginDto) returns (UserLoginResponse) {}
+    rpc AdminLogin(AdminLoginDto) returns (AdminLoginResponse) {}
+    rpc Register(UserRegisterDto) returns (UserRegisterResponse) {}
+    rpc Authenticate(AuthenticateDto) returns (AuthenticateResponse) {}
+    rpc VerifyEmail(VerifyEmailDto) returns (VerifyEmailResponse) {}
+    rpc ConfirmVerifyEmail(ConfirmVerifyEmailDto) returns (ConfirmVerifyEmailResponse) {}
+    rpc ForgotPassword(ForgotPasswordDto) returns (ForgotPasswordResponse) {}
+    rpc ResetPassword(ResetPasswordDto) returns (ResetPasswordResponse) {}
+}
+
+message UserLoginDto {
+    string email = 1;
+    string password = 2;
+}
+
+message UserLoginResponse {
+    string token = 1;
+    string expires = 2;
+    User user = 3;
+}
+
+message AdminLoginDto {
+    string username = 1;
+    string password = 2;
+}
+
+message AdminLoginResponse {
+    string token = 1;
+    string expires = 2;
+    Admin user = 3;
+}
+
+message UserRegisterDto {
+    string first_name = 1;
+    string last_name = 2;
+    string email = 3;
+    string password = 4;
+    string phone = 5;
+}
+
+message UserRegisterResponse {
+    string message = 1;
+    User user = 2;
+}
+
+message AuthenticateDto {
+    string Authentication = 1;
+}
+
+message AuthenticateResponse {
+    User user = 1;
+}
+
+message VerifyEmailDto {
+    string id = 1;
+    string email = 2;
+    string phone = 3;
+    string first_name = 4;
+    string last_name = 5;
+    string verified_email_at = 6;
+    string status = 7;
+    string role = 8;
+}
+
+message VerifyEmailResponse {
+    string message = 1;
+}
+
+message ConfirmVerifyEmailDto {
+    string token = 1;
+}
+
+message ConfirmVerifyEmailResponse {
+    string message = 1;
+}
+
+message ForgotPasswordDto {
+    string email = 1;
+}
+
+message ForgotPasswordResponse {
+    string message = 1;
+}
+
+message ResetPasswordDto {
+    string token = 1;
+    string password = 2;
+}
+
+message ResetPasswordResponse {
+    string message = 1;
+}
+
+message User {
+    string id = 1;
+    string email = 2;
+    string phone = 3;
+    string first_name = 4;
+    string last_name = 5;
+    string verified_email_at = 6;
+    string status = 7;
+    string role = 8;
+    string gender = 9;
+    string birth_date = 10;
+    string profile_pic = 11;
+}
+
+message Admin {
+    string id = 1;
+    string username = 2;
+    string admin_level = 3;
+    repeated string permissions = 4;
+    string role = 5;
+}
+

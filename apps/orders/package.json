@@ -1,0 +1,23 @@
+{
+    "name": "@camshop/orders",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "migrate": "dotenv -e .env.dev -- npx prisma migrate dev",
+        "reset": "dotenv -e .env.dev -- npx prisma migrate reset --force"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@prisma/client": "^5.22.0"
+    },
+    "devDependencies": {
+        "dotenv-cli": "^7.4.2",
+        "prisma": "^5.22.0"
+    }
+}

@@ -1,11 +1,16 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/api-gateway/src",
+  "sourceRoot": ".",
+  "entryFile": "src/main",
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
+    "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
+    "assets": [
+      "proto/**/*.proto"
+    ],
+    "watchAssets": true
   },
   "projects": {
     "common": {
@@ -20,28 +25,57 @@
     "products": {
       "type": "application",
       "root": "apps/products",
-      "entryFile": "main",
-      "sourceRoot": "apps/products/src",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
       "compilerOptions": {
-        "tsConfigPath": "apps/products/tsconfig.app.json"
+        "tsConfigPath": "apps/products/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "proto/products/*.proto",
+            "outDir": "dist/proto"
+          },
+          {
+            "include": "proto/*.proto",
+            "outDir": "dist/proto"
+          }
+        ],
+        "watchAssets": true
       }
     },
     "users": {
       "type": "application",
       "root": "apps/users",
-      "entryFile": "main",
-      "sourceRoot": "apps/users/src",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
       "compilerOptions": {
-        "tsConfigPath": "apps/users/tsconfig.app.json"
+        "tsConfigPath": "apps/users/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "proto/users/*.proto",
+            "outDir": "dist/proto"
+          },
+          {
+            "include": "proto/*.proto",
+            "outDir": "dist/proto"
+          }
+        ],
+        "watchAssets": true
       }
     },
     "api-gateway": {
       "type": "application",
       "root": "apps/api-gateway",
-      "entryFile": "main",
-      "sourceRoot": "apps/api-gateway/src",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
       "compilerOptions": {
-        "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
+        "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "proto/**/*",
+            "outDir": "dist/proto"
+          }
+        ],
+        "watchAssets": true
       }
     },
     "contracts": {
@@ -51,6 +85,31 @@
       "sourceRoot": "libs/contracts/src",
       "compilerOptions": {
         "tsConfigPath": "libs/contracts/tsconfig.lib.json"
+      }
+    },
+    "mail": {
+      "type": "application",
+      "root": "apps/mail",
+      "entryFile": "main",
+      "sourceRoot": "apps/mail/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mail/tsconfig.app.json"
+      }
+    },
+    "orders": {
+      "type": "application",
+      "root": "apps/orders",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
+      "compilerOptions": {
+        "tsConfigPath": "apps/orders/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "proto/**/*",
+            "outDir": "dist/proto"
+          }
+        ],
+        "watchAssets": true
       }
     }
   },

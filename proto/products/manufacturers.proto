@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package products;
+
+// import "proto/common.proto";
+
+import "../common.proto";
+
+service ManufacturersService {
+    rpc Create(CreateManufacturerDto) returns (Manufacturer) {}
+    rpc FindOne(FindOneManufacturerDto) returns (Manufacturer) {}
+    rpc FindAll(common.Empty) returns (Manufacturers) {}
+    rpc Update(UpdateManufacturerDto) returns (Manufacturer) {}
+    rpc Remove(RemoveManufacturerDto) returns (common.Empty) {}
+    rpc PermanentlyRemove(PermanentlyRemoveManufacturerDto) returns (common.Empty) {}
+}
+
+message CreateManufacturerDto {
+    string name = 1;
+}
+
+message FindOneManufacturerDto {
+    string id = 1;
+}
+
+message UpdateManufacturerDto {
+    string id = 1;
+    string name = 2;
+}
+
+message RemoveManufacturerDto {
+    string id = 1;
+}
+
+message PermanentlyRemoveManufacturerDto {
+    string id = 1;
+}
+
+message Manufacturer {
+    string id = 1;
+    string name = 2;
+}
+
+message Manufacturers {
+    int32 count = 1;
+    repeated Manufacturer manufacturers = 2;
+}

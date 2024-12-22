@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package users;
+
+import "../products/inventory.proto";
+import "./users.proto";
+
+service CartService {
+  rpc AddToCart(AddToCartDto) returns (Cart);
+  rpc GetCart(GetCartDto) returns (Cart);
+  rpc RemoveFromCart(RemoveFromCartDto) returns (Cart);
+}
+
+message AddToCartDto {
+  string user_id = 1;
+  string inventory_id = 2;
+  int32 quantity = 3;
+}
+
+message GetCartDto {
+  string user_id = 1;
+}
+
+message RemoveFromCartDto {
+  string user_id = 1;
+  string inventory_id = 2;
+}
+
+message Cart {
+  User user = 1;
+  repeated CartItem items = 2;
+}
+
+message CartItem {
+  products.Inventory inventory = 1;
+  int32 quantity = 2;
+}

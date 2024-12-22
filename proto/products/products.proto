@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package products;
+
+// import "proto/common.proto";
+// import "proto/products/categories.proto";
+// import "proto/products/manufacturers.proto";
+
+import "../common.proto";
+import "./categories.proto";
+import "./manufacturers.proto";
+
+service ProductsService {
+    rpc Create(CreateProductDto) returns (Product) {}
+    rpc FindOne(ProductId) returns (Product) {}
+    rpc FindAll(common.Pagination) returns (Products) {}
+    rpc Filter(FilterProductDto) returns (Products) {}
+    rpc Update(UpdateProductDto) returns (Product) {}
+    rpc Remove(ProductId) returns (common.Empty) {}
+    rpc PermanentlyRemove(ProductId) returns (common.Empty) {}
+}
+
+message CreateProductDto {
+    string name = 1;
+    string description = 2;
+    string category_id = 3;
+    repeated string tags = 4;
+    string manufacturer_id = 5;
+    repeated ProductAttribute attributes = 6;
+    string image_url = 7;
+}
+
+message ProductId {
+    string id = 1;
+}
+
+message FilterProductDto {
+    string name = 1;
+    string category_id = 2;
+    repeated string tags = 3;
+    string manufacturer_id = 4;
+    repeated ProductAttribute attributes = 5;
+    common.Pagination pagination = 6;
+}
+
+message UpdateProductDto {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string category_id = 4;
+    repeated string tags = 5;
+    string manufacturer_id = 6;
+    repeated ProductAttribute attributes = 7;
+    string image_url = 8;
+}
+
+message Product {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    Category category = 4;
+    repeated string tags = 5;
+    Manufacturer manufacturer = 6;
+    repeated ProductAttribute attributes = 7;
+    string image_url = 8;
+}
+
+message Products {
+    repeated Product products = 1;
+    common.PaginationResponse pagination = 2;
+}
+
+message ProductAttribute {
+    string key = 1;
+    string value = 2;
+}

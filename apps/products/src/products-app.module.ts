@@ -5,6 +5,7 @@ import * as Joi from 'joi';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategoriesModule } from './categories/categories.module';
 import { ManufacturersModule } from './manufacturers/manufacturers.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
 	imports: [
@@ -35,6 +36,7 @@ import { ManufacturersModule } from './manufacturers/manufacturers.module';
 		}),
 		CategoriesModule,
 		ManufacturersModule,
+		InventoryModule,
 	],
 	controllers: [],
 	providers: [],

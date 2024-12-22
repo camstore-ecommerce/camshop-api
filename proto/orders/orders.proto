@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package orders;
+
+import "../common.proto";
+import "../products/inventory.proto";
+import "../users/users.proto";
+import "../users/addresses.proto";
+import "google/protobuf/struct.proto";
+
+// import "proto/common.proto";
+// import "proto/products/products.proto";
+// import "proto/users/users.proto";
+
+service OrdersService {
+    rpc FindOne(FindOneOrderDto) returns (Order) {}
+    rpc FindAll(common.Pagination) returns (Orders) {}
+    rpc FindOneByUser(FindOneOrderByUserDto) returns (Order) {}
+    rpc FindAllByUser(FindAllOrderByUserDto) returns (Orders) {}
+    rpc Create(CreateOrderDto) returns (Order) {}
+    rpc Update(UpdateOrderDto) returns (Order) {}
+    rpc Remove(OrderId) returns (common.Empty) {}
+    rpc PermanentlyRemove(OrderId) returns (common.Empty) {}
+}
+
+message FindOneOrderDto {
+    string id = 1;
+}
+
+message FindAllOrderByUserDto {
+    string user_id = 1;
+    common.Pagination pagination = 2;
+}
+
+message FindOneOrderByUserDto {
+    string id = 1;
+    string user_id = 2;
+}
+
+message CreateOrderItemsDto {
+    string inventory_id = 1;
+    int32 qty = 2;
+}
+
+message CreateOrderDto {
+    //
+    string user_id = 1;
+    string email = 2;
+    //
+    repeated CreateOrderItemsDto order_items = 3;
+    //
+    string address_id = 4;
+    google.protobuf.Struct user_address = 5;
+    //
+    string shipping_method = 6;
+}
+
+message UpdateOrderDto {
+    string id = 1;
+    string status = 2;
+    string user_id = 3;
+    string address_id = 4;
+    string shipping_method = 5;
+    string notes = 6;
+    string canceled_reason = 7;
+    string refund_details = 8;
+}
+
+message OrderId {
+    string id = 1;
+}
+
+message Orders {
+    repeated Order orders = 1;
+    common.PaginationResponse pagination = 2;
+}
+
+message Order {
+    string id = 1;
+    //User
+    optional users.User user = 2;
+    optional string email = 3;
+    //
+    string status = 4;
+    string order_date = 5;
+    string updated_at = 6;
+    repeated OrderItems order_items = 7;
+    // Address
+    optional users.Address address = 8;
+    optional google.protobuf.Struct user_address = 9;
+    //SHipping
+    string shipping_method = 10;
+    float sub_total = 11;
+    float total = 12;
+    string notes = 13;
+    string canceled_reason = 14;
+    string refund_details = 15;
+}
+
+message OrderItems {
+    string order_id = 1;
+    products.Inventory inventory = 2;
+    int32 qty = 3;
+    float price = 4;
+    float total_price = 5;
+}

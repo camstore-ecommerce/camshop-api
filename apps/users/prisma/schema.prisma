@@ -1,0 +1,103 @@
+generator client {
+    provider      = "prisma-client-js"
+    output        = "../node_modules/.prisma/client"
+    binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// ==================
+// User Service
+// ==================
+model User {
+    id                String    @id @default(cuid())
+    first_name        String
+    last_name         String
+    email             String    @unique
+    password          String
+    phone             String    @unique
+    role              String    @default("user")
+    created_at        DateTime  @default(now())
+    updated_at        DateTime  @default(now()) @updatedAt
+    deleted_at        DateTime?
+    verified_email_at DateTime?
+    status            String    @default("inactive")
+
+    gender      Gender?
+    birth_date  DateTime?
+    profile_pic String?
+
+    addresses UserAddress[]
+    Cart      Cart[]
+
+    @@map("users")
+}
+
+enum AdminLevel {
+    super_admin
+    moderator
+}
+
+model Admin {
+    id          String      @id @default(cuid())
+    username    String      @unique
+    password    String
+    admin_level AdminLevel?
+    permissions String[]
+    role        String      @default("admin")
+
+    @@map("admins")
+}
+
+model UserAddress {
+    id          String  @id @default(cuid())
+    user_id     String
+    address     String
+    city        String
+    province    String
+    country     String
+    postal_code String
+    is_primary  Boolean @default(false)
+
+    user User @relation(fields: [user_id], references: [id])
+
+    @@map("user_addresses")
+}
+
+enum Gender {
+    male
+    female
+    other
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+// ==================
+// Cart Service
+// ==================
+model Cart {
+    user_id    String     @id
+    cart_items CartItem[]
+    updated_at DateTime   @default(now()) @updatedAt
+
+    user User @relation(fields: [user_id], references: [id])
+
+    @@map("carts")
+}
+
+model CartItem {
+    user_id      String
+    inventory_id String
+    quantity     Int
+
+    cart Cart @relation(fields: [user_id], references: [user_id])
+
+    @@id([user_id, inventory_id])
+    @@map("cart_items")
+}

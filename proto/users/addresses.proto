@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package users; 
+
+// import "proto/common.proto";
+
+import "../common.proto";
+
+service AddressesService {
+    rpc Create(CreateAddressDto) returns (Address) {}
+    rpc FindAll(FindAllAddressDto) returns (Addresses) {}
+    rpc FindOne(FindOneAddressDto) returns (Address) {}
+    rpc FindByIds(FindAddressByIdsDto) returns (Addresses) {}
+    rpc Update(UpdateAddressDto) returns (Address) {}
+    rpc Remove(RemoveAddressDto) returns (common.Empty) {}
+}
+
+message Addresses {
+    int32 count = 1;
+    repeated Address addresses = 2;
+}
+
+message Address {
+    string id = 1;
+    string user_id = 2;
+    string address = 3;
+    string city = 4;
+    string province = 5;
+    string country = 6;
+    string postal_code = 7;
+    bool is_primary = 8;
+}
+
+message CreateAddressDto {
+    string user_id = 1;
+    string address = 2;
+    string city = 3;
+    string province = 4;
+    string country = 5;
+    string postal_code = 6;
+    bool is_primary = 7;
+}
+
+message FindAllAddressDto {
+    string user_id = 1;
+}
+
+message FindOneAddressDto {
+    string id = 1;
+    string user_id = 2;
+}
+
+message FindAddressByIdsDto {
+    repeated string ids = 1;
+}
+
+message UpdateAddressDto {
+    string id = 1;
+    string user_id = 2;
+    string address = 3;
+    string city = 4;
+    string province = 5;
+    string country = 6;
+    string postal_code = 7;
+    bool is_primary = 8;
+}
+
+message RemoveAddressDto {
+    string id = 1;
+    string user_id = 2;
+}

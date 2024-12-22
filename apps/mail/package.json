@@ -1,0 +1,22 @@
+{
+    "name": "@camshop/mail",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "amqp-connection-manager": "^4.1.14",
+        "amqplib": "^0.10.5",
+        "nodemailer": "^6.9.15"
+    },
+    "devDependencies": {
+        "@types/nodemailer": "^6.4.16"
+    }
+}
