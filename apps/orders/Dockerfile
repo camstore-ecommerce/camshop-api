@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
+COPY apps/orders/prisma ./prisma
 
 RUN npm install glob rimraf
 
@@ -37,4 +38,4 @@ COPY --from=development /usr/src/app/dist ./dist
 
 RUN mv dist/proto proto
 
-CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma generate && node dist/apps/orders/src/main"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma generate && node prisma/seed && node dist/apps/orders/src/main"]
