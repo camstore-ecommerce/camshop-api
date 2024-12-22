@@ -87,16 +87,16 @@ services:
     depends_on:
       - mongo
   
-  mail-service:
-    container_name: mail-service
-    # image: reg.findurjob.uk/camshop/mail-service:0.0.1
-    build:
-      context: .
-      dockerfile: apps/mail/Dockerfile
-      # target: development
-    # command: sh -c "npm run start:dev mail"
-    ports:
-      - 3004:3004
+  # mail-service:
+  #   container_name: mail-service
+  #   # image: reg.findurjob.uk/camshop/mail-service:0.0.1
+  #   build:
+  #     context: .
+  #     dockerfile: apps/mail/Dockerfile
+  #     # target: development
+  #   # command: sh -c "npm run start:dev mail"
+  #   ports:
+  #     - 3004:3004
 
   users-service:
     container_name: users-service
@@ -111,13 +111,13 @@ services:
     depends_on:
       - postgres_user
 
-  orders-service:
-    container_name: orders-service
-    build:
-      context: .
-      dockerfile: apps/orders/Dockerfile
-    depends_on:
-      - postgres_order
+  # orders-service:
+  #   container_name: orders-service
+  #   build:
+  #     context: .
+  #     dockerfile: apps/orders/Dockerfile
+  #   depends_on:
+  #     - postgres_order
 volumes:
   postgres_user:
   postgres_order:
