@@ -1,5 +1,7 @@
 FROM node:20-alpine AS development
 
+RUN apk add --no-cache openssl
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -20,6 +22,8 @@ RUN cd apps/users && npm install --only=production && npx tsc ./prisma/seed.ts
 RUN npm run build users
 
 FROM node:20-alpine AS production
+
+RUN apk add --no-cache openssl
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
