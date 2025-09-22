@@ -1,32 +1,33 @@
-import { AbstractMongoRepository } from "@app/common/database";
-import { Injectable, Logger } from "@nestjs/common";
-import { Inventory } from "./schema/inventory.schema";
-import { FilterQuery, Model, QueryOptions, Types, UpdateQuery } from "mongoose";
-import { InjectModel } from "@nestjs/mongoose";
-import { RpcException } from "@nestjs/microservices";
+import { AbstractMongoRepository } from '@app/common/database';
+import { Injectable, Logger } from '@nestjs/common';
+import { Inventory } from './schema/inventory.schema';
+import { FilterQuery, Model, QueryOptions, Types, UpdateQuery } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class InventoryRepository extends AbstractMongoRepository<Inventory> {
-    protected readonly logger = new Logger(InventoryRepository.name);
-    constructor(
-        @InjectModel(Inventory.name) private readonly inventoryModel: Model<Inventory>,
-    ) {
-        super(inventoryModel);
-    }
+	protected readonly logger = new Logger(InventoryRepository.name);
+	constructor(
+		@InjectModel(Inventory.name)
+		private readonly inventoryModel: Model<Inventory>,
+	) {
+		super(inventoryModel);
+	}
 
-    async find(
+	async find(
 		filterQuery: FilterQuery<Inventory>,
 		options?: QueryOptions<Inventory>,
 	): Promise<Inventory[]> {
 		try {
 			const documents = this.model
-					.find(
-						{ ...filterQuery, deleted_at: null },
-						options?.projection,
-						options,
-					)
-					.lean<Inventory[]>(true)
-					.populate('product')
+				.find(
+					{ ...filterQuery, deleted_at: null },
+					options?.projection,
+					options,
+				)
+				.lean<Inventory[]>(true)
+				.populate('product');
 			return documents;
 		} catch (error) {
 			console.error(error);

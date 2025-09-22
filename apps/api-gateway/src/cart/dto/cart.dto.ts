@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 class CartUserDto {
-    @ApiProperty()
+	@ApiProperty()
 	id: string;
 
 	@ApiProperty()
@@ -19,7 +19,7 @@ class CartUserDto {
 
 class CartProductDto {
 	@ApiProperty()
-	id: string
+	id: string;
 
 	@ApiProperty()
 	name: string;
@@ -41,20 +41,20 @@ class CartProductDto {
 }
 
 export class CartItem {
-    @ApiProperty()
-    product: CartProductDto;
+	@ApiProperty()
+	product: CartProductDto;
 
-    @ApiProperty()
-    quantity: number;
+	@ApiProperty()
+	quantity: number;
 
-    @ApiProperty()
-    price: number;
+	@ApiProperty()
+	price: number;
 }
 
 export class CartDto {
-    @ApiProperty()
-    user: CartUserDto;
+	@ApiProperty()
+	user: CartUserDto;
 
-    @ApiProperty({ type: [CartItem] })
-    items: CartItem[];
+	@ApiProperty({ type: [CartItem] })
+	items: CartItem[];
 }

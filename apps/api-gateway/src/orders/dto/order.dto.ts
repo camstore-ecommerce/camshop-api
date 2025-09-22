@@ -65,7 +65,7 @@ export class OrderAddressDto {
 }
 
 export class OrderItemsDto {
-	@ApiProperty({type: OrderInventoryDto})
+	@ApiProperty({ type: OrderInventoryDto })
 	inventory: OrderInventoryDto;
 
 	@ApiProperty()
@@ -85,7 +85,7 @@ export class OrderDto {
 	@ApiProperty()
 	status: string;
 
-	@ApiPropertyOptional({type: OrderUserDto})
+	@ApiPropertyOptional({ type: OrderUserDto })
 	user?: OrderUserDto;
 
 	@ApiProperty()
@@ -94,7 +94,7 @@ export class OrderDto {
 	@ApiProperty()
 	updated_at: Date;
 
-	@ApiProperty({type: OrderAddressDto})
+	@ApiProperty({ type: OrderAddressDto })
 	address: OrderAddressDto;
 
 	@ApiProperty()
@@ -115,14 +115,14 @@ export class OrderDto {
 	@ApiProperty()
 	refund_details: string;
 
-	@ApiProperty({type: OrderItemsDto})
+	@ApiProperty({ type: OrderItemsDto })
 	order_items: OrderItemsDto[];
 }
 
 export class OrdersDto {
-	@ApiProperty({type: OrderDto})
+	@ApiProperty({ type: OrderDto })
 	orders: OrderDto[];
 
-	@ApiProperty({type: PaginationResponse})
+	@ApiProperty({ type: PaginationResponse })
 	pagination: PaginationResponse;
 }

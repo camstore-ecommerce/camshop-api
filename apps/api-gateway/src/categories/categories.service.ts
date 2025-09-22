@@ -5,7 +5,12 @@ import {
 	CreateCategoryDto,
 	UpdateCategoryDto,
 } from '@app/contracts/categories';
-import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	OnModuleInit,
+} from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { catchError, throwError } from 'rxjs';
 
@@ -40,18 +45,20 @@ export class CategoriesService implements OnModuleInit {
 	}
 
 	update(id: string, updateCategoryDto: UpdateCategoryDto) {
-		return this.categtoriesServiceClient.update({ id, ...updateCategoryDto }).pipe(
-			catchError((error) => {
-				return throwError(() => new BadRequestException(error.message));
-			})
-		);
+		return this.categtoriesServiceClient
+			.update({ id, ...updateCategoryDto })
+			.pipe(
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				}),
+			);
 	}
 
 	remove(id: string) {
 		return this.categtoriesServiceClient.remove({ id }).pipe(
 			catchError((error) => {
 				return throwError(() => new BadRequestException(error.message));
-			})
+			}),
 		);
 	}
 
@@ -59,7 +66,7 @@ export class CategoriesService implements OnModuleInit {
 		return this.categtoriesServiceClient.permanentlyRemove({ id }).pipe(
 			catchError((error) => {
 				return throwError(() => new BadRequestException(error.message));
-			})
+			}),
 		);
 	}
 }

@@ -1,9 +1,9 @@
-import { PaginationResponse } from "@app/common/interfaces";
-import { Address } from "../addresses";
-import { Inventory } from "../inventory";
-import { User } from "../users";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional, IsPhoneNumber, IsString } from "class-validator";
+import { PaginationResponse } from '@app/common/interfaces';
+import { Address } from '../addresses';
+import { Inventory } from '../inventory';
+import { User } from '../users';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 
 export class UserAddress {
 	@ApiProperty()
@@ -17,11 +17,11 @@ export class UserAddress {
 	@ApiProperty()
 	@IsString()
 	address: string;
-  
+
 	@ApiProperty()
 	@IsString()
 	city: string;
-  
+
 	@ApiProperty()
 	@IsString()
 	province: string;
@@ -35,7 +35,7 @@ export class UserAddress {
 	@IsOptional()
 	@IsString()
 	apartment?: string;
-  
+
 	@ApiProperty()
 	@IsString()
 	country: string;
@@ -48,7 +48,6 @@ export class UserAddress {
 	@IsPhoneNumber()
 	phone: string;
 }
-
 
 export interface Order {
 	id: string;

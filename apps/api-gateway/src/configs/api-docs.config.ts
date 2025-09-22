@@ -29,20 +29,24 @@ export function configSwagger(app: INestApplication) {
 		next();
 	}
 
-	function authMiddleware(req: Request, res: Response, next: NextFunction): void {
+	function authMiddleware(
+		req: Request,
+		res: Response,
+		next: NextFunction,
+	): void {
 		if (!req.headers.authorization) {
 			return unauthorizedResponse(res, next);
 		}
-	
+
 		const credentials = parseAuthHeader(req.headers.authorization);
-	
+
 		if (
 			credentials?.name !== api_documentation_credentials.name ||
 			credentials?.pass !== api_documentation_credentials.pass
 		) {
 			return unauthorizedResponse(res, next);
 		}
-	
+
 		next();
 	}
 

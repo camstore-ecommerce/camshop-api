@@ -20,14 +20,14 @@ export class ProductsRepository extends AbstractMongoRepository<Product> {
 	): Promise<Product[]> {
 		try {
 			const documents = this.model
-					.find(
-						{ ...filterQuery, deleted_at: null },
-						options?.projection,
-						options,
-					)
-					.lean<Product[]>(true)
-					.populate('category')
-					.populate('manufacturer');
+				.find(
+					{ ...filterQuery, deleted_at: null },
+					options?.projection,
+					options,
+				)
+				.lean<Product[]>(true)
+				.populate('category')
+				.populate('manufacturer');
 			return documents;
 		} catch (error) {
 			console.error(error);

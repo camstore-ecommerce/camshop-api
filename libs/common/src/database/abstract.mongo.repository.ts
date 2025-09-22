@@ -7,7 +7,7 @@ export abstract class AbstractMongoRepository<
 	TDocument extends AbstractDocument,
 > {
 	protected abstract readonly logger: Logger;
-	constructor(protected readonly model: Model<TDocument>) { }
+	constructor(protected readonly model: Model<TDocument>) {}
 
 	async create(
 		document: Omit<TDocument, '_id' | 'deleted_at'>,
@@ -55,7 +55,6 @@ export abstract class AbstractMongoRepository<
 				return null;
 			}
 			return document;
-
 		} catch (error) {
 			this.logger.error(error.message);
 			throw new RpcException(error.message);
@@ -95,8 +94,7 @@ export abstract class AbstractMongoRepository<
 	): Promise<TDocument> {
 		try {
 			return this.model.findOneAndDelete(filterQuery).lean<TDocument>(true);
-		}
-		catch (error) {
+		} catch (error) {
 			this.logger.error(error.message);
 			throw new RpcException(error.message);
 		}

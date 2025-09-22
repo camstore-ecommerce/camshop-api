@@ -40,7 +40,7 @@ export class Product {
 export class Products {
 	@ApiProperty({ type: [Product] })
 	products: Product[];
-	
+
 	@ApiProperty({ type: PaginationResponse })
 	pagination: PaginationResponse;
 }

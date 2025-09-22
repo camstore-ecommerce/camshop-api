@@ -7,10 +7,10 @@ import { ClientProxyFactory } from '@nestjs/microservices';
 import { USERS_CLIENT } from '@app/common/constants/services';
 
 @Module({
-  imports: [ClientConfigModule],
-  controllers: [CartController],
-  providers: [
-    CartService,
+	imports: [ClientConfigModule],
+	controllers: [CartController],
+	providers: [
+		CartService,
 		{
 			provide: USERS_CLIENT,
 			useFactory: (configService: ClientConfigService) => {
@@ -19,6 +19,6 @@ import { USERS_CLIENT } from '@app/common/constants/services';
 			},
 			inject: [ClientConfigService],
 		},
-  ],
+	],
 })
 export class CartModule {}

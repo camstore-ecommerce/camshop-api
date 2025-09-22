@@ -1,13 +1,13 @@
-import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { CreateInventoryDto } from "./create-inventory.dto";
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { CreateInventoryDto } from './create-inventory.dto';
 
 export class UpdateInventoryDto extends PartialType(CreateInventoryDto) {
-    id: string;
+	id: string;
 }
 
 export class UpdateReservedStockDto {
-    id: string;
+	id: string;
 
-    @ApiProperty()
-    reserved_stock: number;
+	@ApiProperty()
+	reserved_stock: number;
 }

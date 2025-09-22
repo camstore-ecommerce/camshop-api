@@ -1,35 +1,35 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class Address {
-  @ApiProperty()
-  id: string;
+	@ApiProperty()
+	id: string;
 
-  @ApiProperty()
-  user_id: string;
+	@ApiProperty()
+	user_id: string;
 
-  @ApiProperty()
-  address: string;
+	@ApiProperty()
+	address: string;
 
-  @ApiProperty()
-  city: string;
+	@ApiProperty()
+	city: string;
 
-  @ApiProperty()
-  province: string;
+	@ApiProperty()
+	province: string;
 
-  @ApiProperty()
-  country: string;
+	@ApiProperty()
+	country: string;
 
-  @ApiProperty()
-  postal_code: string;
+	@ApiProperty()
+	postal_code: string;
 
-  @ApiProperty()
-  is_primary: boolean;
+	@ApiProperty()
+	is_primary: boolean;
 }
 
 export class Addresses {
-  @ApiProperty()
-  count: number;
+	@ApiProperty()
+	count: number;
 
-  @ApiProperty({ type: [Address] })
-  addresses: Address[];
+	@ApiProperty({ type: [Address] })
+	addresses: Address[];
 }

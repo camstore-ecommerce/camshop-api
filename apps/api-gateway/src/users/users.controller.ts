@@ -43,12 +43,12 @@ export class UsersController {
 
 	@Patch(':id')
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Update user by id', description: 'Only admin can update other users' })
+	@ApiOperation({
+		summary: 'Update user by id',
+		description: 'Only admin can update other users',
+	})
 	@ApiResponse({ status: 200, description: 'User updated', type: User })
-	update(
-		@Param('id') id: string,
-		@Body() updateUserDto: UpdateUserDto,
-	) {
+	update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
 		return this.userService.update(id, updateUserDto);
 	}
 
@@ -62,7 +62,10 @@ export class UsersController {
 
 	@Roles(Role.Admin)
 	@Delete(':id/permanently')
-	@ApiOperation({ summary: 'Permanently remove user by id', description: 'Admin access' })
+	@ApiOperation({
+		summary: 'Permanently remove user by id',
+		description: 'Admin access',
+	})
 	permanentlyRemove(@Param('id') id: string) {
 		return this.userService.permanentlyRemove(id);
 	}

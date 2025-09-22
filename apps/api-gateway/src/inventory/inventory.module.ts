@@ -9,7 +9,8 @@ import { ClientConfigModule } from '../client-config/client-config.module';
 @Module({
 	imports: [ClientConfigModule],
 	controllers: [InventoryController],
-	providers: [InventoryService,
+	providers: [
+		InventoryService,
 		{
 			provide: PRODUCTS_CLIENT,
 			useFactory: (configService: ClientConfigService) => {
@@ -28,4 +29,4 @@ import { ClientConfigModule } from '../client-config/client-config.module';
 		},
 	],
 })
-export class InventoryModule { }
+export class InventoryModule {}

@@ -27,7 +27,10 @@ export class ManufacturersController {
 
 	@Post()
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Create a new manufacturer', description: 'Admin access' })
+	@ApiOperation({
+		summary: 'Create a new manufacturer',
+		description: 'Admin access',
+	})
 	@ApiResponse({ status: 201, type: Manufacturer })
 	create(@Body() createManufacturerDto: CreateManufacturerDto) {
 		return this.manufacturersService.create(createManufacturerDto);
@@ -35,7 +38,10 @@ export class ManufacturersController {
 
 	@Get()
 	@Public()
-	@ApiOperation({ summary: 'Get all manufacturers', description: 'Public access' })
+	@ApiOperation({
+		summary: 'Get all manufacturers',
+		description: 'Public access',
+	})
 	@ApiResponse({ status: 201, type: Manufacturers })
 	findAll() {
 		return this.manufacturersService.findAll();
@@ -43,7 +49,10 @@ export class ManufacturersController {
 
 	@Get(':id')
 	@Public()
-	@ApiOperation({ summary: 'Get a manufacturer by id', description: 'Public access' })
+	@ApiOperation({
+		summary: 'Get a manufacturer by id',
+		description: 'Public access',
+	})
 	@ApiResponse({ status: 201, type: Manufacturer })
 	findOne(@Param('id') id: string) {
 		return this.manufacturersService.findOne(id);
@@ -51,7 +60,10 @@ export class ManufacturersController {
 
 	@Patch(':id')
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Update a manufacturer by id', description: 'Admin access' })
+	@ApiOperation({
+		summary: 'Update a manufacturer by id',
+		description: 'Admin access',
+	})
 	@ApiResponse({ status: 201, type: Manufacturer })
 	update(
 		@Param('id') id: string,
@@ -62,14 +74,20 @@ export class ManufacturersController {
 
 	@Delete(':id')
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Remove a manufacturer by id', description: 'Admin access' })
+	@ApiOperation({
+		summary: 'Remove a manufacturer by id',
+		description: 'Admin access',
+	})
 	remove(@Param('id') id: string) {
 		return this.manufacturersService.remove(id);
 	}
 
 	@Delete(':id/permanently')
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Permanently remove a manufacturer by id', description: 'Admin access' })
+	@ApiOperation({
+		summary: 'Permanently remove a manufacturer by id',
+		description: 'Admin access',
+	})
 	permanentlyRemove(@Param('id') id: string) {
 		return this.manufacturersService.permanentlyRemove(id);
 	}

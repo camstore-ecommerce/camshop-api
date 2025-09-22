@@ -23,7 +23,7 @@ import { Pagination } from '@app/common/interfaces';
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
 export class OrdersController {
-	constructor(private readonly ordersService: OrdersService) { }
+	constructor(private readonly ordersService: OrdersService) {}
 
 	@Post()
 	@Public()
@@ -44,11 +44,17 @@ export class OrdersController {
 
 	@Get('/me')
 	@Roles(Role.User)
-	@ApiOperation({ summary: 'Get all orders by user', description: 'User access' })
+	@ApiOperation({
+		summary: 'Get all orders by user',
+		description: 'User access',
+	})
 	@ApiResponse({ status: 200, type: OrdersDto })
 	@ApiDocsPagination('order')
 	findAllByUser(@AuthUser() user: UserDto, @Query() query: Pagination) {
-		return this.ordersService.findAllByUser({ user_id: user.id, pagination: query });
+		return this.ordersService.findAllByUser({
+			user_id: user.id,
+			pagination: query,
+		});
 	}
 
 	@Get('/me/:id')
@@ -61,7 +67,10 @@ export class OrdersController {
 
 	@Patch(':user_id/:id')
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Update order', description: 'Update order by id. Admin access' })
+	@ApiOperation({
+		summary: 'Update order',
+		description: 'Update order by id. Admin access',
+	})
 	@ApiResponse({ status: 200, type: OrderDto })
 	update(
 		@Param('id') id: string,

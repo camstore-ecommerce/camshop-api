@@ -1,4 +1,8 @@
-import { ORDERS_PATH, PRODUCTS_PATH, USERS_PATH } from '@app/common/constants/proto-path';
+import {
+	ORDERS_PATH,
+	PRODUCTS_PATH,
+	USERS_PATH,
+} from '@app/common/constants/proto-path';
 import { ORDERS_PACKAGE_NAME } from '@app/contracts/orders';
 import { PRODUCTS_PACKAGE_NAME } from '@app/contracts/products';
 import { USERS_PACKAGE_NAME } from '@app/contracts/users';
@@ -8,7 +12,7 @@ import { ClientOptions, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class ClientConfigService {
-	constructor(private configService: ConfigService) { }
+	constructor(private configService: ConfigService) {}
 
 	getCdnCloudName(): string {
 		return this.configService.get<string>('CDN_CLOUD_NAME');

@@ -7,11 +7,13 @@ import { ProductsModule } from '../products/products.module';
 import { InventoryRepository } from './inventory.repository';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Inventory.name, schema: InventorySchema }]),
-    ProductsModule
-  ],
-  controllers: [InventoryController],
-  providers: [InventoryService, InventoryRepository],
+	imports: [
+		MongooseModule.forFeature([
+			{ name: Inventory.name, schema: InventorySchema },
+		]),
+		ProductsModule,
+	],
+	controllers: [InventoryController],
+	providers: [InventoryService, InventoryRepository],
 })
 export class InventoryModule {}

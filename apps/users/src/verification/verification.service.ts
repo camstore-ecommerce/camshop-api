@@ -6,9 +6,7 @@ import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class VerificationService {
-	constructor(
-		private readonly redisService: UsersRedisService,
-	) { }
+	constructor(private readonly redisService: UsersRedisService) {}
 
 	// Minimum interval between requests
 	// Feel free to implement robust throthling/security
@@ -23,7 +21,6 @@ export class VerificationService {
 	}
 
 	async generateOtpCode(user_id: string, size: number = 6): Promise<string> {
-
 		// Check if a token was requested too recently
 		// Feel free to implement robust throthling/security
 		const recentToken = await this.redisService.get(`otp:${user_id}`);
@@ -37,7 +34,11 @@ export class VerificationService {
 		const otp = this.generateOtp(size);
 		const hashedToken = await bcrypt.hash(otp, this.saltRounds);
 
-		await this.redisService.set(`otp:${user_id}`, hashedToken, this.tokenExpirationMinutes * 60);
+		await this.redisService.set(
+			`otp:${user_id}`,
+			hashedToken,
+			this.tokenExpirationMinutes * 60,
+		);
 
 		return otp;
 	}
@@ -52,5 +53,4 @@ export class VerificationService {
 			return false;
 		}
 	}
-
 }

@@ -1,9 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class Category {
 	@ApiProperty()
 	id: string;
-	
+
 	@ApiProperty()
 	name: string;
 }

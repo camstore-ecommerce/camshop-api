@@ -4,7 +4,12 @@ import {
 	USERS_SERVICE_NAME,
 	UsersServiceClient,
 } from '@app/contracts/users';
-import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	OnModuleInit,
+} from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { catchError, throwError } from 'rxjs';
 
@@ -31,26 +36,28 @@ export class UsersService implements OnModuleInit {
 		return this.usersServiceClient.findOne({ id }).pipe(
 			catchError((error) => {
 				return throwError(() => new BadRequestException(error));
-			})
+			}),
 		);
 	}
 
 	update(id: string, updateUserDto: UpdateUserDto) {
-		return this.usersServiceClient.update({
-			id,
-			...updateUserDto,
-		}).pipe(
-			catchError((error) => {
-				return throwError(() => new BadRequestException(error));
+		return this.usersServiceClient
+			.update({
+				id,
+				...updateUserDto,
 			})
-		);
+			.pipe(
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error));
+				}),
+			);
 	}
 
 	remove(id: string) {
 		return this.usersServiceClient.remove({ id }).pipe(
 			catchError((error) => {
 				return throwError(() => new BadRequestException(error));
-			})
+			}),
 		);
 	}
 
@@ -58,7 +65,7 @@ export class UsersService implements OnModuleInit {
 		return this.usersServiceClient.permanentlyRemove({ id }).pipe(
 			catchError((error) => {
 				return throwError(() => new BadRequestException(error));
-			})
+			}),
 		);
 	}
 }

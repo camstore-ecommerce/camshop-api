@@ -15,8 +15,9 @@ import { Category as CategorySchema } from './schema/categories.schema';
 export class CategoriesController implements CategoriesServiceController {
 	constructor(private readonly categoriesService: CategoriesService) {}
 
-	async create(createCategoryDto: CreateCategoryDto){
-		const category: CategorySchema = await this.categoriesService.create(createCategoryDto);
+	async create(createCategoryDto: CreateCategoryDto) {
+		const category: CategorySchema =
+			await this.categoriesService.create(createCategoryDto);
 		return this.categoriesService.toCategory(category);
 	}
 
@@ -31,7 +32,9 @@ export class CategoriesController implements CategoriesServiceController {
 	}
 
 	async findOne(updateCategoryDto: UpdateCategoryDto) {
-		const category: CategorySchema = await this.categoriesService.findOne(updateCategoryDto.id);
+		const category: CategorySchema = await this.categoriesService.findOne(
+			updateCategoryDto.id,
+		);
 		return this.categoriesService.toCategory(category);
 	}
 

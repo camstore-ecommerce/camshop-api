@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class Admin {
 	@ApiProperty()
@@ -6,7 +6,7 @@ export class Admin {
 
 	@ApiProperty()
 	username: string;
-	
+
 	@ApiProperty()
 	admin_level: string;
 

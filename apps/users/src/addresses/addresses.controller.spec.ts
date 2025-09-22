@@ -3,18 +3,18 @@ import { AddressesController } from './addresses.controller';
 import { AddressesService } from './addresses.service';
 
 describe('AddressesController', () => {
-  let controller: AddressesController;
+	let controller: AddressesController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [AddressesController],
-      providers: [AddressesService],
-    }).compile();
+	beforeEach(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			controllers: [AddressesController],
+			providers: [AddressesService],
+		}).compile();
 
-    controller = module.get<AddressesController>(AddressesController);
-  });
+		controller = module.get<AddressesController>(AddressesController);
+	});
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+	it('should be defined', () => {
+		expect(controller).toBeDefined();
+	});
 });

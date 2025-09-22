@@ -28,11 +28,17 @@ export class OrdersController implements OrdersServiceController {
 	}
 
 	async findAllByUser(findAllOrderByUserDto: FindAllOrderByUserDto) {
-		return this.ordersService.findAllByUser(findAllOrderByUserDto.user_id, findAllOrderByUserDto.pagination);
+		return this.ordersService.findAllByUser(
+			findAllOrderByUserDto.user_id,
+			findAllOrderByUserDto.pagination,
+		);
 	}
 
 	async findOneByUser(findOneOrderByUserDto: FindOneOrderByUserDto) {
-		return this.ordersService.findOneByUser(findOneOrderByUserDto.id, findOneOrderByUserDto.user_id);
+		return this.ordersService.findOneByUser(
+			findOneOrderByUserDto.id,
+			findOneOrderByUserDto.user_id,
+		);
 	}
 
 	async findOne(findOneOrderDto: FindOneOrderDto) {
@@ -47,9 +53,7 @@ export class OrdersController implements OrdersServiceController {
 		return await this.ordersService.remove(removeOrderDto.id);
 	}
 
-	async permanentlyRemove(
-		permanentlyRemoveOrderDto: OrderId,
-	) {
+	async permanentlyRemove(permanentlyRemoveOrderDto: OrderId) {
 		return await this.ordersService.permanentlyRemove(
 			permanentlyRemoveOrderDto.id,
 		);

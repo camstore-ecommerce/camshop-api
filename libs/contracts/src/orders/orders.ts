@@ -28,7 +28,7 @@ export interface FindOneOrderByUserDto {
 	user_id: string;
 }
 
-export interface OrderId{
+export interface OrderId {
 	id: string;
 }
 
@@ -53,13 +53,9 @@ export interface OrdersServiceClient {
 }
 
 export interface OrdersServiceController {
-	findOne(
-		request: FindOneOrderDto,
-	): Promise<Order> | Observable<Order> | Order;
+	findOne(request: FindOneOrderDto): Promise<Order> | Observable<Order> | Order;
 
-	findAll(
-		request: Pagination,
-	): Promise<Orders> | Observable<Orders> | Orders;
+	findAll(request: Pagination): Promise<Orders> | Observable<Orders> | Orders;
 
 	findAllByUser(
 		request: FindAllOrderByUserDto,
@@ -69,13 +65,9 @@ export interface OrdersServiceController {
 		request: FindOneOrderByUserDto,
 	): Promise<Order> | Observable<Order> | Order;
 
-	create(
-		request: CreateOrderDto,
-	): Promise<Order> | Observable<Order> | Order;
+	create(request: CreateOrderDto): Promise<Order> | Observable<Order> | Order;
 
-	update(
-		request: UpdateOrderDto,
-	): Promise<Order> | Observable<Order> | Order;
+	update(request: UpdateOrderDto): Promise<Order> | Observable<Order> | Order;
 
 	remove(request: OrderId): Promise<Empty> | Observable<Empty> | Empty;
 
@@ -87,8 +79,13 @@ export interface OrdersServiceController {
 export function OrdersServiceControllerMethods() {
 	return function (constructor: Function) {
 		const grpcMethods: string[] = [
-			'findOne', 'findAll', 'findAllByUser',
-			'findOneByUser', 'create', 'update', 'remove',
+			'findOne',
+			'findAll',
+			'findAllByUser',
+			'findOneByUser',
+			'create',
+			'update',
+			'remove',
 			'permanentlyRemove',
 		];
 		for (const method of grpcMethods) {
