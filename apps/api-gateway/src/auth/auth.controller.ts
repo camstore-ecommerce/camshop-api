@@ -18,13 +18,18 @@ import {
 } from '@app/contracts/auth';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthUser } from '@app/common/decorators';
-import { Admin, UserDto } from '@app/contracts/users';
-import { ApiBody, ApiExcludeEndpoint, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Admin, LoginResponse, UserDto } from '@app/contracts/users';
+import {
+	ApiBody,
+	ApiExcludeEndpoint,
+	ApiOperation,
+	ApiResponse,
+} from '@nestjs/swagger';
 import { RpcException } from '@nestjs/microservices';
 
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly authService: AuthService) { }
+	constructor(private readonly authService: AuthService) {}
 
 	@Post('admin-login')
 	@ApiOperation({ summary: 'Admin login' })
@@ -49,22 +54,20 @@ export class AuthController {
 		examples: {
 			a: {
 				summary: 'Example Admin Login',
-				value: { email: 'davicmax123@gmail.com', password: '1234567' }
-			}
-		}
+				value: { email: 'davicmax123@gmail.com', password: '1234567' },
+			},
+		},
 	})
-	@ApiResponse({ status: 200, description: 'User login', type: UserDto })
+	@ApiResponse({ status: 200, description: 'User login', type: LoginResponse })
 	async login(
 		@Body() loginDto: UserLoginDto,
 		@Res({ passthrough: true }) response: Response,
 	) {
 		const jwt = await this.authService.login(loginDto);
-		response.cookie('Authentication', jwt.token, {
-			httpOnly: true,
-			expires: new Date(jwt.expires),
-		});
-		response.setHeader('Content-Type', 'application/json');
-		response.send(jwt.user);
+		if (!jwt) {
+			throw new BadRequestException('Invalid credentials');
+		}
+		return {token: jwt.token, expires: jwt.expires, user: jwt.user};
 	}
 
 	@Post('register')
@@ -99,11 +102,13 @@ export class AuthController {
 		}
 
 		return { message: 'Only users can verify email' };
-
 	}
 
 	@Get('confirm-verify-email')
-	@ApiOperation({ summary: 'Confirm verify email', description: 'Confirm verify email using token from mail' })
+	@ApiOperation({
+		summary: 'Confirm verify email',
+		description: 'Confirm verify email using token from mail',
+	})
 	async verify(@Query('token') token: string) {
 		return await this.authService.confirmVerifyEmail(token);
 	}

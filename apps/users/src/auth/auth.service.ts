@@ -67,9 +67,8 @@ export class AuthService {
 			role: user.role,
 			sub: user.id,
 		};
-		const expires = new Date();
-		expires.setSeconds(
-			expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
+		const expires = Math.floor(
+			Date.now() / 1000 + this.configService.get('JWT_EXPIRATION'),
 		);
 
 		const token = await this.jwtService.signAsync(tokenPayload);

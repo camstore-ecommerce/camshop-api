@@ -14,6 +14,6 @@ export class UserLoginDto {
 
 export interface UserLoginResponse {
 	token: string;
-	expires: Date;
+	expires: number;
 	user: User | undefined;
 }
