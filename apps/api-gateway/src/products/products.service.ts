@@ -1,4 +1,9 @@
-import { Inject, Injectable, OnModuleInit, BadRequestException } from '@nestjs/common';
+import {
+	Inject,
+	Injectable,
+	OnModuleInit,
+	BadRequestException,
+} from '@nestjs/common';
 import { PRODUCTS_CLIENT } from '@app/common/constants/services';
 import {
 	ProductsServiceClient,
@@ -22,7 +27,7 @@ export class ProductsService implements OnModuleInit {
 	constructor(
 		@Inject(PRODUCTS_CLIENT) private readonly productsClient: ClientGrpc,
 		private readonly cdnService: CdnService,
-	) { }
+	) {}
 
 	onModuleInit() {
 		this.productsServiceClient =
@@ -33,7 +38,7 @@ export class ProductsService implements OnModuleInit {
 
 	/**
 	 * Convert form data text to array
-	 * @param obj 
+	 * @param obj
 	 */
 	fromStringToArray(obj: any) {
 		for (const key in obj) {
@@ -44,7 +49,6 @@ export class ProductsService implements OnModuleInit {
 				obj[key] = obj[key].split(',').map((tag: string) => tag.trim());
 			}
 		}
-
 	}
 
 	create(createProductDto: CreateProductDto, image?: Express.Multer.File) {
@@ -120,7 +124,7 @@ export class ProductsService implements OnModuleInit {
 			map((response) => response),
 			catchError((error) => {
 				return throwError(() => new BadRequestException(error.message));
-			})
+			}),
 		);
 	}
 

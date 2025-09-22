@@ -1,8 +1,11 @@
-import { applyDecorators, UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
-import { ApiBody, ApiConsumes, ApiQuery } from "@nestjs/swagger";
-import { ReferenceObject, SchemaObject } from "@nestjs/swagger/dist/interfaces/open-api-spec.interface";
+import { applyDecorators, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
+import { ApiBody, ApiConsumes, ApiQuery } from '@nestjs/swagger';
+import {
+	ReferenceObject,
+	SchemaObject,
+} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 
 export function ApiBodyWithSingleFile(
 	name = 'file',
@@ -66,16 +69,16 @@ export function ApiDocsPagination(entity: string) {
 		}),
 		ApiQuery({
 			name: 'sort',
-			type:  String,
+			type: String,
 			examples: {
-				'id': {
+				id: {
 					value: 'id',
 					description: 'Sort by id',
 				},
-				'_id': {
+				_id: {
 					value: '_id',
 					description: 'Sort by _id',
-				}
+				},
 			},
 			required: false,
 		}),
@@ -83,11 +86,11 @@ export function ApiDocsPagination(entity: string) {
 			name: 'order',
 			type: String,
 			examples: {
-				'asc': {
+				asc: {
 					value: 'asc',
 					description: 'Ascending order',
 				},
-				'desc': {
+				desc: {
 					value: 'desc',
 					description: 'Descending order',
 				},
@@ -108,7 +111,6 @@ export function ApiDocsPagination(entity: string) {
 				},
 			},
 			required: false,
-		})
-
+		}),
 	);
 }

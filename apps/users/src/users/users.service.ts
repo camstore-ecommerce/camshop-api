@@ -43,7 +43,7 @@ export class UsersService {
 		return {
 			count: users.length,
 			users: users.map(({ password, ...user }) => user),
-		}
+		};
 	}
 
 	async findAdmin(id: string) {

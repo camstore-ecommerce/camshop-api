@@ -1,5 +1,10 @@
 import { USERS_CLIENT } from '@app/common/constants/services';
-import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	OnModuleInit,
+} from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { catchError, firstValueFrom, throwError } from 'rxjs';
 import {
@@ -24,12 +29,22 @@ export class AuthService implements OnModuleInit {
 	}
 
 	async login(userLoginDto: UserLoginDto) {
-		return await firstValueFrom(this.authServiceClient.login(userLoginDto));
+		return await firstValueFrom(
+			this.authServiceClient.login(userLoginDto).pipe(
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				}),
+			),
+		);
 	}
 
 	async register(userRegisterDto: UserRegisterDto) {
 		return await firstValueFrom(
-			this.authServiceClient.register(userRegisterDto),
+			this.authServiceClient.register(userRegisterDto).pipe(
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				}),
+			),
 		);
 	}
 
@@ -40,11 +55,13 @@ export class AuthService implements OnModuleInit {
 	}
 
 	async sendVerifyEmail(user: VerifyEmailDto) {
-		return await firstValueFrom(this.authServiceClient.verifyEmail(user).pipe(
-			catchError((error) => {
-				return throwError(() => new BadRequestException(error.message));
-			}),
-		));
+		return await firstValueFrom(
+			this.authServiceClient.verifyEmail(user).pipe(
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				}),
+			),
+		);
 	}
 
 	async confirmVerifyEmail(token: string) {
@@ -53,7 +70,7 @@ export class AuthService implements OnModuleInit {
 				catchError((error) => {
 					return throwError(() => new BadRequestException(error.message));
 				}),
-			)
+			),
 		);
 	}
 

@@ -7,17 +7,18 @@ import { ClientProxyFactory } from '@nestjs/microservices';
 import { ClientConfigModule } from '../client-config/client-config.module';
 
 @Module({
-  imports: [ClientConfigModule],
-  controllers: [AddressesController],
-  providers: [AddressesService,
-    {
+	imports: [ClientConfigModule],
+	controllers: [AddressesController],
+	providers: [
+		AddressesService,
+		{
 			provide: USERS_CLIENT,
 			useFactory: (configService: ClientConfigService) => {
 				const clientOptions = configService.usersClientOption;
 				return ClientProxyFactory.create(clientOptions);
 			},
 			inject: [ClientConfigService],
-		}
-  ],
+		},
+	],
 })
 export class AddressesModule {}

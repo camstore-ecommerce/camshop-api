@@ -13,8 +13,8 @@ export class CategoriesService {
 
 	/**
 	 * Convert CategorySchema to proto Category
-	 * @param category 
-	 * @returns 
+	 * @param category
+	 * @returns
 	 */
 	toCategory(category: CategorySchema): Category {
 		return {

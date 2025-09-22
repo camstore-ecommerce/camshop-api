@@ -6,11 +6,11 @@ import { Manufacturer } from '../../manufacturers/schema/manufacturers.schema';
 
 @Schema()
 export class ProductAttribute {
-  @Prop({ required: true })
-  key: string;
+	@Prop({ required: true })
+	key: string;
 
-  @Prop({ required: true })
-  value: string;
+	@Prop({ required: true })
+	value: string;
 }
 
 const ProductAttributeSchema = SchemaFactory.createForClass(ProductAttribute);

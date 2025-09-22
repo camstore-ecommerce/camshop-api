@@ -1,6 +1,6 @@
-import { PartialType } from "@nestjs/swagger";
-import { CreateAddressDto } from "./create-address.dto";
+import { PartialType } from '@nestjs/swagger';
+import { CreateAddressDto } from './create-address.dto';
 
 export class UpdateAddressDto extends PartialType(CreateAddressDto) {
-    id: string;
+	id: string;
 }

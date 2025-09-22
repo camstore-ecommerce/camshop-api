@@ -1,6 +1,6 @@
-import { IsString } from "class-validator";
-import { Admin } from "../users";
-import { ApiProperty } from "@nestjs/swagger";
+import { IsString } from 'class-validator';
+import { Admin } from '../users';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class AdminLoginDto {
 	@ApiProperty()

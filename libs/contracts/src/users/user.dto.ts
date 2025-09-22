@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
 	@ApiProperty()
@@ -6,16 +6,16 @@ export class UserDto {
 
 	@ApiProperty()
 	email: string;
-
+	
 	@ApiProperty()
 	first_name: string;
-
+	
 	@ApiProperty()
 	last_name: string;
-
+	
 	@ApiProperty()
 	role: string;
-
+	
 	@ApiProperty()
 	verified_email_at: Date;
 
@@ -26,10 +26,21 @@ export class UserDto {
 	status: string;
 }
 
+export class LoginResponse {
+	@ApiProperty()
+	token: string;
+	
+	@ApiProperty()
+	expires: number;
+
+	@ApiProperty({ type: () => UserDto })
+	user: UserDto;
+}
+
 export class User {
 	@ApiProperty()
 	id: string;
-
+	
 	@ApiProperty()
 	email: string;
 

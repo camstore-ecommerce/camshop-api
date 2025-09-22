@@ -11,28 +11,40 @@ import {
 	Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto, FilterProductDto, Product, Products, UpdateProductDto } from '@app/contracts/products';
+import {
+	CreateProductDto,
+	FilterProductDto,
+	Product,
+	Products,
+	UpdateProductDto,
+} from '@app/contracts/products';
 import { JwtAuthGuard } from '@app/common/guards';
 import { Public, Roles } from '@app/common/decorators';
 import { Role } from '@app/common/enums';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ApiBodyWithSingleFile, ApiDocsPagination } from '@app/common/decorators/swagger-form-data.decorators';
+import {
+	ApiBodyWithSingleFile,
+	ApiDocsPagination,
+} from '@app/common/decorators/swagger-form-data.decorators';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard)
 export class ProductsController {
-	constructor(private readonly productsService: ProductsService) { }
+	constructor(private readonly productsService: ProductsService) {}
 
 	@Post()
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Create a new product', description: 'Admin access' })
+	@ApiOperation({
+		summary: 'Create a new product',
+		description: 'Admin access',
+	})
 	@ApiBodyWithSingleFile(
 		'image',
 		{
-			name: { type: 'string', },
-			description: { type: 'string', },
-			category_id: { type: 'string', },
-			manufacturer_id: { type: 'string', },
+			name: { type: 'string' },
+			description: { type: 'string' },
+			category_id: { type: 'string' },
+			manufacturer_id: { type: 'string' },
 			tags: {
 				type: 'array',
 				items: {
@@ -47,15 +59,14 @@ export class ProductsController {
 						key: { type: 'string' },
 						value: { type: 'string' },
 					},
-				}
+				},
 			},
 			image: {
 				type: 'string',
 				format: 'binary',
-			}
+			},
 		},
-		['name', 'category_id', 'manufacturer_id', 'image']
-
+		['name', 'category_id', 'manufacturer_id', 'image'],
 	)
 	@ApiResponse({ status: 201, type: Product })
 	create(
@@ -80,13 +91,18 @@ export class ProductsController {
 	@ApiResponse({ status: 201, type: Products })
 	@ApiDocsPagination('products')
 	filter(@Query() query: any, @Body() filterProductDto: FilterProductDto) {
-		return this.productsService.filter({...filterProductDto, pagination: query});
+		return this.productsService.filter({
+			...filterProductDto,
+			pagination: query,
+		});
 	}
-
 
 	@Get(':id')
 	@Public()
-	@ApiOperation({ summary: 'Get a product by id', description: 'Public access' })
+	@ApiOperation({
+		summary: 'Get a product by id',
+		description: 'Public access',
+	})
 	@ApiResponse({ status: 201, type: Product })
 	findOne(@Param('id') id: string) {
 		return this.productsService.findOne(id);
@@ -94,36 +110,36 @@ export class ProductsController {
 
 	@Patch(':id')
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Update a product by id', description: 'Admin access' })
-	@ApiBodyWithSingleFile(
-		'image',
-		{
-			name: { type: 'string', },
-			description: { type: 'string', },
-			category_id: { type: 'string', },
-			manufacturer_id: { type: 'string', },
-			tags: {
-				type: 'array',
-				items: {
-					type: 'string',
-				},
-			},
-			attributes: {
-				type: 'array',
-				items: {
-					type: 'object',
-					properties: {
-						key: { type: 'string' },
-						value: { type: 'string' },
-					},
-				},
-			},
-			image: {
+	@ApiOperation({
+		summary: 'Update a product by id',
+		description: 'Admin access',
+	})
+	@ApiBodyWithSingleFile('image', {
+		name: { type: 'string' },
+		description: { type: 'string' },
+		category_id: { type: 'string' },
+		manufacturer_id: { type: 'string' },
+		tags: {
+			type: 'array',
+			items: {
 				type: 'string',
-				format: 'binary',
-			}
+			},
 		},
-	)
+		attributes: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					key: { type: 'string' },
+					value: { type: 'string' },
+				},
+			},
+		},
+		image: {
+			type: 'string',
+			format: 'binary',
+		},
+	})
 	@ApiResponse({ status: 201, type: Product })
 	update(
 		@Param('id') id: string,
@@ -135,14 +151,20 @@ export class ProductsController {
 
 	@Delete(':id')
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Remove a product by id', description: 'Admin access' })
+	@ApiOperation({
+		summary: 'Remove a product by id',
+		description: 'Admin access',
+	})
 	remove(@Param('id') id: string) {
 		return this.productsService.remove(id);
 	}
 
 	@Delete(':id/permanently')
 	@Roles(Role.Admin)
-	@ApiOperation({ summary: 'Permanently remove a product by id', description: 'Admin access' })
+	@ApiOperation({
+		summary: 'Permanently remove a product by id',
+		description: 'Admin access',
+	})
 	permanentlyRemove(@Param('id') id: string) {
 		return this.productsService.permanentlyRemove(id);
 	}

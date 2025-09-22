@@ -5,7 +5,12 @@ import {
 	ManufacturersServiceClient,
 	MANUFACTURERS_SERVICE_NAME,
 } from '@app/contracts/manufacturers';
-import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	OnModuleInit,
+} from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { catchError, throwError } from 'rxjs';
 
@@ -41,14 +46,16 @@ export class ManufacturersService implements OnModuleInit {
 	}
 
 	update(id: string, updateManufacturerDto: ClientUpdateManufacturerDto) {
-		return this.manufacturersServiceClient.update({
-			id,
-			...updateManufacturerDto,
-		}).pipe(
-			catchError((error) => {
-				return throwError(() => new BadRequestException(error.message));
-			}),
-		);
+		return this.manufacturersServiceClient
+			.update({
+				id,
+				...updateManufacturerDto,
+			})
+			.pipe(
+				catchError((error) => {
+					return throwError(() => new BadRequestException(error.message));
+				}),
+			);
 	}
 
 	remove(id: string) {

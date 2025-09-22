@@ -1,34 +1,33 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateProductDto {
-    @ApiProperty()
-    @IsString()
+	@ApiProperty()
+	@IsString()
 	name: string;
 
-    @ApiPropertyOptional()
-    @IsOptional()
+	@ApiPropertyOptional()
+	@IsOptional()
 	description: string;
 
-    @ApiProperty()
-    @IsString()
+	@ApiProperty()
+	@IsString()
 	category_id: string;
 
-    @ApiPropertyOptional()
-    @IsString({ each: true })
-    @IsOptional()
+	@ApiPropertyOptional()
+	@IsString({ each: true })
+	@IsOptional()
 	tags: string[];
 
-    @ApiProperty()
-    @IsString()
+	@ApiProperty()
+	@IsString()
 	manufacturer_id: string;
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    attributes: any;
+	@ApiPropertyOptional()
+	@IsOptional()
+	attributes: any;
 
-    @IsString()
-    @IsOptional()
+	@IsString()
+	@IsOptional()
 	image_url: string;
-
 }

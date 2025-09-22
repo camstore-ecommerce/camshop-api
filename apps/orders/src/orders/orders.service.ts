@@ -8,13 +8,22 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ClientGrpc, RpcException } from '@nestjs/microservices';
 import { PRODUCTS_CLIENT, USERS_CLIENT } from '@app/common/constants/services';
+import { Products } from '@app/contracts/products';
 import {
-	Products,
-} from '@app/contracts/products';
-import { USERS_SERVICE_NAME, User, UsersServiceClient } from '@app/contracts/users';
+	USERS_SERVICE_NAME,
+	User,
+	UsersServiceClient,
+} from '@app/contracts/users';
 import { firstValueFrom } from 'rxjs';
-import { ADDRESSES_SERVICE_NAME, Address, AddressesServiceClient } from '@app/contracts/addresses';
-import { INVENTORY_SERVICE_NAME, InventoryServiceClient } from '@app/contracts/inventory';
+import {
+	ADDRESSES_SERVICE_NAME,
+	Address,
+	AddressesServiceClient,
+} from '@app/contracts/addresses';
+import {
+	INVENTORY_SERVICE_NAME,
+	InventoryServiceClient,
+} from '@app/contracts/inventory';
 import { Struct } from '@app/common/interfaces/struct';
 import { Pagination } from '@app/common/interfaces';
 import { handlePagination } from '@app/common/utils';
@@ -29,7 +38,7 @@ export class OrdersService implements OnModuleInit {
 		private readonly prismaService: PrismaService,
 		@Inject(PRODUCTS_CLIENT) private readonly productsClient: ClientGrpc,
 		@Inject(USERS_CLIENT) private readonly usersClient: ClientGrpc,
-	) { }
+	) {}
 
 	onModuleInit() {
 		this.inventoryServiceClient =
@@ -39,7 +48,10 @@ export class OrdersService implements OnModuleInit {
 		this.usersServiceClient =
 			this.usersClient.getService<UsersServiceClient>(USERS_SERVICE_NAME);
 
-		this.addressesServiceClient = this.usersClient.getService<AddressesServiceClient>(ADDRESSES_SERVICE_NAME);
+		this.addressesServiceClient =
+			this.usersClient.getService<AddressesServiceClient>(
+				ADDRESSES_SERVICE_NAME,
+			);
 	}
 
 	private generateOrderId() {
@@ -59,7 +71,9 @@ export class OrdersService implements OnModuleInit {
 
 	async create(createOrderDto: CreateOrderDto) {
 		try {
-			createOrderDto.user_address = Struct.unwrap(createOrderDto.user_address as any) as any;
+			createOrderDto.user_address = Struct.unwrap(
+				createOrderDto.user_address as any,
+			) as any;
 			const { order_items, ...orderData } = createOrderDto;
 
 			// Get products
@@ -95,11 +109,17 @@ export class OrdersService implements OnModuleInit {
 			let address: Address = undefined;
 			if (orderData.address_id) {
 				address = await firstValueFrom(
-					this.addressesServiceClient.findOne({ id: orderData.address_id, user_id: orderData.user_id }),
+					this.addressesServiceClient.findOne({
+						id: orderData.address_id,
+						user_id: orderData.user_id,
+					}),
 				);
 			}
 
-			const sub_total = order_items.reduce((acc, item) => acc + item.total_price, 0);
+			const sub_total = order_items.reduce(
+				(acc, item) => acc + item.total_price,
+				0,
+			);
 			const order = await this.prismaService.order.create({
 				data: {
 					...orderData,
@@ -139,14 +159,13 @@ export class OrdersService implements OnModuleInit {
 	}
 
 	async findAll(pagination: Pagination) {
-		const queryOptions = handlePagination(pagination, "id");
+		const queryOptions = handlePagination(pagination, 'id');
 		const orders = await this.prismaService.order.findMany({
 			where: { deleted_at: null },
 			include: { order_items: true },
 			skip: queryOptions.offset,
 			take: queryOptions.limit,
 			orderBy: { [queryOptions.sort]: pagination.order },
-
 		});
 
 		const inventories = await firstValueFrom(
@@ -166,18 +185,20 @@ export class OrdersService implements OnModuleInit {
 		);
 
 		const users = await firstValueFrom(
-			this.usersServiceClient.findByIds(
-				{
-					ids: orders
-						.map((order) => order.user_id)
-						.filter((id) => id !== undefined && id !== null)
-				}
-			));
-
+			this.usersServiceClient.findByIds({
+				ids: orders
+					.map((order) => order.user_id)
+					.filter((id) => id !== undefined && id !== null),
+			}),
+		);
 
 		const ordersResponse = orders.map((order) => {
-			const user = order.user_id ? users.users.find((user) => user.id === order.user_id) : null;
-			const address = order.address_id ? addresses.addresses.find((address) => address.id === order.address_id) : null;
+			const user = order.user_id
+				? users.users.find((user) => user.id === order.user_id)
+				: null;
+			const address = order.address_id
+				? addresses.addresses.find((address) => address.id === order.address_id)
+				: null;
 
 			return {
 				...order,
@@ -187,24 +208,26 @@ export class OrdersService implements OnModuleInit {
 				order_items: order.order_items.map((item) => ({
 					...item,
 					inventory: inventories.inventories.find(
-						(inventory) => inventory.id === item.inventory_id
+						(inventory) => inventory.id === item.inventory_id,
 					),
 				})),
 			};
 		});
 
-		return { orders: ordersResponse, pagination: { ...pagination, total: orders.length } };
+		return {
+			orders: ordersResponse,
+			pagination: { ...pagination, total: orders.length },
+		};
 	}
 
 	async findAllByUser(user_id: string, pagination: Pagination) {
-		const queryOptions = handlePagination(pagination, "id");
+		const queryOptions = handlePagination(pagination, 'id');
 		const orders = await this.prismaService.order.findMany({
 			where: { deleted_at: null, user_id },
 			include: { order_items: true },
 			skip: queryOptions.offset,
 			take: queryOptions.limit,
 			orderBy: { [queryOptions.sort]: pagination.order },
-
 		});
 
 		const inventories = await firstValueFrom(
@@ -224,18 +247,20 @@ export class OrdersService implements OnModuleInit {
 		);
 
 		const users = await firstValueFrom(
-			this.usersServiceClient.findByIds(
-				{
-					ids: orders
-						.map((order) => order.user_id)
-						.filter((id) => id !== undefined && id !== null)
-				}
-			));
-
+			this.usersServiceClient.findByIds({
+				ids: orders
+					.map((order) => order.user_id)
+					.filter((id) => id !== undefined && id !== null),
+			}),
+		);
 
 		const ordersResponse = orders.map((order) => {
-			const user = order.user_id ? users.users.find((user) => user.id === order.user_id) : null;
-			const address = order.address_id ? addresses.addresses.find((address) => address.id === order.address_id) : null;
+			const user = order.user_id
+				? users.users.find((user) => user.id === order.user_id)
+				: null;
+			const address = order.address_id
+				? addresses.addresses.find((address) => address.id === order.address_id)
+				: null;
 
 			return {
 				...order,
@@ -245,13 +270,16 @@ export class OrdersService implements OnModuleInit {
 				order_items: order.order_items.map((item) => ({
 					...item,
 					inventory: inventories.inventories.find(
-						(inventory) => inventory.id === item.inventory_id
+						(inventory) => inventory.id === item.inventory_id,
 					),
 				})),
 			};
 		});
 
-		return { orders: ordersResponse, pagination: { ...pagination, total: orders.length } };
+		return {
+			orders: ordersResponse,
+			pagination: { ...pagination, total: orders.length },
+		};
 	}
 
 	async findOne(id: string) {
@@ -266,13 +294,20 @@ export class OrdersService implements OnModuleInit {
 			}),
 		);
 
-		const user = order.user_id ? await firstValueFrom(
-			this.usersServiceClient.findOne({ id: order.user_id })
-		) : null;
+		const user = order.user_id
+			? await firstValueFrom(
+					this.usersServiceClient.findOne({ id: order.user_id }),
+				)
+			: null;
 
-		const address = order.address_id ? await firstValueFrom(
-			this.addressesServiceClient.findOne({ id: order.address_id, user_id: order.user_id }),
-		) : null;
+		const address = order.address_id
+			? await firstValueFrom(
+					this.addressesServiceClient.findOne({
+						id: order.address_id,
+						user_id: order.user_id,
+					}),
+				)
+			: null;
 
 		const orderResponse: Order = {
 			...order,
@@ -302,14 +337,21 @@ export class OrdersService implements OnModuleInit {
 			}),
 		);
 
-		const user = order.user_id ? await firstValueFrom(
-			this.usersServiceClient.findOne({ id: order.user_id })
-		) : null;
+		const user = order.user_id
+			? await firstValueFrom(
+					this.usersServiceClient.findOne({ id: order.user_id }),
+				)
+			: null;
 
-		const address = order.address_id ? await firstValueFrom(
-			this.addressesServiceClient.findOne({ id: order.address_id, user_id: order.user_id }),
-		) : null;
-		
+		const address = order.address_id
+			? await firstValueFrom(
+					this.addressesServiceClient.findOne({
+						id: order.address_id,
+						user_id: order.user_id,
+					}),
+				)
+			: null;
+
 		const orderResponse: Order = {
 			...order,
 			user,
@@ -331,7 +373,7 @@ export class OrdersService implements OnModuleInit {
 			where: { order_id: id },
 		});
 
-		let inventories = await firstValueFrom(
+		const inventories = await firstValueFrom(
 			this.inventoryServiceClient.findByIds({
 				ids: existOrderItems.map((item) => item.inventory_id),
 			}),
@@ -352,9 +394,14 @@ export class OrdersService implements OnModuleInit {
 
 		const orderResponse: Order = {
 			...order,
-			address: order.address_id ? await firstValueFrom(
-				this.addressesServiceClient.findOne({ id: order.address_id, user_id: order.user_id }),
-			) : null,
+			address: order.address_id
+				? await firstValueFrom(
+						this.addressesServiceClient.findOne({
+							id: order.address_id,
+							user_id: order.user_id,
+						}),
+					)
+				: null,
 			user,
 			user_address: Struct.wrap(order.user_address as any) as any,
 			order_items: order.order_items.map((item) => ({
@@ -377,7 +424,9 @@ export class OrdersService implements OnModuleInit {
 
 	async permanentlyRemove(id: string) {
 		const order = await this.prismaService.order.findFirst({ where: { id } });
-		const user = await firstValueFrom(this.usersServiceClient.findOne({ id: order.user_id }));
+		const user = await firstValueFrom(
+			this.usersServiceClient.findOne({ id: order.user_id }),
+		);
 		if (user) {
 			throw new RpcException('Cannot delete order with user');
 		}

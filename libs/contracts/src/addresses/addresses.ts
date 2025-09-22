@@ -5,74 +5,105 @@
 // source: proto/users/addresses.proto
 
 /* eslint-disable */
-import { Empty } from "@app/common/interfaces";
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
-import { Address, Addresses, CreateAddressDto, UpdateAddressDto } from ".";
+import { Empty } from '@app/common/interfaces';
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import { Address, Addresses, CreateAddressDto, UpdateAddressDto } from '.';
 
-export const protobufPackage = "users";
+export const protobufPackage = 'users';
 
 export interface FindAllAddressDto {
-  user_id: string;
+	user_id: string;
 }
 
 export interface FindOneAddressDto {
-  id: string;
-  user_id: string;
+	id: string;
+	user_id: string;
 }
 
 export interface FindAddressByIdsDto {
-  ids: string[];
+	ids: string[];
 }
 
 export interface RemoveAddressDto {
-  id: string;
-  user_id: string;
+	id: string;
+	user_id: string;
 }
 
-export const USERS_PACKAGE_NAME = "users";
+export const USERS_PACKAGE_NAME = 'users';
 
 export interface AddressesServiceClient {
-  create(request: CreateAddressDto): Observable<Address>;
+	create(request: CreateAddressDto): Observable<Address>;
 
-  findAll(request: FindAllAddressDto): Observable<Addresses>;
+	findAll(request: FindAllAddressDto): Observable<Addresses>;
 
-  findOne(request: FindOneAddressDto): Observable<Address>;
+	findOne(request: FindOneAddressDto): Observable<Address>;
 
-  findByIds(request: FindAddressByIdsDto): Observable<Addresses>;
+	findByIds(request: FindAddressByIdsDto): Observable<Addresses>;
 
-  update(request: UpdateAddressDto): Observable<Address>;
+	update(request: UpdateAddressDto): Observable<Address>;
 
-  remove(request: RemoveAddressDto): Observable<Empty>;
+	remove(request: RemoveAddressDto): Observable<Empty>;
 }
 
 export interface AddressesServiceController {
-  create(request: CreateAddressDto): Promise<Address> | Observable<Address> | Address;
+	create(
+		request: CreateAddressDto,
+	): Promise<Address> | Observable<Address> | Address;
 
-  findAll(request: FindAllAddressDto): Promise<Addresses> | Observable<Addresses> | Addresses;
+	findAll(
+		request: FindAllAddressDto,
+	): Promise<Addresses> | Observable<Addresses> | Addresses;
 
-  findOne(request: FindOneAddressDto): Promise<Address> | Observable<Address> | Address;
+	findOne(
+		request: FindOneAddressDto,
+	): Promise<Address> | Observable<Address> | Address;
 
-  findByIds(request: FindAddressByIdsDto): Promise<Addresses> | Observable<Addresses> | Addresses;
+	findByIds(
+		request: FindAddressByIdsDto,
+	): Promise<Addresses> | Observable<Addresses> | Addresses;
 
-  update(request: UpdateAddressDto): Promise<Address> | Observable<Address> | Address;
+	update(
+		request: UpdateAddressDto,
+	): Promise<Address> | Observable<Address> | Address;
 
-  remove(request: RemoveAddressDto): Promise<Empty> | Observable<Empty> | Empty;
+	remove(request: RemoveAddressDto): Promise<Empty> | Observable<Empty> | Empty;
 }
 
 export function AddressesServiceControllerMethods() {
-  return function (constructor: Function) {
-    const grpcMethods: string[] = ["create", "findAll", "findOne", "findByIds", "update", "remove"];
-    for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("AddressesService", method)(constructor.prototype[method], method, descriptor);
-    }
-    const grpcStreamMethods: string[] = [];
-    for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("AddressesService", method)(constructor.prototype[method], method, descriptor);
-    }
-  };
+	return function (constructor: Function) {
+		const grpcMethods: string[] = [
+			'create',
+			'findAll',
+			'findOne',
+			'findByIds',
+			'update',
+			'remove',
+		];
+		for (const method of grpcMethods) {
+			const descriptor: any = Reflect.getOwnPropertyDescriptor(
+				constructor.prototype,
+				method,
+			);
+			GrpcMethod('AddressesService', method)(
+				constructor.prototype[method],
+				method,
+				descriptor,
+			);
+		}
+		const grpcStreamMethods: string[] = [];
+		for (const method of grpcStreamMethods) {
+			const descriptor: any = Reflect.getOwnPropertyDescriptor(
+				constructor.prototype,
+				method,
+			);
+			GrpcStreamMethod('AddressesService', method)(
+				constructor.prototype[method],
+				method,
+				descriptor,
+			);
+		}
+	};
 }
 
-export const ADDRESSES_SERVICE_NAME = "AddressesService";
+export const ADDRESSES_SERVICE_NAME = 'AddressesService';

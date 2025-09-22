@@ -14,11 +14,15 @@ import { Pagination } from '@app/common/interfaces';
 @Controller()
 @ProductsServiceControllerMethods()
 export class ProductsController implements ProductsServiceController {
-	constructor(private readonly productsService: ProductsService) { }
+	constructor(private readonly productsService: ProductsService) {}
 
 	async create(createProductDto: CreateProductDto) {
 		const product = await this.productsService.create(createProductDto);
-		return this.productsService.toProduct(product, product.category, product.manufacturer);
+		return this.productsService.toProduct(
+			product,
+			product.category,
+			product.manufacturer,
+		);
 	}
 
 	async findAll(pagination: Pagination): Promise<Products> {
@@ -26,7 +30,11 @@ export class ProductsController implements ProductsServiceController {
 		return {
 			...products,
 			products: products.products.map((product) =>
-				this.productsService.toProduct(product, product.category, product.manufacturer)
+				this.productsService.toProduct(
+					product,
+					product.category,
+					product.manufacturer,
+				),
 			),
 		};
 	}
@@ -37,14 +45,22 @@ export class ProductsController implements ProductsServiceController {
 		return {
 			...products,
 			products: products.products.map((product) =>
-				this.productsService.toProduct(product, product.category, product.manufacturer)
+				this.productsService.toProduct(
+					product,
+					product.category,
+					product.manufacturer,
+				),
 			),
-		}
+		};
 	}
 
 	async findOne(productId: ProductId) {
 		const product = await this.productsService.findOne(productId.id);
-		return this.productsService.toProduct(product, product.category, product.manufacturer);
+		return this.productsService.toProduct(
+			product,
+			product.category,
+			product.manufacturer,
+		);
 	}
 
 	async update(updateProductDto: UpdateProductDto) {
@@ -53,18 +69,18 @@ export class ProductsController implements ProductsServiceController {
 			updateProductDto,
 		);
 
-		return this.productsService.toProduct(product, product.category, product.manufacturer);
+		return this.productsService.toProduct(
+			product,
+			product.category,
+			product.manufacturer,
+		);
 	}
 
 	async remove(productId: ProductId) {
 		return await this.productsService.remove(productId.id);
 	}
 
-	async permanentlyRemove(
-		productId: ProductId,
-	) {
-		return await this.productsService.permanentlyRemove(
-			productId.id,
-		);
+	async permanentlyRemove(productId: ProductId) {
+		return await this.productsService.permanentlyRemove(productId.id);
 	}
 }

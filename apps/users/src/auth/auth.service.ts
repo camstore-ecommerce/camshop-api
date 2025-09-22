@@ -1,9 +1,4 @@
-import {
-	HttpException,
-	HttpStatus,
-	Inject,
-	Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import {
@@ -32,7 +27,7 @@ export class AuthService {
 		private readonly verificationService: VerificationService,
 		private readonly prismaService: PrismaService,
 		@Inject(MAIL_CLIENT) private readonly mailClient: ClientProxy,
-	) { }
+	) {}
 
 	async adminLogin(loginDto: AdminLoginDto) {
 		const user = await this.usersService.validateAdmin(
@@ -72,9 +67,8 @@ export class AuthService {
 			role: user.role,
 			sub: user.id,
 		};
-		const expires = new Date();
-		expires.setSeconds(
-			expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
+		const expires = Math.floor(
+			Date.now() / 1000 + this.configService.get('JWT_EXPIRATION'),
 		);
 
 		const token = await this.jwtService.signAsync(tokenPayload);
@@ -92,7 +86,8 @@ export class AuthService {
 				},
 			});
 			return {
-				message: 'User registered. Please check your email to verify your account.',
+				message:
+					'User registered. Please check your email to verify your account.',
 				user,
 			};
 		} catch (err) {
@@ -118,16 +113,17 @@ export class AuthService {
 				this.mailClient.send(MAIL_PATTERNS.SEND, {
 					subject: 'Email Verification',
 					recipients: [
-						{ name: `${user.first_name} ${user.last_name}`, address: user.email },
+						{
+							name: `${user.first_name} ${user.last_name}`,
+							address: user.email,
+						},
 					],
 					html: `<p>Click <a href="${this.configService.get('APP_URL')}/confirm-verify-email?token=${token}">here</a> to verify your email</p>`,
 				}),
 			);
 
 			return { message: 'Please check your email to verify your account.' };
-		} catch (err) {
-
-		}
+		} catch (err) {}
 	}
 
 	async verifyEmail(token: string) {

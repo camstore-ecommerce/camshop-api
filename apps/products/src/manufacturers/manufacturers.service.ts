@@ -4,7 +4,7 @@ import {
 } from '@app/contracts/manufacturers';
 import { Injectable } from '@nestjs/common';
 import { ManufacturersRepository } from './manufacturers.repository';
-import { Manufacturer as ManufacturerSchema} from './schema/manufacturers.schema';
+import { Manufacturer as ManufacturerSchema } from './schema/manufacturers.schema';
 import { Manufacturer } from '@app/contracts/manufacturers';
 
 @Injectable()
@@ -15,8 +15,8 @@ export class ManufacturersService {
 
 	/**
 	 * Convert ManufacturerSchema to proto Manufacturer
-	 * @param manufacturer 
-	 * @returns 
+	 * @param manufacturer
+	 * @returns
 	 */
 	toManufacturer(manufacturer: ManufacturerSchema): Manufacturer {
 		return {

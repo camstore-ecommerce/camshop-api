@@ -35,7 +35,7 @@ import { CartModule } from './cart/cart.module';
 		VerificationModule,
 		AddressesModule,
 		UsersRedisModule,
-		CartModule
+		CartModule,
 	],
 	controllers: [],
 	providers: [],

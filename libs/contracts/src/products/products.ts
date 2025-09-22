@@ -42,13 +42,15 @@ export interface ProductsServiceController {
 		request: CreateProductDto,
 	): Promise<Product> | Observable<Product> | Product;
 
-	findOne(
-		request: ProductId,
-	): Promise<Product> | Observable<Product> | Product;
+	findOne(request: ProductId): Promise<Product> | Observable<Product> | Product;
 
-	findAll(request: Pagination): Promise<Products> | Observable<Products> | Products;
+	findAll(
+		request: Pagination,
+	): Promise<Products> | Observable<Products> | Products;
 
-	filter(request: FilterProductDto): Promise<Products> | Observable<Products> | Products;
+	filter(
+		request: FilterProductDto,
+	): Promise<Products> | Observable<Products> | Products;
 
 	update(
 		request: UpdateProductDto,

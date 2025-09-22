@@ -18,8 +18,6 @@ import * as Joi from 'joi';
 
 @Module({
 	imports: [
-		UsersModule,
-		ProductsModule,
 		ConfigModule.forRoot({
 			isGlobal: true,
 			envFilePath: `./apps/api-gateway/${process.env.NODE_ENV === 'development' ? '.env.dev' : '.env'}`,
@@ -38,8 +36,6 @@ import * as Joi from 'joi';
 			cache: true,
 			expandVariables: true,
 		}),
-		CategoriesModule,
-		ManufacturersModule,
 		LoggerModule.forRoot({
 			pinoHttp: {
 				transport: {
@@ -50,6 +46,10 @@ import * as Joi from 'joi';
 				},
 			},
 		}),
+		UsersModule,
+		ProductsModule,
+		CategoriesModule,
+		ManufacturersModule,
 		AuthModule,
 		OrdersModule,
 		AddressesModule,

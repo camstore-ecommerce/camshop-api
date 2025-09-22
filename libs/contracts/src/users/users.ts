@@ -17,7 +17,7 @@ export interface FindOneUserDto {
 	id: string;
 }
 
-export interface FindUsersByIds{
+export interface FindUsersByIds {
 	ids: string[];
 }
 
@@ -69,7 +69,9 @@ export interface UsersServiceController {
 
 	findOne(request: FindOneUserDto): Promise<User> | Observable<User> | User;
 
-	findByIds(request: FindUsersByIds): Promise<Users> | Observable<Users> | Users;
+	findByIds(
+		request: FindUsersByIds,
+	): Promise<Users> | Observable<Users> | Users;
 
 	update(request: UpdateUserDto): Promise<User> | Observable<User> | User;
 

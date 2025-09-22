@@ -1,40 +1,40 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Product } from "../products";
-import { PaginationResponse } from "@app/common/interfaces";
+import { ApiProperty } from '@nestjs/swagger';
+import { Product } from '../products';
+import { PaginationResponse } from '@app/common/interfaces';
 
 export class Inventory {
-    @ApiProperty()
-    id: string;
+	@ApiProperty()
+	id: string;
 
-    @ApiProperty({type: Product})
-    product: Product;
+	@ApiProperty({ type: Product })
+	product: Product;
 
-    @ApiProperty()
-    price: number;
+	@ApiProperty()
+	price: number;
 
-    @ApiProperty()
-    sku: string;
+	@ApiProperty()
+	sku: string;
 
-    @ApiProperty()
-    barcode: string;
+	@ApiProperty()
+	barcode: string;
 
-    @ApiProperty()
-    serial: string;
+	@ApiProperty()
+	serial: string;
 
-    @ApiProperty()
-    stock: number;
+	@ApiProperty()
+	stock: number;
 
-    @ApiProperty()
-    reserved_stock: number;
+	@ApiProperty()
+	reserved_stock: number;
 
-    @ApiProperty()
-    active: boolean;
+	@ApiProperty()
+	active: boolean;
 }
 
 export class Inventories {
-    @ApiProperty({type: [Inventory]})
-    inventories: Inventory[];
+	@ApiProperty({ type: [Inventory] })
+	inventories: Inventory[];
 
-    @ApiProperty({type: PaginationResponse})
-    pagination: PaginationResponse;
+	@ApiProperty({ type: PaginationResponse })
+	pagination: PaginationResponse;
 }
