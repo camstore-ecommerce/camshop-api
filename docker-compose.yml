@@ -11,7 +11,7 @@ services:
     volumes:
       - mongo_data:/data/db
 
-  postgres_:
+  postgres:
     container_name: postgres
     image: postgres:17.6-alpine3.22
     environment:
@@ -66,16 +66,16 @@ services:
   #   ports:
   #     - 3004:3004
 
-  # users-service:
-  #   container_name: users-service
-  #   build:
-  #     context: .
-  #     dockerfile: apps/users/Dockerfile
-  #     # target: development
-  #   ports:
-  #     - 3003:3003
-  #   depends_on:
-  #     - postgres
+  users-service:
+    container_name: users-service
+    build:
+      context: .
+      dockerfile: apps/users/Dockerfile
+      # target: development
+    ports:
+      - 3003:3003
+    depends_on:
+      - postgres
 
   # orders-service:
   #   container_name: orders-service
